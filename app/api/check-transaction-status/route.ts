@@ -358,8 +358,8 @@ export async function POST(request: NextRequest) {
             },
             commission: {
               totalPriceInCents: transactionData.amount,
-              gatewayFeeInCents: transactionData.amount,
-              userCommissionInCents: transactionData.amount
+              gatewayFeeInCents: Math.round(transactionData.amount * 0.04), // 4% de taxa
+              userCommissionInCents: Math.round(transactionData.amount * 0.96) // 96% para o usuário
             },
             isTest: process.env.UTMIFY_TEST_MODE === 'true'
           }
@@ -529,8 +529,8 @@ export async function POST(request: NextRequest) {
               },
               commission: {
                 totalPriceInCents: transactionData.amount,
-                gatewayFeeInCents: transactionData.amount,
-                userCommissionInCents: transactionData.amount
+                gatewayFeeInCents: Math.round(transactionData.amount * 0.04), // 4% de taxa
+                userCommissionInCents: Math.round(transactionData.amount * 0.96) // 96% para o usuário
               },
               isTest: process.env.UTMIFY_TEST_MODE === 'true'
             }
