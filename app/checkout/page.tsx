@@ -737,8 +737,38 @@ export default function CheckoutPage() {
               console.log(whitePageUrl.toString())
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               
-              // Redirecionar para whitepage SEM enviar referer
-              window.location.replace(whitePageUrl.toString())
+              // Disparar conversão do Google Ads ANTES de redirecionar
+              console.log('🎯 [GOOGLE ADS] Disparando conversão...')
+              if (typeof window !== 'undefined' && (window as any).gtag) {
+                const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID
+                const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL
+                
+                if (awId && conversionLabel) {
+                  (window as any).gtag('event', 'conversion', {
+                    'send_to': `${awId}/${conversionLabel}`,
+                    'value': totalValue,
+                    'currency': 'BRL',
+                    'transaction_id': pixData.transactionId
+                  })
+                  console.log('✅ [GOOGLE ADS] Conversão disparada!')
+                  console.log('   - AW ID:', awId)
+                  console.log('   - Label:', conversionLabel)
+                  console.log('   - Transaction ID:', pixData.transactionId)
+                  console.log('   - Valor:', totalValue)
+                } else {
+                  console.warn('⚠️ [GOOGLE ADS] Variáveis não configuradas')
+                }
+              } else {
+                console.warn('⚠️ [GOOGLE ADS] gtag não encontrado')
+              }
+              
+              // Aguardar 3 segundos para garantir que a conversão foi enviada
+              console.log('⏳ Aguardando 3s para enviar conversão...')
+              setTimeout(() => {
+                console.log('✅ Redirecionando para whitepage...')
+                // Redirecionar para whitepage SEM enviar referer
+                window.location.replace(whitePageUrl.toString())
+              }, 3000)
               
               // Enviar para UTMify com status PAID (não-bloqueante)
               // NOTA: O webhook já envia PAID para UTMify, mas mantemos este envio como fallback
