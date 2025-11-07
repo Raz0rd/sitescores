@@ -49,7 +49,6 @@ export async function middleware(request: NextRequest) {
   
   // Em produção, NUNCA liberar localhost (previne bypass com curl)
   if (isLocalhost && process.env.NODE_ENV === 'development') {
-    console.log('🔓 [Referer] LOCALHOST LIBERADO (DEV MODE)')
     return NextResponse.next()
   }
 

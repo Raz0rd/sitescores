@@ -119,7 +119,6 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
   }
 
   const data = await response.json()
-  console.log("✅ [GhostPay] SUCCESS RESPONSE:", JSON.stringify(data, null, 2))
 
   // Extrair informações importantes da resposta GhostPay
   const transactionId = data.id || data.transaction_id || data.transactionId
@@ -332,7 +331,6 @@ async function generatePixNitro(body: any, baseUrl: string) {
     throw new Error("Configuração de API Nitro não encontrada")
   }
 
-  console.log("📤 [Nitro] REQUEST BODY:", JSON.stringify(body, null, 2))
   console.log("🌐 [Nitro] URL dinâmica detectada:", baseUrl)
 
   // Extrair hostname para offer_hash
@@ -377,7 +375,6 @@ async function generatePixNitro(body: any, baseUrl: string) {
     postback_url: domainName
   }
   
-  console.log("📦 [Nitro] PAYLOAD ENVIADO:", JSON.stringify(nitroPayload, null, 2))
   console.log("🎯 [Nitro] URL:", `https://api.nitropagamentos.com/api/public/v1/transactions?api_token=${apiKey}`)
   
   const response = await fetch(`https://api.nitropagamentos.com/api/public/v1/transactions?api_token=${apiKey}`, {
@@ -403,7 +400,6 @@ async function generatePixNitro(body: any, baseUrl: string) {
   }
 
   const data = await response.json()
-  console.log("✅ [Nitro] SUCCESS RESPONSE:", JSON.stringify(data, null, 2))
 
   // Extrair informações da resposta Nitro
   const transactionId = data.hash || data.id
@@ -712,9 +708,6 @@ export async function POST(request: NextRequest) {
     // Type assertion após validação
     const validResult = result as { transactionId: string; pixCode: string; qrCode: string; success: boolean }
     
-    console.log("💾 [STORAGE] Salvando pedido no order storage...")
-    console.log("🔍 [STORAGE DEBUG] Body completo:", JSON.stringify(body, null, 2))
-    console.log("🔍 [STORAGE DEBUG] trackingParams:", body.trackingParams)
     console.log("🔍 [STORAGE DEBUG] utmParams:", body.utmParams)
     
     try {
@@ -749,7 +742,6 @@ export async function POST(request: NextRequest) {
             timestamp: params.timestamp || new Date().toISOString(),
             current_page: params.current_page || 'checkout'
           }
-          console.log("✅ [STORAGE] trackingParams extraídos (apenas UTMs válidos):", trackingParameters)
         }
       } else if (body.utmParams) {
         trackingParameters = body.utmParams
@@ -772,7 +764,6 @@ export async function POST(request: NextRequest) {
       
       console.log("💾 [STORAGE] Salvando pedido no orderStorage...")
       console.log("💾 [STORAGE] Transaction ID:", validResult.transactionId)
-      console.log("💾 [STORAGE] Dados completos:", JSON.stringify(orderData, null, 2))
       
       orderStorageService.saveOrder(orderData)
       

@@ -14,10 +14,7 @@ console.log('📦 [MODULE] app/page.tsx carregado!')
 
 export default function HomePage() {
   // Log IMEDIATO para debug
-  console.log('🚀 [HOMEPAGE] Componente HomePage renderizando!', {
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'SSR',
-    pathname: typeof window !== 'undefined' ? window.location.pathname : 'SSR'
-  })
+
   
   const { isAuthenticated, loading: authLoading, login } = useAuth();
   const [mounted, setMounted] = useState(false)
@@ -57,6 +54,7 @@ export default function HomePage() {
   // const [pendingDisqualifyAnswer, setPendingDisqualifyAnswer] = useState<string | null>(null)
   const [selectedGame, setSelectedGame] = useState<'freefire' | 'deltaforce' | 'haikyu'>('freefire')
   const [showSummaryDetails, setShowSummaryDetails] = useState(false)
+  const [showWelcomeGif, setShowWelcomeGif] = useState(true)
   
   // Perguntas do Quiz Arena de Fogo
   const quizQuestions = [
@@ -168,6 +166,7 @@ export default function HomePage() {
       rechargeValues: ["100", "310", "520", "2.180", "5.600", "15.600"],
       promotionalValues: ["2.180", "5.600", "15.600"],
       specialOffers: [
+        { id: 'firepower', name: 'Poder do Fogo (3 unidades Restantes)', image: '/images/firepower.png', description: 'Personagem "Poder do Fogo" - (3 unidades Restantes)' },
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
         { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Ganhe todos os privilégios e recompensas do Booyah Pass Premium + recompensas exclusivas + 50 níveis do Booyah Pass instantaneamente + 5.600 diamantes de bônus!' },
@@ -217,6 +216,19 @@ export default function HomePage() {
     console.log('✅ [MOUNT] Setando mounted = true')
     setMounted(true)
   }, [])
+
+  // Bloquear scroll quando modal de boas-vindas estiver aberto
+  useEffect(() => {
+    if (showWelcomeGif) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [showWelcomeGif])
 
   // Controlar exibição do quiz (SEM SUBDOMAIN - tudo no mesmo domínio)
   useEffect(() => {
@@ -321,7 +333,6 @@ export default function HomePage() {
               }
             }
           } catch (error) {
-            console.error('[HomePage] Erro ao carregar dados do usuário:', error)
           }
         }
         
@@ -587,6 +598,7 @@ export default function HomePage() {
   const getSpecialOfferPrice = (offer: string): number => {
     const priceMap: { [key: string]: number } = {
       // Free Fire
+      "Poder do Fogo (3 unidades Restantes)": 39.84,
       "Assinatura Semanal": 14.99,
       "Assinatura Mensal": 44.99,
       "Passe Booyah Premium Plus": 56.32,
@@ -919,7 +931,6 @@ export default function HomePage() {
   }
 
   // Evitar problemas de hidratação - não renderizar até estar montado
-  console.log('🔍 [MOUNTED CHECK]', { mounted })
   if (!mounted) {
     console.log('⏳ [MOUNTED] Aguardando montagem...')
     return null
@@ -1816,13 +1827,17 @@ export default function HomePage() {
                         data-ai-hint="game offer"
                         loading="lazy"
                         decoding="async"
-                        className="pointer-events-none h-full w-full object-cover rounded-sm"
+                        className={`pointer-events-none h-full w-full rounded-sm ${
+                          offer.image.includes('firepower')
+                            ? 'object-contain scale-75'
+                            : 'object-cover'
+                        }`}
                         sizes="(max-width: 768px) 50vw, 25vw"
                         src={offer.image}
                       />
                     </div>
-                    {/* Badge Hot - para Passe de Nível, Assinatura Mensal e Passe Booyah Premium Plus */}
-                    {(offer.name === 'Passe de Nível' || offer.name === 'Assinatura Mensal' || offer.name === 'Passe Booyah Premium Plus') && (
+                    {/* Badge Hot - para Passe de Nível, Assinatura Mensal, Passe Booyah Premium Plus e Poder do Fogo */}
+                    {(offer.name === 'Passe de Nível' || offer.name === 'Assinatura Mensal' || offer.name === 'Passe Booyah Premium Plus' || offer.name.includes('Poder do Fogo')) && (
                       <div className="absolute top-2 right-2 bg-primary-red text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded">
                         Hot
                       </div>
@@ -1830,9 +1845,21 @@ export default function HomePage() {
                   </div>
                   <div className="flex flex-col items-center justify-center gap-1 px-1.5 pb-1">
                     <div className="flex items-center justify-center gap-1">
-                      <div className="text-center text-sm sm:text-base leading-[20px] font-medium text-white line-clamp-2">
-                        {offer.name}
-                      </div>
+                      {/* Tratamento especial para Poder do Fogo */}
+                      {offer.name.includes('Poder do Fogo') ? (
+                        <div className="text-center">
+                          <div className="text-sm sm:text-base leading-[20px] font-medium text-white">
+                            Poder do Fogo
+                          </div>
+                          <div className="text-[10px] text-white/60 mt-0.5">
+                            (3 unidades Restantes)
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center text-sm sm:text-base leading-[20px] font-medium text-white line-clamp-2">
+                          {offer.name}
+                        </div>
+                      )}
                       {(selectedGame === 'haikyu' || selectedGame === 'freefire' || selectedGame === 'deltaforce') && offer.description && (
                         <button
                           onClick={(e) => {
@@ -1876,15 +1903,36 @@ export default function HomePage() {
         {showOfferInfoModal && selectedOfferInfo && (
           <div className="fixed inset-0 bg-black/50 z-[70] flex items-center justify-center p-4" onClick={() => setShowOfferInfoModal(false)}>
             <div className="relative flex h-full w-full items-center justify-center" onClick={(e) => e.stopPropagation()}>
-              <div className="flex w-80 flex-col items-center justify-center rounded-lg bg-white p-6 text-center">
+              <div className="flex w-80 flex-col items-center justify-center rounded-lg bg-white p-6 text-center relative">
+                {/* Tag HOT - apenas para firepower */}
+                {selectedOfferInfo.image.includes('firepower') && (
+                  <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                    HOT
+                  </div>
+                )}
+                
                 <div className="mb-5 flex w-full items-center justify-center overflow-hidden rounded-[4px]">
                   <img 
-                    className="pointer-events-none h-full w-full object-cover" 
+                    className={`pointer-events-none ${
+                      selectedOfferInfo.image.includes('firepower') 
+                        ? 'h-48 w-auto object-contain scale-75' 
+                        : 'h-full w-full object-cover'
+                    }`}
                     src={selectedOfferInfo.image} 
                     alt={selectedOfferInfo.name}
                   />
                 </div>
-                <div className="mb-3 text-base font-bold text-gray-800">{selectedOfferInfo.name}</div>
+                
+                {/* Título com tratamento especial para firepower */}
+                {selectedOfferInfo.image.includes('firepower') ? (
+                  <div className="mb-3">
+                    <div className="text-base font-bold text-gray-800">Poder do Fogo</div>
+                    <div className="text-[10px] text-gray-500 mt-1">(3 unidades Restantes)</div>
+                  </div>
+                ) : (
+                  <div className="mb-3 text-base font-bold text-gray-800">{selectedOfferInfo.name}</div>
+                )}
+                
                 <div className="text-sm leading-[22px] text-gray-600">{selectedOfferInfo.description}</div>
                 <button 
                   className="mt-5 w-full inline-flex items-center justify-center gap-1.5 rounded-md border py-1 text-center leading-none transition-colors border-red-500 bg-red-500 text-white hover:bg-red-600 hover:border-red-600 px-5 text-sm font-bold h-10"
@@ -2674,6 +2722,41 @@ export default function HomePage() {
                   Continuar e Fechar
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Boas-Vindas com GIF */}
+        {showWelcomeGif && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="relative bg-[#1B1B25] rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[#3C3E65]">
+              {/* Título */}
+              <h2 className="text-2xl font-bold text-white text-center mb-2">
+                Domine o poder do Dragão!
+              </h2>
+              <p className="text-red-500 text-center mb-4 text-xs font-semibold">
+                Oferta diária, limitada somente a 3 unidades!
+              </p>
+              <p className="text-white/80 text-center mb-4">
+                Adquira já!
+              </p>
+              
+              {/* GIF */}
+              <div className="flex justify-center mb-6">
+                <img 
+                  src="/images/giftFogo.gif" 
+                  alt="Dragão de Fogo" 
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
+              
+              {/* Botão Fechar */}
+              <button
+                onClick={() => setShowWelcomeGif(false)}
+                className="w-full h-12 text-lg font-bold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Fechar
+              </button>
             </div>
           </div>
         )}

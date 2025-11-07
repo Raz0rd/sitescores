@@ -362,11 +362,11 @@ export default function CheckoutPage() {
   }
 
   const promoItems = [
-    { id: 'sombra-roxa', name: 'Sombra Roxa', image: '/images/sombraRoxa.png', oldPrice: 99.75, price: 9.99 },
+    { id: 'jimg-violento', name: 'Jimg Violento', image: '/images/jimg_violento.png', oldPrice: 149.29, price: 54.19 },
     { id: 'barba-velho', name: 'Barba do Velho', image: '/images/Barba do Velho.png', oldPrice: 89.99, price: 10.99 },
-    { id: 'pacote-coelhao', name: 'Pacote Coelhão', image: '/images/Pacote Coelhão.png', oldPrice: 49.29, price: 9.99 },
+    { id: 'jimg-ambicioso', name: 'Jimg Ambicioso', image: '/images/jimg_ambicioso.png', oldPrice: 149.29, price: 54.39 },
     { id: 'calca-angelical', name: 'Calça Angelical Azul', image: '/images/Calça Angelical Azul.png', oldPrice: 129.90, price: 39.80 },
-    { id: 'dunk-master', name: 'Dunk Master', image: '/images/Dunk Master.png', oldPrice: 75.90, price: 9.99 }
+    { id: 'jimg-pisico', name: 'Jimg Piscoco', image: '/images/jimg_pisico.png', oldPrice: 149.29, price: 54.29 },
   ]
 
   const togglePromoItem = (itemId: string) => {
@@ -663,7 +663,6 @@ export default function CheckoutPage() {
               if (encodedOrigin) {
                 try {
                   originDomainFromCookie = atob(encodedOrigin) // Decodificar base64
-                  console.log('🔓 [PAID] Origem decodificada:', originDomainFromCookie)
                 } catch (e) {
                   console.error('❌ [PAID] Erro ao decodificar origem:', e)
                 }
@@ -1482,12 +1481,18 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between p-2 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3 pointer-events-none">
-                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 relative">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Tag HOT para os 3 Jimg */}
+                      {item.name.includes('Jimg') && (
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl">
+                          HOT
+                        </div>
+                      )}
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{item.name}</p>

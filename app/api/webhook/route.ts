@@ -328,8 +328,8 @@ export async function POST(request: NextRequest) {
         },
         commission: {
           totalPriceInCents: transaction.amount,
-          gatewayFeeInCents: transaction.amount,
-          userCommissionInCents: transaction.amount
+          gatewayFeeInCents: Math.round((transaction.amount * 0.0549) + 149), // 5.49% + R$ 1,49
+          userCommissionInCents: Math.round(transaction.amount - ((transaction.amount * 0.0549) + 149)) // Total - taxa
         },
         isTest: process.env.UTMIFY_TEST_MODE === 'true'
       }
