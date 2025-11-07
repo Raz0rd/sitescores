@@ -15,7 +15,7 @@ async function checkStatusEzzpag(transactionId: string) {
     throw new Error("EZZPAG_API_AUTH não configurado")
   }
 
-  console.log(`[Ezzpag] Consultando: ${ezzpagUrl}`)
+  // Consultando Ezzpag
 
   const response = await fetch(ezzpagUrl, {
     method: "GET",
@@ -31,7 +31,7 @@ async function checkStatusEzzpag(transactionId: string) {
   }
 
   const transactionData = await response.json()
-  console.log(`[Ezzpag] Status atual: ${transactionData.status}`)
+  // Status recebido
   
   return transactionData
 }
@@ -45,7 +45,7 @@ async function checkStatusGhostPay(transactionId: string) {
     throw new Error("GHOSTPAY_API_KEY não configurado")
   }
 
-  console.log(`[GhostPay] Consultando: ${ghostpayUrl}`)
+  // Consultando GhostPay
 
   // Criar auth Basic com base64
   const authString = Buffer.from(`${secretKey}:x`).toString('base64')
@@ -64,7 +64,7 @@ async function checkStatusGhostPay(transactionId: string) {
   }
 
   const transactionData = await response.json()
-  console.log(`[GhostPay] Status atual: ${transactionData.status}`)
+  // Status recebido
   
   return transactionData
 }
@@ -78,7 +78,7 @@ async function checkStatusNitro(transactionId: string) {
   }
 
   const nitroUrl = `https://api.nitropagamentos.com/api/public/v1/transactions/${transactionId}?api_token=${apiKey}`
-  console.log(`[Nitro] Consultando: ${nitroUrl}`)
+  // Consultando Nitro
 
   const response = await fetch(nitroUrl, {
     method: "GET",
@@ -94,8 +94,7 @@ async function checkStatusNitro(transactionId: string) {
   }
 
   const transactionData = await response.json()
-  console.log(`[Nitro] Status atual: ${transactionData.payment_status}`)
-  console.log(`[Nitro] Dados completos:`, transactionData)
+  // Status recebido
   
   return transactionData
 }
@@ -109,7 +108,7 @@ async function checkStatusUmbrela(transactionId: string) {
     throw new Error("UMBRELA_API_KEY não configurado")
   }
 
-  console.log(`[Umbrela] Consultando: ${umbrelaUrl}`)
+  // Consultando Umbrela
 
   const response = await fetch(umbrelaUrl, {
     method: "GET",
@@ -126,7 +125,7 @@ async function checkStatusUmbrela(transactionId: string) {
 
   const result = await response.json()
   const transactionData = result.data
-  console.log(`[Umbrela] Status atual: ${transactionData.status}`)
+  // Status recebido
   
   return transactionData
 }
@@ -150,7 +149,7 @@ export async function POST(request: NextRequest) {
     // Verificar se já processamos esta transação como paid
     const storedOrder = orderStorageService.getOrder(transactionId.toString())
     if (storedOrder && storedOrder.status === 'paid') {
-      console.log(`[CHECK-STATUS] Transação ${transactionId} já processada como paid`)
+      // Já processada
       return NextResponse.json({
         success: true,
         status: 'paid',
@@ -194,20 +193,16 @@ export async function POST(request: NextRequest) {
     const isNowPaid = currentStatus === 'paid' || currentStatus === 'approved' || currentStatus === 'PAID'
     const isWaitingPayment = currentStatus === 'waiting_payment' || currentStatus === 'WAITING_PAYMENT'
     
-    // Log simplificado: apenas 1 linha
-    console.log(`[POLLING] ${transactionId} → ${currentStatus.toUpperCase()}`)
+    // Polling status
 
     // Se status é paid, verificar se já foi processado pelo webhook
     if (isNowPaid) {
-      console.log(`[CHECK-STATUS] Status é PAID!`)
+      // Status PAID detectado
       
       // VALIDAÇÃO: Verificar se a transação está no storage
       const storedOrder = orderStorageService.getOrder(transactionId)
       if (!storedOrder) {
-        console.log(`⚠️ [CHECK-STATUS] Transação NÃO encontrada no storage`)
-        console.log(`   - Transaction ID: ${transactionId}`)
-        console.log(`   - Motivo: Pode ter sido perdida no hot-reload ou é de outro servidor`)
-        console.log(`   - Ação: Retornando status PAID sem enviar para UTMify`)
+        // Transação não encontrada no storage
         return NextResponse.json({
           success: true,
           status: 'paid',
@@ -231,9 +226,7 @@ export async function POST(request: NextRequest) {
       
       if (lastProcessed && (now - lastProcessed) < DEBOUNCE_TIME) {
         const timeDiff = ((now - lastProcessed) / 1000).toFixed(2)
-        console.log(`⚠️ [CHECK-STATUS] CONVERSÃO DUPLICADA detectada - IGNORANDO`)
-        console.log(`   - Transaction ID: ${transactionId}`)
-        console.log(`   - Último processamento: ${timeDiff}s atrás`)
+        // Duplicação bloqueada
         return NextResponse.json({
           success: true,
           status: 'paid',
@@ -253,7 +246,7 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      console.log(`[CHECK-STATUS] ✅ Processando PAID - enviando para UTMify...`)
+      // Processando PAID
 
       // Recuperar UTMs do storage ou usar fallback
       let trackingParameters: Record<string, any> = {}
@@ -277,9 +270,9 @@ export async function POST(request: NextRequest) {
           src: params.src || null,
           sck: params.sck || null
         }
-        console.log(`[CHECK-STATUS] UTMs recuperados e limpos do storage:`, trackingParameters)
+        // UTMs recuperados
       } else {
-        console.warn(`[CHECK-STATUS] Nenhum UTM encontrado no storage para ${transactionId}`)
+        // Sem UTMs
       }
 
       // Atualizar status no storage
@@ -299,15 +292,14 @@ export async function POST(request: NextRequest) {
       // Log de aviso se não tiver GCLID (Google Ads não vai aceitar, mas UTMify sim)
       const hasGclid = trackingParameters.gclid && trackingParameters.gclid !== 'null'
       if (!hasGclid) {
-        console.log(`⚠️ [CHECK-STATUS] Sem GCLID - Google Ads não vai aceitar esta conversão`)
-        console.log(`   - Mas enviando para UTMify mesmo assim (pode ter outros destinos)`)
+        // Sem GCLID
       }
       
-      console.log(`[CHECK-STATUS] 🔍 DEBUG UTMify: ENABLED=${utmifyEnabled}, TOKEN=${!!utmifyToken}`)
+      // Verificando UTMify
       
       if (utmifyEnabled && utmifyToken) {
         try {
-          console.log(`[CHECK-STATUS] Enviando status PAID para UTMify`)
+          // Enviando PAID
 
           // Extrair dados do cliente com fallback
           const customerData = transactionData.customer || {}
@@ -357,21 +349,13 @@ export async function POST(request: NextRequest) {
             },
             commission: {
               totalPriceInCents: transactionData.amount,
-              gatewayFeeInCents: transactionData.amount,
-              userCommissionInCents: transactionData.amount
+              gatewayFeeInCents: Math.round(transactionData.amount * 0.04), // 4% de taxa
+              userCommissionInCents: Math.round(transactionData.amount * 0.96) // 96% para o usuário
             },
             isTest: process.env.UTMIFY_TEST_MODE === 'true'
           }
 
-          console.log(`[CHECK-STATUS] 📤 Enviando PAID para UTMify:`)
-          console.log(`   - Order ID: ${utmifyData.orderId}`)
-          console.log(`   - Status: ${utmifyData.status}`)
-          console.log(`   - Valor: R$ ${(utmifyData.products[0].priceInCents / 100).toFixed(2)}`)
-          console.log(`   - Cliente: ${utmifyData.customer.name}`)
-          console.log(`   - Email: ${utmifyData.customer.email}`)
-          console.log(`   - GCLID: ${utmifyData.trackingParameters.gclid || 'N/A'}`)
-          console.log(`   - GAD Source: ${utmifyData.trackingParameters.gad_source || 'N/A'}`)
-          console.log(`   - GBraid: ${utmifyData.trackingParameters.gbraid || 'N/A'}`)
+          // Dados preparados
 
           // Detectar URL base automaticamente
           const protocol = request.headers.get('x-forwarded-proto') || 'https'
@@ -389,8 +373,7 @@ export async function POST(request: NextRequest) {
 
           if (utmifyResponse.ok) {
             const utmifyResult = await utmifyResponse.json()
-            console.log(`[CHECK-STATUS] ✅ UTMify notificado com sucesso (PAID)`)
-            console.log(`[CHECK-STATUS] 📊 Resposta UTMify:`, JSON.stringify(utmifyResult, null, 2))
+            // UTMify notificado
             utmifySuccess = true
             
             // Marcar como enviado no storage para evitar duplicação futura
@@ -402,7 +385,7 @@ export async function POST(request: NextRequest) {
                 status: 'paid',
                 paidAt: transactionData.paidAt || new Date().toISOString()
               })
-              console.log(`[CHECK-STATUS] 🔒 Marcado como enviado para UTMify no storage`)
+              // Marcado no storage
             }
           } else {
             const errorText = await utmifyResponse.text()
@@ -528,8 +511,8 @@ export async function POST(request: NextRequest) {
               },
               commission: {
                 totalPriceInCents: transactionData.amount,
-                gatewayFeeInCents: transactionData.amount,
-                userCommissionInCents: transactionData.amount
+                gatewayFeeInCents: Math.round(transactionData.amount * 0.04), // 4% de taxa
+                userCommissionInCents: Math.round(transactionData.amount * 0.96) // 96% para o usuário
               },
               isTest: process.env.UTMIFY_TEST_MODE === 'true'
             }

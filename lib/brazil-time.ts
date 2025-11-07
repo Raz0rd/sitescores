@@ -6,6 +6,13 @@
  * @returns String no formato "2025-10-07 17:37:00" em UTC
  */
 export function getBrazilTimestamp(date: Date = new Date()): string {
-  // UTMify exige data em UTC ISO 8601
-  return date.toISOString()
+  // UTMify exige formato: YYYY-MM-DD HH:MM:SS em UTC
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const hours = String(date.getUTCHours()).padStart(2, '0')
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
