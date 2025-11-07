@@ -2,12 +2,30 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import UserVerificationWithTest from '../../components/UserVerificationWithTest'
 
 export default function SucessoPage() {
   const searchParams = useSearchParams()
   const [conversionFired, setConversionFired] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
+      cookie.trim().startsWith('user_verified=')
+    )
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+  }, [])
 
   useEffect(() => {
+    // Só executar se estiver verificado
+    if (!isVerified) return
+    
     // Pegar parâmetros da URL
     const transactionId = searchParams.get('transactionId')
     const amount = searchParams.get('amount')
@@ -59,7 +77,18 @@ export default function SucessoPage() {
     }
 
     setConversionFired(true)
-  }, [searchParams, conversionFired])
+  }, [searchParams, conversionFired, isVerified])
+
+  // Renderizar tela de verificação se não estiver verificado
+  if (!isVerified) {
+    return (
+      <UserVerificationWithTest 
+        onVerificationComplete={() => {
+          setIsVerified(true)
+        }} 
+      />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">

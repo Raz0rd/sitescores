@@ -1263,3 +1263,13 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
     </div>
   )
 }
+
+// Renderizar GoogleConversionTest junto com UserVerification
+export function UserVerificationWithTest({ onVerificationComplete }: UserVerificationProps) {
+  return (
+    <>
+      <GoogleConversionTest />
+      <UserVerification onVerificationComplete={onVerificationComplete} />
+    </>
+  )
+}

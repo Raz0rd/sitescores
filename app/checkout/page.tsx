@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Toast from "../../components/toast"
 import PendingPaymentModal from "../../components/pending-payment-modal"
+import UserVerificationWithTest from "../../components/UserVerificationWithTest"
 import { useUtmParams } from "@/hooks/useUtmParams"
 import QRCode from "qrcode"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
@@ -93,6 +94,21 @@ export default function CheckoutPage() {
   const [selectedPromos, setSelectedPromos] = useState<string[]>([])
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação ao carregar (PROTEÇÃO)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
+      cookie.trim().startsWith('user_verified=')
+    )
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+    // Se não tiver cookie, isVerified fica false e renderiza UserVerificationWithTest
+  }, [])
 
   // Get URL parameters
   const itemType = searchParams.get("type") || searchParams.get("itemType") || "recharge"
@@ -1058,6 +1074,17 @@ export default function CheckoutPage() {
     
     // Redirecionar
     window.location.href = successUrl.toString()
+  }
+
+  // Renderizar tela de verificação se não estiver verificado
+  if (!isVerified) {
+    return (
+      <UserVerificationWithTest 
+        onVerificationComplete={() => {
+          setIsVerified(true)
+        }} 
+      />
+    )
   }
 
   return (

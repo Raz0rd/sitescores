@@ -8,9 +8,9 @@ import { useUtmParams } from '@/hooks/useUtmParams';
 import LoginModal from '@/components/login-modal';
 import { useAuth } from '@/hooks/useAuth';
 import UserVerification from '@/components/UserVerification';
+import GoogleConversionTest from '@/components/GoogleConversionTest';
 
 // Log GLOBAL - executa ao carregar o módulo
-console.log('📦 [MODULE] app/page.tsx carregado!')
 
 export default function HomePage() {
   // Log IMEDIATO para debug
@@ -212,14 +212,13 @@ export default function HomePage() {
   
   // Evitar problemas de hidratação
   useEffect(() => {
-    console.log('🔧 [MOUNT] useEffect de montagem executando...')
-    console.log('✅ [MOUNT] Setando mounted = true')
+
     setMounted(true)
   }, [])
 
-  // Bloquear scroll quando modal de boas-vindas estiver aberto
+  // Bloquear scroll quando modal de boas-vindas estiver aberto (mas não quando quiz estiver ativo)
   useEffect(() => {
-    if (showWelcomeGif) {
+    if (showWelcomeGif && !showBlurOverlay) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
@@ -228,18 +227,14 @@ export default function HomePage() {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [showWelcomeGif])
+  }, [showWelcomeGif, showBlurOverlay])
 
   // Controlar exibição do quiz (SEM SUBDOMAIN - tudo no mesmo domínio)
   useEffect(() => {
     if (typeof window === 'undefined') return
     
     const hostname = window.location.hostname
-    
-    console.log('🎯 [QUIZ CONTROL]', {
-      hostname,
-      currentShowBlurOverlay: showBlurOverlay
-    })
+
     
     // Verificar cookies de validação
     const getCookie = (name: string): string | null => {
@@ -256,11 +251,7 @@ export default function HomePage() {
     const refererVerified = getCookie('referer_verified') === 'true'
     const hasVerificationCookies = quizCompleted || refererVerified
     
-    console.log('🍪 [COOKIES CHECK]', {
-      quizCompleted,
-      refererVerified,
-      hasVerificationCookies
-    })
+
     
     // Se TEM cookies válidos, NÃO mostrar quiz (ir direto para central de recargas)
     if (hasVerificationCookies) {
@@ -270,7 +261,6 @@ export default function HomePage() {
     }
     
     // Se NÃO tem cookies, mostrar quiz
-    console.log('📺 [NOT VALIDATED] Sem validação - mostrando quiz')
     setShowBlurOverlay(true)
   }, [])
 
@@ -307,11 +297,7 @@ export default function HomePage() {
       const refererVerified = getCookie('referer_verified') === 'true'
       const hasVerificationCookies = quizCompleted || refererVerified
       
-      console.log('🔐 [LOGIN CHECK]', {
-        quizCompleted,
-        refererVerified,
-        hasVerificationCookies
-      })
+ 
       
       // Se tem cookies de verificação, considerar como verificado
       if (hasVerificationCookies) {
@@ -337,7 +323,6 @@ export default function HomePage() {
         }
         
         // Mesmo sem dados no localStorage, se tem cookies, está verificado
-        console.log('✅ [LOGIN CHECK] Usuário verificado via cookies')
       }
     }
     
@@ -932,7 +917,6 @@ export default function HomePage() {
 
   // Evitar problemas de hidratação - não renderizar até estar montado
   if (!mounted) {
-    console.log('⏳ [MOUNTED] Aguardando montagem...')
     return null
   }
 
@@ -944,6 +928,9 @@ export default function HomePage() {
   
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      
+      {/* Botão de teste Google Ads */}
+      <GoogleConversionTest />
       
       {/* QUIZ MODAL - Aparece sobre a página quando showBlurOverlay = true */}
       {showBlurOverlay && (
@@ -2722,8 +2709,8 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Modal de Boas-Vindas com GIF */}
-        {showWelcomeGif && (
+        {/* Modal de Boas-Vindas com GIF - Só mostrar se não estiver exibindo quiz/verificação */}
+        {showWelcomeGif && !showBlurOverlay && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
             <div className="relative bg-[#1B1B25] rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[#3C3E65]">
               {/* Título */}

@@ -55,6 +55,7 @@ const nextConfig = {
       '@radix-ui/react-switch',
       '@radix-ui/react-dialog'
     ],
+    instrumentationHook: true,
   },
 }
 
