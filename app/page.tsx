@@ -936,15 +936,11 @@ export default function HomePage() {
     return null
   }
 
-  console.log('📺 [RENDER CHECK]', {
-    showBlurOverlay,
-    willShowQuiz: showBlurOverlay
-  })
+
 
   // ============================================
   // SEMPRE RENDERIZAR: Central de recargas (com ou sem quiz)
   // ============================================
-  console.log('🏪 [RENDER] Renderizando CENTRAL DE RECARGAS', { quizVisivel: showBlurOverlay })
   
   return (
     <div className="min-h-screen bg-white flex flex-col">

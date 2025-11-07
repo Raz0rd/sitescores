@@ -352,64 +352,60 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   if (step === 'loading') {
     return (
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #0a0014 0%, #1a0a28 50%, #0a0014 100%)'
+        background: 'linear-gradient(135deg, #0a1f2e 0%, #0a4d5c 50%, #0a1f2e 100%)'
       }}>
-        {/* Efeitos de fundo cyberpunk */}
+        {/* Efeitos de fundo Origami */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Círculos neon */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-pink-600/20 to-cyan-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-cyan-500/20 to-purple-600/10 rounded-full blur-3xl" />
-          {/* Scan lines */}
+          {/* Textura triangular */}
           <div className="absolute inset-0 opacity-5" style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #00f5ff 2px, #00f5ff 4px)',
-            backgroundSize: '100% 4px',
-            animation: 'scan 8s linear infinite'
+            backgroundImage: 'repeating-linear-gradient(45deg, #5a7d7c 0px, #5a7d7c 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #b8c5d0 0px, #b8c5d0 1px, transparent 1px, transparent 20px)',
+            backgroundSize: '40px 40px'
           }} />
         </div>
         
         <div className="flex items-center justify-center min-h-screen p-4 relative z-10">
           <div className="text-center max-w-md w-full">
-            {/* Logo/Ícone cyberpunk */}
-            <div className="relative inline-block mb-4 sm:mb-6 md:mb-8">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-pink-600 to-purple-600 flex items-center justify-center shadow-2xl border-4 border-cyan-400/40" style={{boxShadow: '0 0 30px #ff006e, 0 0 50px #a855f7'}}>
-                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+            {/* Logo/Ícone Origami */}
+            <div className="relative inline-block mb-8">
+              <div className="w-24 h-24 bg-gradient-to-br from-[#0a4d5c] to-[#5a7d7c] flex items-center justify-center shadow-2xl" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}>
+                <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
               </div>
-              {/* Spinner neon ao redor */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 10px #00f5ff)'}}></div>
+              {/* Spinner triangular ao redor */}
+              <div className="absolute inset-0 border-4 border-transparent border-t-[#b8c5d0] animate-spin" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}></div>
             </div>
 
             {/* Mensagem Principal */}
-            <div className="bg-purple-950/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-pink-500/50 mb-4 sm:mb-5 md:mb-6" style={{boxShadow: '0 0 20px rgba(255,0,110,0.3)'}}>
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 text-white" style={{ textShadow: '0 0 10px #00f5ff, 0 0 20px #ff006e' }}>
-                ⚡ Verificação Concluída!
+            <div className="bg-[#0a4d5c]/60 backdrop-blur-sm rounded-2xl p-6 border border-[#5a7d7c]/50 mb-6">
+              <h2 className="text-2xl font-bold mb-3 text-white">
+                ▲ Verificação Concluída!
               </h2>
-              <p className="text-cyan-200 text-sm sm:text-base mb-2">
+              <p className="text-[#b8c5d0] text-base mb-2">
                 Seu desconto foi ativado com sucesso
               </p>
-              <div className="flex items-center justify-center gap-2 text-pink-300 font-bold text-sm sm:text-base">
-                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-pink-300 border-t-transparent"></div>
+              <div className="flex items-center justify-center gap-2 text-[#5a7d7c] font-bold text-base">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#5a7d7c] border-t-transparent"></div>
                 <span>Redirecionando...</span>
               </div>
             </div>
 
             {/* Benefícios */}
-            <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-              <div className="flex items-center justify-center gap-2 text-cyan-400">
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-center gap-2 text-[#b8c5d0]">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Desconto de 70% ativado</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-pink-400">
+              <div className="flex items-center justify-center gap-2 text-[#5a7d7c]">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Conta verificada</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-purple-400">
+              <div className="flex items-center justify-center gap-2 text-[#b8c5d0]">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
@@ -424,109 +420,70 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #0a0014 0%, #1a0a28 50%, #0a0014 100%)'
+      background: 'linear-gradient(135deg, #0a1f2e 0%, #0a4d5c 50%, #0a1f2e 100%)'
     }}>
-      {/* Efeitos de fundo cyberpunk */}
+      {/* Efeitos de fundo Origami */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Padrão de circuitos */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, #ff006e 0px, #ff006e 1px, transparent 1px, transparent 15px), repeating-linear-gradient(90deg, #00f5ff 0px, #00f5ff 1px, transparent 1px, transparent 15px)',
-          backgroundSize: '30px 30px'
-        }} />
-        {/* Scan lines */}
+        {/* Textura triangular sutil */}
         <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #00f5ff 2px, #00f5ff 4px)',
-          backgroundSize: '100% 4px',
-          animation: 'scan 8s linear infinite'
+          backgroundImage: 'repeating-linear-gradient(45deg, #5a7d7c 0px, #5a7d7c 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #b8c5d0 0px, #b8c5d0 1px, transparent 1px, transparent 20px)',
+          backgroundSize: '40px 40px'
         }} />
         
-        {/* Circuito cyberpunk canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-40 h-40 opacity-60">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-pink-500" style={{filter: 'drop-shadow(0 0 10px #ff006e)'}}>
-            <path d="M0,20 L20,20 L20,40 L40,40 L40,20 L60,20" stroke="currentColor" strokeWidth="2" fill="none" className="animate-pulse"/>
-            <circle cx="20" cy="20" r="4" fill="currentColor"/>
-            <circle cx="40" cy="40" r="4" fill="currentColor"/>
-            <path d="M10,10 L30,10 L30,30 L10,30 Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            <path d="M15,0 L15,50 M0,25 L50,25" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+        {/* Triângulo Origami canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-32 h-32 opacity-50 animate-triangle-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 60,0 0,60" fill="#0a4d5c" opacity="0.6"/>
+            <polygon points="0,0 40,0 0,40" fill="#5a7d7c" opacity="0.4"/>
+            <polygon points="10,10 50,10 10,50" fill="none" stroke="#b8c5d0" strokeWidth="1" opacity="0.3"/>
           </svg>
         </div>
         
-        {/* Circuito cyberpunk canto superior direito */}
-        <div className="absolute top-0 right-0 w-40 h-40 opacity-60">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-cyan-400" style={{filter: 'drop-shadow(0 0 10px #00f5ff)'}}>
-            <path d="M100,30 L80,30 L80,50 L60,50 L60,30 L40,30" stroke="currentColor" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '0.5s'}}/>
-            <circle cx="80" cy="30" r="4" fill="currentColor"/>
-            <circle cx="60" cy="50" r="4" fill="currentColor"/>
-            <polygon points="70,10 90,10 90,30 70,30" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            <path d="M85,0 L85,60 M50,35 L100,35" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+        {/* Triângulo Origami canto superior direito */}
+        <div className="absolute top-0 right-0 w-32 h-32 opacity-50 animate-triangle-rotate" style={{animationDelay: '1s'}}>
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,0 40,0 100,60" fill="#5a7d7c" opacity="0.6"/>
+            <polygon points="100,0 60,0 100,40" fill="#b8c5d0" opacity="0.3"/>
+            <polygon points="90,10 50,10 90,50" fill="none" stroke="#0a4d5c" strokeWidth="1" opacity="0.4"/>
           </svg>
         </div>
         
-        {/* Circuito cyberpunk canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-40 h-40 opacity-60">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-purple-500" style={{filter: 'drop-shadow(0 0 10px #a855f7)'}}>
-            <path d="M0,80 L25,80 L25,60 L45,60 L45,80 L70,80" stroke="currentColor" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '1s'}}/>
-            <circle cx="25" cy="80" r="4" fill="currentColor"/>
-            <circle cx="45" cy="60" r="4" fill="currentColor"/>
-            <rect x="10" y="70" width="20" height="20" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            <path d="M20,50 L20,100 M0,75 L50,75" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+        {/* Triângulo Origami canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-32 h-32 opacity-50 animate-subtle-shift">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,100 60,100 0,40" fill="#0a4d5c" opacity="0.6"/>
+            <polygon points="0,100 40,100 0,60" fill="#5a7d7c" opacity="0.4"/>
+            <polygon points="10,90 50,90 10,50" fill="none" stroke="#b8c5d0" strokeWidth="1" opacity="0.3"/>
           </svg>
         </div>
         
-        {/* Circuito cyberpunk canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-40 h-40 opacity-60">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-pink-400" style={{filter: 'drop-shadow(0 0 10px #f472b6)'}}>
-            <path d="M100,70 L75,70 L75,90 L55,90 L55,70 L30,70" stroke="currentColor" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '1.5s'}}/>
-            <circle cx="75" cy="70" r="4" fill="currentColor"/>
-            <circle cx="55" cy="90" r="4" fill="currentColor"/>
-            <polygon points="65,80 85,80 85,100 65,100" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            <path d="M80,50 L80,100 M50,85 L100,85" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+        {/* Triângulo Origami canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-50 animate-triangle-float" style={{animationDelay: '2s'}}>
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 40,100 100,40" fill="#5a7d7c" opacity="0.6"/>
+            <polygon points="100,100 60,100 100,60" fill="#b8c5d0" opacity="0.3"/>
+            <polygon points="90,90 50,90 90,50" fill="none" stroke="#0a4d5c" strokeWidth="1" opacity="0.4"/>
           </svg>
         </div>
-        
-        {/* Brilhos neon */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-pink-500/20 to-cyan-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-cyan-500/20 to-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}} />
       </div>
 
-      {/* Brilho neon central */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-96 h-96 rounded-full bg-gradient-to-r from-pink-500/10 via-cyan-500/10 to-purple-500/10 animate-pulse-slow"></div>
-      </div>
-
-      <style jsx global>{`
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100%); }
+      <style>{`
+        @keyframes triangleFloat {
+          0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+          50% { transform: translateY(-15px) rotate(5deg); opacity: 0.7; }
         }
-        @keyframes glitch {
-          0%, 100% { transform: translate(0); }
-          20% { transform: translate(-2px, 2px); }
-          40% { transform: translate(-2px, -2px); }
-          60% { transform: translate(2px, 2px); }
-          80% { transform: translate(2px, -2px); }
+        @keyframes triangleRotate {
+          0% { transform: rotateZ(0deg); opacity: 0.3; }
+          50% { transform: rotateZ(180deg); opacity: 0.6; }
+          100% { transform: rotateZ(360deg); opacity: 0.3; }
         }
-        @keyframes neon-pulse {
-          0%, 100% { 
-            box-shadow: 0 0 10px #ff006e, 0 0 20px #ff006e, 0 0 30px #ff006e;
-            border-color: #ff006e;
-          }
-          50% { 
-            box-shadow: 0 0 20px #00f5ff, 0 0 30px #00f5ff, 0 0 40px #00f5ff;
-            border-color: #00f5ff;
-          }
-        }
-        @keyframes pulse-slow {
-          0%, 100% { transform: scale(1); opacity: 0.3; }
-          50% { transform: scale(1.2); opacity: 0.5; }
+        @keyframes subtleShift {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(10px); }
         }
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes spin-reverse {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
         }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
@@ -535,25 +492,17 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
         .animate-shimmer {
           animation: shimmer 3s ease-in-out infinite;
         }
-        .animate-pulse-slow {
-          animation: pulse-slow 4s ease-in-out infinite;
-        }
         .animate-fade-in {
           animation: fade-in 0.4s ease-out;
         }
-        .animate-spin-reverse {
-          animation: spin-reverse 1s linear infinite;
+        .animate-triangle-float {
+          animation: triangleFloat 8s ease-in-out infinite;
         }
-        .animate-glow {
-          animation: glow-pulse 2s ease-in-out infinite;
+        .animate-triangle-rotate {
+          animation: triangleRotate 12s linear infinite;
         }
-        .cursor-fire,
-        .cursor-fire * {
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>') 4 4, auto !important;
-        }
-        .cursor-fire button:hover,
-        .cursor-fire a:hover {
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23FF3C00" stroke="%23FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>') 4 4, pointer !important;
+        .animate-subtle-shift {
+          animation: subtleShift 6s ease-in-out infinite;
         }
       `}</style>
 
@@ -562,100 +511,100 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           
           {/* Tela Inicial */}
           {step === 'initial' && (
-            <div className="bg-gradient-to-br from-black/95 via-purple-950/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border border-pink-500/60 overflow-hidden backdrop-blur-xl" style={{animation: 'neon-pulse 3s ease-in-out infinite'}}>
-              {/* Header cyberpunk */}
-              <div className="relative h-14 sm:h-16 md:h-20 bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-black/40" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,245,255,0.3),transparent_50%)] animate-pulse"></div>
-                {/* Hexágonos tech no header */}
-                <div className="absolute top-2 left-2 w-3 h-3 border border-cyan-400" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}></div>
-                <div className="absolute top-2 right-2 w-3 h-3 border border-pink-400" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}></div>
+            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl sm:rounded-3xl shadow-2xl border border-[#5a7d7c]/60 overflow-hidden backdrop-blur-xl">
+              {/* Header Origami */}
+              <div className="relative h-20 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5a7d7c]/10 to-black/40" />
+                {/* Triângulos decorativos no header */}
+                <div className="absolute top-2 left-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
+                  <div className="w-full h-full bg-[#b8c5d0] opacity-60"></div>
+                </div>
+                <div className="absolute top-2 right-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
+                  <div className="w-full h-full bg-[#5a7d7c] opacity-60"></div>
+                </div>
                 <div className="absolute inset-0 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
                 </div>
-                <h1 className="relative text-base sm:text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2" style={{textShadow: '0 0 10px #00f5ff, 0 0 20px #ff006e'}}>
-                  <span className="text-xl sm:text-2xl md:text-3xl">⚡</span>
+                <h1 className="relative text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
+                  <span className="text-2xl md:text-3xl">▲</span>
                   <span>Bem-vindo!</span>
-                  <span className="text-xl sm:text-2xl md:text-3xl">⚡</span>
+                  <span className="text-2xl md:text-3xl">▼</span>
                 </h1>
               </div>
 
               {/* Conteúdo compacto */}
-              <div className="p-3 sm:p-4 md:p-5 text-center">
-                {/* Ícone cyberpunk com hexágonos */}
-                <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4">
-                  {/* Hexágono externo girando */}
-                  <div className="absolute inset-0 animate-spin" style={{animationDuration: '4s'}}>
-                    <svg viewBox="0 0 100 100" className="w-full h-full text-pink-500" style={{filter: 'drop-shadow(0 0 5px #ff006e)'}}>
-                      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="currentColor" strokeWidth="3" fill="none"/>
-                      <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5"/>
+              <div className="p-5 text-center">
+                {/* Ícone Origami com triângulos */}
+                <div className="relative w-16 h-16 mx-auto mb-4">
+                  {/* Triângulo externo */}
+                  <div className="absolute inset-0 animate-triangle-rotate">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <polygon points="50,10 90,90 10,90" stroke="#5a7d7c" strokeWidth="3" fill="none"/>
+                      <polygon points="50,20 80,80 20,80" stroke="#b8c5d0" strokeWidth="2" fill="none" opacity="0.6"/>
                     </svg>
                   </div>
-                  {/* Circuito interno */}
-                  <div className="absolute inset-3 animate-spin-reverse" style={{animationDuration: '3s'}}>
-                    <svg viewBox="0 0 100 100" className="w-full h-full text-cyan-400" style={{filter: 'drop-shadow(0 0 5px #00f5ff)'}}>
-                      <path d="M50,20 L70,35 L70,65 L50,80 L30,65 L30,35 Z" stroke="currentColor" strokeWidth="2" fill="none"/>
-                      <circle cx="50" cy="35" r="3" fill="currentColor"/>
-                      <circle cx="50" cy="65" r="3" fill="currentColor"/>
+                  {/* Triângulo interno */}
+                  <div className="absolute inset-4 animate-triangle-float">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <polygon points="50,20 80,80 20,80" fill="#0a4d5c" opacity="0.6"/>
                     </svg>
                   </div>
-                  {/* Núcleo neon pulsante */}
-                  <div className="absolute inset-6 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 animate-pulse shadow-lg" style={{boxShadow: '0 0 20px #ff006e, 0 0 30px #a855f7'}}></div>
                   {/* Símbolo central */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-2xl animate-bounce" style={{ animationDelay: '0.2s' }}>💠</div>
+                    <div className="text-3xl text-[#b8c5d0]">◆</div>
                   </div>
                 </div>
-                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-cyan-400 to-purple-400 mb-2 sm:mb-3" style={{textShadow: '0 0 20px #ff006e'}}>
+                <h2 className="text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] via-[#b8c5d0] to-[#0a4d5c] mb-3">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-cyan-100 mb-2 sm:mb-3 md:mb-4 leading-relaxed text-xs sm:text-sm">
-                  Valide sua identidade e tenha acesso a descontos especiais e bônus exclusivos!
+                <p className="text-[#b8c5d0] mb-4 leading-relaxed text-sm">
+                  Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
-                <div className="bg-gradient-to-br from-pink-600/20 via-purple-500/15 to-cyan-600/20 border border-pink-500/60 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4 backdrop-blur-md shadow-lg relative overflow-hidden" style={{boxShadow: '0 0 20px rgba(255,0,110,0.3)'}}>
-                  {/* Circuitos decorativos */}
-                  <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-cyan-400/40"></div>
-                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-pink-400/40"></div>
-                  <div className="absolute top-0 left-0 w-2 h-2 bg-cyan-400 rounded-full" style={{boxShadow: '0 0 10px #00f5ff'}}></div>
-                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-pink-400 rounded-full" style={{boxShadow: '0 0 10px #ff006e'}}></div>
-                  <p className="text-pink-300 font-bold text-sm sm:text-base md:text-lg mb-1.5 sm:mb-2 flex items-center justify-center gap-1.5 sm:gap-2 relative z-10" style={{textShadow: '0 0 10px #ff006e'}}>
-                    <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
-                    <span>Recompensa Exclusiva</span>
-                    <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
+                <div className="bg-gradient-to-br from-[#0a4d5c]/30 via-[#5a7d7c]/20 to-[#b8c5d0]/10 border border-[#5a7d7c]/60 rounded-xl p-4 mb-4 backdrop-blur-md shadow-lg relative overflow-hidden">
+                  {/* Triângulos decorativos */}
+                  <div className="absolute top-0 right-0 w-8 h-8" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}}>
+                    <div className="w-full h-full bg-[#5a7d7c] opacity-30"></div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8" style={{clipPath: 'polygon(0 100%, 100% 100%, 0 0)'}}>
+                    <div className="w-full h-full bg-[#b8c5d0] opacity-30"></div>
+                  </div>
+                  <p className="text-[#b8c5d0] font-bold text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
+                    <span className="text-xl md:text-2xl">▲</span>
+                    <span>Benefício Exclusivo</span>
+                    <span className="text-xl md:text-2xl">▼</span>
                   </p>
-                  <p className="text-cyan-50 text-xs sm:text-sm leading-relaxed relative z-10">
-                    Valide sua conta e ganhe <span className="font-bold text-pink-300 text-sm sm:text-base" style={{textShadow: '0 0 10px #ff006e'}}>70% de desconto</span> na sua recarga!
+                  <p className="text-[#b8c5d0]/90 text-sm leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-[#5a7d7c] text-base">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
                 <button
                   onClick={handleInitialCheck}
-                  className="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white font-bold text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-300 shadow-xl hover:scale-[1.03] border border-pink-500/60 hover:border-cyan-400 relative overflow-hidden group mb-2 sm:mb-3"
-                  style={{boxShadow: '0 0 20px #ff006e, 0 0 30px #00f5ff'}}
+                  className="w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold text-base py-3 px-6 rounded-xl transition-all duration-300 shadow-xl hover:scale-[1.03] border border-[#5a7d7c]/60 hover:border-[#b8c5d0] relative overflow-hidden group mb-3"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  <span className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2">
-                    <span className="text-base sm:text-lg md:text-xl">⚡</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="text-lg md:text-xl">▲</span>
                     <span>Começar Agora</span>
-                    <span className="text-base sm:text-lg md:text-xl">💠</span>
+                    <span className="text-lg md:text-xl">◆</span>
                   </span>
                 </button>
 
                 {/* Links de Termos e Políticas */}
-                <div className="mt-2 sm:mt-3 md:mt-4 text-center text-[10px] sm:text-xs">
-                  <p className="mb-2 text-cyan-300">Ao continuar, você concorda com nossos</p>
+                <div className="mt-4 text-center text-xs">
+                  <p className="mb-2 text-[#b8c5d0]">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-pink-300 hover:text-cyan-200 underline transition-colors font-semibold"
+                      className="text-[#5a7d7c] hover:text-[#b8c5d0] underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-purple-500">•</span>
+                    <span className="text-[#5a7d7c]">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-pink-300 hover:text-cyan-200 underline transition-colors font-semibold"
+                      className="text-[#5a7d7c] hover:text-[#b8c5d0] underline transition-colors font-semibold"
                     >
                       Política de Privacidade
                     </button>
@@ -667,68 +616,68 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Termos */}
           {step === 'terms' && (
-            <div className="bg-gradient-to-br from-black/95 via-purple-950/95 to-black/95 rounded-2xl border-2 border-pink-500/50 p-8 shadow-2xl backdrop-blur-xl" style={{boxShadow: '0 0 30px rgba(255,0,110,0.4)'}}>
+            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl border-2 border-[#5a7d7c]/50 p-8 shadow-2xl backdrop-blur-xl">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-cyan-400 to-purple-400" style={{textShadow: '0 0 20px #ff006e'}}>Termos de Uso e Política de Privacidade</h2>
-                <div className="bg-purple-900/40 rounded-lg p-4 max-h-64 overflow-y-auto text-sm text-cyan-100 leading-relaxed border border-pink-500/40">
+                <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] via-[#b8c5d0] to-[#0a4d5c]">Termos de Uso e Política de Privacidade</h2>
+                <div className="bg-[#0a4d5c]/40 rounded-lg p-4 max-h-64 overflow-y-auto text-sm text-[#b8c5d0] leading-relaxed border border-[#5a7d7c]/40">
                   
-                  <div className="bg-pink-900/30 border-l-4 border-pink-500 p-3 mb-4 rounded" style={{boxShadow: '0 0 15px rgba(255,0,110,0.2)'}}>
-                    <p className="text-pink-300 font-semibold">
-                      ⚡ <strong>EXCLUSIVIDADE:</strong> Deseja ganhar seu desconto especial? 
+                  <div className="bg-[#5a7d7c]/20 border-l-4 border-[#5a7d7c] p-3 mb-4 rounded">
+                    <p className="text-[#b8c5d0] font-semibold">
+                      ▲ <strong>EXCLUSIVIDADE:</strong> Deseja receber seu desconto especial? 
                       Aceite os termos e tenha acesso a ofertas exclusivas!
                     </p>
                   </div>
 
-                  <h4 className="font-bold text-pink-300 mb-2" style={{textShadow: '0 0 10px #ff006e'}}>⚡ TERMOS DE USO</h4>
+                  <h4 className="font-bold text-[#b8c5d0] mb-2">▲ TERMOS DE USO</h4>
                   <p className="mb-3">
-                    <strong className="text-pink-300">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
+                    <strong className="text-[#5a7d7c]">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de jogadores ativos são aceitos.
+                    <strong className="text-[#b8c5d0]">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de jogadores ativos são aceitos.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus em diamantes. As ofertas são limitadas e sujeitas a disponibilidade.
+                    <strong className="text-[#5a7d7c]">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
+                    <strong className="text-[#b8c5d0]">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">5. Validade da Oferta:</strong> O desconto de 70% é válido para recargas e não pode ser combinado com outras promoções. Esta oferta está sujeita à disponibilidade e pode ser encerrada a qualquer momento sem aviso prévio.
+                    <strong className="text-[#5a7d7c]">5. Validade da Oferta:</strong> O desconto de 70% é válido para recargas e não pode ser combinado com outras promoções. Esta oferta está sujeita à disponibilidade e pode ser encerrada a qualquer momento sem aviso prévio.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
+                    <strong className="text-[#b8c5d0]">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
+                    <strong className="text-[#5a7d7c]">7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
                   </p>
 
-                  <h4 className="font-bold text-cyan-300 mb-2 mt-4" style={{textShadow: '0 0 10px #00f5ff'}}>💠 POLÍTICA DE PRIVACIDADE</h4>
+                  <h4 className="font-bold text-[#b8c5d0] mb-2 mt-4">◆ POLÍTICA DE PRIVACIDADE</h4>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
+                    <strong className="text-[#b8c5d0]">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">9. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações, oferecer suporte técnico e disponibilizar ofertas personalizadas.
+                    <strong className="text-[#5a7d7c]">9. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
+                    <strong className="text-[#b8c5d0]">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">11. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.
+                    <strong className="text-[#5a7d7c]">11. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-cyan-300">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
+                    <strong className="text-[#b8c5d0]">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
+                    <strong className="text-[#5a7d7c]">13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
                   </p>
                   
-                  <p className="text-xs text-purple-300 mt-4 italic">
+                  <p className="text-xs text-[#5a7d7c] mt-4 italic">
                     Ao participar desta promoção, você concorda com estes termos e condições.
                   </p>
 
-                  <div className="bg-cyan-900/30 border-l-4 border-cyan-500 p-3 mt-4 rounded" style={{boxShadow: '0 0 15px rgba(0,245,255,0.2)'}}>
-                    <p className="text-cyan-300 text-xs">
-                      ⚡ <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
+                  <div className="bg-[#0a4d5c]/30 border-l-4 border-[#b8c5d0] p-3 mt-4 rounded">
+                    <p className="text-[#b8c5d0] text-xs">
+                      ◆ <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
                       Transações rápidas, seguras e com garantia de entrega.
                     </p>
                   </div>
@@ -736,23 +685,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               </div>
 
               <div className="mb-4">
-                <label className="flex items-start text-sm text-cyan-100">
+                <label className="flex items-start text-sm text-[#b8c5d0]">
                   <input
                     type="checkbox"
                     checked={accepted}
                     onChange={(e) => setAccepted(e.target.checked)}
-                    className="mr-3 w-5 h-5 text-pink-500 rounded focus:ring-pink-500 mt-0.5 bg-purple-900 border-pink-400"
+                    className="mr-3 w-5 h-5 text-[#5a7d7c] rounded focus:ring-[#5a7d7c] mt-0.5 bg-[#0a4d5c] border-[#5a7d7c]"
                   />
                   <span>
                     Eu li e aceito os{' '}
-                    <span className="text-pink-400 underline font-bold">
+                    <span className="text-[#5a7d7c] underline font-bold">
                       Termos de Uso
                     </span>
                     {' '}e{' '}
-                    <span className="text-cyan-400 underline font-bold">
+                    <span className="text-[#b8c5d0] underline font-bold">
                       Política de Privacidade
                     </span>, 
-                    e desejo ter acesso às <strong className="text-pink-400">ofertas exclusivas</strong> para usuários verificados
+                    e desejo ter acesso às <strong className="text-[#5a7d7c]">ofertas exclusivas</strong> para usuários verificados
                   </span>
                 </label>
               </div>
@@ -766,7 +715,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep('initial')}
-                  className="flex-1 bg-purple-900/60 hover:bg-purple-800/60 text-cyan-300 font-medium py-3 px-4 rounded-lg transition-all duration-200 border border-pink-500/40 hover:border-pink-400/60"
+                  className="flex-1 bg-[#0a4d5c]/60 hover:bg-[#0a4d5c]/80 text-[#b8c5d0] font-medium py-3 px-4 rounded-lg transition-all duration-200 border border-[#5a7d7c]/40 hover:border-[#5a7d7c]/60"
                 >
                   ← Voltar
                 </button>
@@ -775,12 +724,11 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   disabled={!accepted}
                   className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all duration-300 ${
                     accepted
-                      ? 'bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white shadow-lg hover:scale-105 border border-pink-500/60'
+                      ? 'bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white shadow-lg hover:scale-105 border border-[#5a7d7c]/60'
                       : 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600'
                   }`}
-                  style={accepted ? {boxShadow: '0 0 20px #ff006e, 0 0 30px #00f5ff'} : {}}
                 >
-                  Continuar ⚡
+                  Continuar ▲
                 </button>
               </div>
             </div>
@@ -847,16 +795,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
             <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-              <div className="bg-gradient-to-br from-black/95 via-purple-950/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-pink-500/50" style={{boxShadow: '0 0 30px rgba(255,0,110,0.4)'}}>
+              <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-[#5a7d7c]/50">
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 -m-6 p-6 rounded-t-2xl">
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2" style={{textShadow: '0 0 10px #00f5ff, 0 0 20px #ff006e'}}>
-                      <span className="text-3xl">⚡</span>
+                  <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] -m-6 p-6 rounded-t-2xl">
+                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+                      <span className="text-3xl">▲</span>
                       <span>Termos de Uso</span>
                     </h3>
                     <button 
                       onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                      className="text-white hover:text-cyan-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                      className="text-white hover:text-[#b8c5d0] transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -864,26 +812,25 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </button>
                   </div>
                   
-                  <div className="space-y-4 text-cyan-100 text-sm leading-relaxed">
-                    <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
+                  <div className="space-y-4 text-[#b8c5d0] text-sm leading-relaxed">
+                    <p><strong className="text-[#5a7d7c] text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
                     
-                    <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
+                    <p><strong className="text-[#b8c5d0] text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
                     
-                    <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus. As ofertas são limitadas e sujeitas a disponibilidade.</p>
+                    <p><strong className="text-[#5a7d7c] text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
                     
-                    <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
+                    <p><strong className="text-[#b8c5d0] text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
                     
-                    <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
+                    <p><strong className="text-[#5a7d7c] text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
                     
-                    <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
+                    <p><strong className="text-[#b8c5d0] text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
                   </div>
                   
                   <button 
                     onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                    className="mt-6 w-full bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
-                    style={{boxShadow: '0 0 20px #ff006e, 0 0 30px #00f5ff'}}
+                    className="mt-6 w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
                   >
-                    ⚡ Entendi
+                    ▲ Entendi
                   </button>
                 </div>
               </div>
@@ -952,62 +899,69 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Verificação */}
           {step === 'verification' && (
-            <div className="bg-gradient-to-br from-black/95 via-purple-950/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-pink-500/50 overflow-hidden backdrop-blur-xl" style={{animation: 'neon-pulse 3s ease-in-out infinite'}}>
-              {/* Header cyberpunk */}
-              <div className="relative h-14 sm:h-16 md:h-20 lg:h-24 bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-black/30" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,245,255,0.3),transparent_50%)] animate-pulse"></div>
-                {/* Hexágonos tech */}
-                <div className="absolute top-2 left-2 w-3 h-3 border border-cyan-400" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}></div>
-                <div className="absolute top-2 right-2 w-3 h-3 border border-pink-400" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}></div>
-                <h2 className="relative text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2" style={{textShadow: '0 0 10px #00f5ff, 0 0 20px #ff006e'}}>
-                  <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
+            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-[#5a7d7c]/50 overflow-hidden backdrop-blur-xl">
+              {/* Header Origami */}
+              <div className="relative h-20 lg:h-24 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5a7d7c]/10 to-black/30" />
+                {/* Triângulos decorativos */}
+                <div className="absolute top-2 left-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
+                  <div className="w-full h-full bg-[#b8c5d0] opacity-60"></div>
+                </div>
+                <div className="absolute top-2 right-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
+                  <div className="w-full h-full bg-[#5a7d7c] opacity-60"></div>
+                </div>
+                <h2 className="relative text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
+                  <span className="text-xl md:text-2xl">▲</span>
                   <span>Validar Identidade</span>
-                  <span className="text-lg sm:text-xl md:text-2xl">💠</span>
+                  <span className="text-xl md:text-2xl">◆</span>
                 </h2>
               </div>
 
               <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-                <p className="text-cyan-100 text-xs sm:text-sm mb-4 sm:mb-5 md:mb-6 text-center">
+                <p className="text-[#b8c5d0] text-sm mb-6 text-center">
                   Insira seu ID de jogador para confirmar que você é um usuário real
                 </p>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm sm:text-base font-bold mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400 flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-base sm:text-lg md:text-xl">🎮</span>
+                    <label className="block text-base font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] to-[#b8c5d0] flex items-center gap-2">
+                      <span className="text-lg md:text-xl">🎮</span>
                       <span>ID do Jogador</span>
-                      <span className="text-xs text-cyan-300 font-normal">(apenas números)</span>
+                      <span className="text-xs text-[#b8c5d0] font-normal">(apenas números)</span>
                     </label>
                     <input
                       type="text"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Digite seu ID do jogo (ex: 5435431)"
-                      className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-purple-900/60 to-black/60 border-2 border-pink-500/40 rounded-xl sm:rounded-2xl text-white text-base sm:text-lg font-bold placeholder-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 hover:border-pink-400/70 transition-all duration-300 shadow-lg" style={{boxShadow: '0 0 15px rgba(255,0,110,0.2)'}}
+                      className="w-full px-5 py-4 bg-gradient-to-r from-[#0a4d5c]/60 to-black/60 border-2 border-[#5a7d7c]/40 rounded-2xl text-white text-lg font-bold placeholder-[#b8c5d0]/50 focus:outline-none focus:ring-2 focus:ring-[#b8c5d0] focus:border-[#b8c5d0] hover:border-[#5a7d7c]/70 transition-all duration-300 shadow-lg"
                       disabled={isLoading}
                       maxLength={15}
                     />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-pink-600/20 via-purple-500/15 to-cyan-600/20 border-2 border-pink-400/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 backdrop-blur-md shadow-lg relative overflow-hidden" style={{boxShadow: '0 0 20px rgba(255,0,110,0.3)'}}>
-                    {/* Circuitos decorativos */}
-                    <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-400/30"></div>
-                    <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-pink-400/30"></div>
-                    <p className="text-xs sm:text-sm text-pink-300 font-bold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2 relative z-10" style={{textShadow: '0 0 10px #ff006e'}}>
-                      <span className="text-base sm:text-lg">⚡</span>
+                  <div className="bg-gradient-to-br from-[#0a4d5c]/30 via-[#5a7d7c]/20 to-[#b8c5d0]/10 border-2 border-[#5a7d7c]/50 rounded-2xl p-5 backdrop-blur-md shadow-lg relative overflow-hidden">
+                    {/* Triângulos decorativos */}
+                    <div className="absolute top-0 right-0 w-8 h-8" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}}>
+                      <div className="w-full h-full bg-[#5a7d7c] opacity-30"></div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-8 h-8" style={{clipPath: 'polygon(0 100%, 100% 100%, 0 0)'}}>
+                      <div className="w-full h-full bg-[#b8c5d0] opacity-30"></div>
+                    </div>
+                    <p className="text-sm text-[#b8c5d0] font-bold mb-3 flex items-center gap-2 relative z-10">
+                      <span className="text-lg">▲</span>
                       <span>Importante:</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-cyan-50 mb-2 sm:mb-3 leading-relaxed relative z-10">
-                      Digite seu <span className="text-pink-300 font-bold" style={{textShadow: '0 0 10px #ff006e'}}>ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
+                    <p className="text-sm text-[#b8c5d0]/90 mb-3 leading-relaxed relative z-10">
+                      Digite seu <span className="text-[#5a7d7c] font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
                     </p>
-                    <p className="text-xs text-cyan-100 mb-3 bg-purple-900/40 rounded-lg p-2 border border-pink-500/40 relative z-10">
-                      📍 <span className="text-cyan-300 font-semibold">Encontre seu ID em:</span><br/>
+                    <p className="text-xs text-[#b8c5d0] mb-3 bg-[#0a4d5c]/40 rounded-lg p-2 border border-[#5a7d7c]/40 relative z-10">
+                      📍 <span className="text-[#b8c5d0] font-semibold">Encontre seu ID em:</span><br/>
                       <span className="text-white font-bold ml-4">Configurações → Informações Básicas → ID do Jogador</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
-                      className="text-xs sm:text-sm text-pink-300 hover:text-cyan-200 underline font-bold flex items-center gap-1 relative z-10"
+                      className="text-sm text-[#5a7d7c] hover:text-[#b8c5d0] underline font-bold flex items-center gap-1 relative z-10"
                     >
                       📖 Ver tutorial completo de como encontrar seu ID
                     </button>
@@ -1027,12 +981,11 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 <button
                   onClick={handleVerification}
                   disabled={isLoading || !playerId.trim()}
-                  className={`w-full font-bold text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
+                  className={`w-full font-bold text-lg py-5 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
                     isLoading || !playerId.trim()
                       ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600'
-                      : 'bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white shadow-2xl hover:scale-[1.05] border-2 border-pink-500/60 hover:border-cyan-400'
+                      : 'bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white shadow-2xl hover:scale-[1.05] border-2 border-[#5a7d7c]/60 hover:border-[#b8c5d0]'
                   }`}
-                  style={!isLoading && playerId.trim() ? {boxShadow: '0 0 20px #ff006e, 0 0 30px #00f5ff'} : {}}
                 >
                   {!isLoading && !(!playerId.trim()) && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
@@ -1044,9 +997,9 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </>
                   ) : (
                     <>
-                      <span className="text-lg sm:text-xl md:text-2xl mr-1.5 sm:mr-2">⚡</span>
+                      <span className="text-xl md:text-2xl mr-2">▲</span>
                       <span className="relative z-10">Verificar Identidade</span>
-                      <span className="text-lg sm:text-xl md:text-2xl ml-1.5 sm:ml-2">💠</span>
+                      <span className="text-xl md:text-2xl ml-2">◆</span>
                     </>
                   )}
                 </button>
@@ -1060,16 +1013,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
         <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-          <div className="bg-gradient-to-br from-black/95 via-purple-950/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-pink-500/50" style={{boxShadow: '0 0 30px rgba(255,0,110,0.4)'}}>
+          <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-[#5a7d7c]/50">
             <div className="p-6">
-              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 -m-6 p-6 rounded-t-2xl">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-2" style={{textShadow: '0 0 10px #00f5ff, 0 0 20px #ff006e'}}>
-                  <span className="text-3xl">💠</span>
+              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] -m-6 p-6 rounded-t-2xl">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <span className="text-3xl">◆</span>
                   <span>Política de Privacidade</span>
                 </h3>
                 <button 
                   onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                  className="text-white hover:text-cyan-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                  className="text-white hover:text-[#b8c5d0] transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1077,26 +1030,25 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </button>
               </div>
               
-              <div className="space-y-4 text-cyan-100 text-sm leading-relaxed">
-                <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
+              <div className="space-y-4 text-[#b8c5d0] text-sm leading-relaxed">
+                <p><strong className="text-[#5a7d7c] text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
                 
-                <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações, oferecer suporte técnico e disponibilizar ofertas personalizadas.</p>
+                <p><strong className="text-[#b8c5d0] text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
                 
-                <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
+                <p><strong className="text-[#5a7d7c] text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
                 
-                <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
+                <p><strong className="text-[#b8c5d0] text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
                 
-                <p><strong className="text-pink-300 text-base" style={{textShadow: '0 0 10px #ff006e'}}>5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
+                <p><strong className="text-[#5a7d7c] text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
                 
-                <p><strong className="text-cyan-300 text-base" style={{textShadow: '0 0 10px #00f5ff'}}>6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
+                <p><strong className="text-[#b8c5d0] text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
               </div>
               
               <button 
                 onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                className="mt-6 w-full bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
-                style={{boxShadow: '0 0 20px #ff006e, 0 0 30px #00f5ff'}}
+                className="mt-6 w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
               >
-                ⚡ Entendi
+                ▲ Entendi
               </button>
             </div>
           </div>
