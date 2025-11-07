@@ -489,7 +489,7 @@ export async function POST(request: NextRequest) {
               platform: "RecarGames",
               paymentMethod: "pix",
               status: "waiting_payment",
-              createdAt: getBrazilTimestamp(new Date(transactionData.createdAt)),
+              createdAt: transactionData.createdAt ? getBrazilTimestamp(new Date(transactionData.createdAt)) : getBrazilTimestamp(),
               approvedDate: null,
               refundedAt: null,
               customer: {
