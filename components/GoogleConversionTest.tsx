@@ -25,15 +25,25 @@ export default function GoogleConversionTest() {
     setResult('')
 
     try {
+      // Pegar variáveis do ambiente (SEM FALLBACK)
+      const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID
+      const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL
+
+      // Validar se as variáveis existem
+      if (!awId || !conversionLabel) {
+        setResult('❌ Erro: Variáveis de ambiente não configuradas!\n\nConfigure no .env.local:\nNEXT_PUBLIC_GOOGLE_AW_ID\nNEXT_PUBLIC_GOOGLE_CONVERSION_LABEL')
+        console.error('❌ Variáveis de ambiente não encontradas')
+        setIsSending(false)
+        return
+      }
+
       // Gerar transaction_id aleatório
       const transactionId = `test-${Date.now()}-${Math.random().toString(36).substring(7)}`
-      
-      // Pegar variáveis do ambiente
-      const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID || 'AW-17710336360'
-      const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL || 'ABlgCM6vs7sbEOiS-fxB'
       const sendTo = `${awId}/${conversionLabel}`
 
       console.log('🧪 [TESTE CONVERSÃO GOOGLE]')
+      console.log('   - AW ID:', awId)
+      console.log('   - Conversion Label:', conversionLabel)
       console.log('   - Send To:', sendTo)
       console.log('   - Transaction ID:', transactionId)
 
@@ -46,7 +56,7 @@ export default function GoogleConversionTest() {
           'transaction_id': transactionId
         })
 
-        setResult(`✅ Conversão enviada!\n\nSend To: ${sendTo}\nTransaction ID: ${transactionId}`)
+        setResult(`✅ Conversão enviada!\n\nAW ID: ${awId}\nLabel: ${conversionLabel}\nSend To: ${sendTo}\nTransaction ID: ${transactionId}`)
         console.log('✅ Conversão de teste enviada com sucesso!')
       } else {
         setResult('❌ Erro: gtag não está carregado na página')

@@ -174,27 +174,35 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 bg-gray-100" style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(229, 231, 235, 0.8) 0%, transparent 50%),
-          radial-gradient(circle at 70% 20%, rgba(243, 244, 246, 0.6) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(229, 231, 235, 0.7) 0%, transparent 60%),
-          radial-gradient(circle at 30% 90%, rgba(243, 244, 246, 0.5) 0%, transparent 45%)
-        `
-      }}>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center text-gray-800">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-red-500 border-t-transparent mb-4"></div>
-            <p>Carregando...</p>
+      <>
+        <GoogleConversionTest />
+        <div className="fixed inset-0 z-50 bg-gray-100" style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, rgba(229, 231, 235, 0.8) 0%, transparent 50%),
+            radial-gradient(circle at 70% 20%, rgba(243, 244, 246, 0.6) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(229, 231, 235, 0.7) 0%, transparent 60%),
+            radial-gradient(circle at 30% 90%, rgba(243, 244, 246, 0.5) 0%, transparent 45%)
+          `
+        }}>
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center text-gray-800">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-red-500 border-t-transparent mb-4"></div>
+              <p>Carregando...</p>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 
   // Se verificação está habilitada e usuário não está verificado
   if (isVerificationEnabled && !isVerified) {
-    return <UserVerification onVerificationComplete={handleVerificationComplete} />
+    return (
+      <>
+        <GoogleConversionTest />
+        <UserVerification onVerificationComplete={handleVerificationComplete} />
+      </>
+    )
   }
 
   // Se verificação está desabilitada ou usuário já está verificado
