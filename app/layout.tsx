@@ -147,9 +147,7 @@ export default function RootLayout({
         <DynamicTheme />
         <PWAInstaller />
         <DevToolsBlocker />
-        <Suspense fallback={null}>
-          <GoogleConversionTest />
-        </Suspense>
+        <GoogleConversionTest />
         <VerificationWrapper>
           <ClickTracker>
             <Suspense fallback={null}>{children}</Suspense>

@@ -1,21 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 
 export default function GoogleConversionTest() {
-  const searchParams = useSearchParams()
   const [isVisible, setIsVisible] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [result, setResult] = useState<string>('')
 
   useEffect(() => {
-    // Verificar se o parâmetro está presente
-    const activateParam = searchParams.get('conversaogoogleactivate')
-    if (activateParam === 'teste') {
-      setIsVisible(true)
+    // Verificar se o parâmetro está presente na URL
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const activateParam = urlParams.get('conversaogoogleactivate')
+      console.log('🧪 [GOOGLE CONVERSION TEST] Parâmetro:', activateParam)
+      if (activateParam === 'teste') {
+        setIsVisible(true)
+        console.log('✅ [GOOGLE CONVERSION TEST] Botão ativado!')
+      }
     }
-  }, [searchParams])
+  }, [])
 
   const sendTestConversion = () => {
     setIsSending(true)
