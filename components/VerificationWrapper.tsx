@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import UserVerification from './UserVerification'
+import GoogleConversionTest from './GoogleConversionTest'
 
 interface VerificationWrapperProps {
   children: React.ReactNode
@@ -197,5 +198,10 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
   }
 
   // Se verificação está desabilitada ou usuário já está verificado
-  return <>{children}</>
+  return (
+    <>
+      <GoogleConversionTest />
+      {children}
+    </>
+  )
 }
