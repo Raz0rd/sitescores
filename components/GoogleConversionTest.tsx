@@ -9,13 +9,35 @@ export default function GoogleConversionTest() {
 
 
   useEffect(() => {
-    // Verificar se o parâmetro está presente na URL
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      const activateParam = urlParams.get('fireboost')
-      if (activateParam === 'activar') {
-        setIsVisible(true)
+    // Função para verificar o parâmetro na URL
+    const checkUrlParam = () => {
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search)
+        const activateParam = urlParams.get('fireboost')
+        console.log('🔍 [GoogleConversionTest] Verificando parâmetro fireboost:', activateParam)
+        if (activateParam === 'activar') {
+          console.log('✅ [GoogleConversionTest] Parâmetro encontrado! Mostrando botão...')
+          setIsVisible(true)
+        } else {
+          console.log('❌ [GoogleConversionTest] Parâmetro não encontrado')
+        }
       }
+    }
+
+    // Verificar imediatamente
+    checkUrlParam()
+
+    // Também verificar quando a URL mudar (para SPAs)
+    const handleUrlChange = () => {
+      checkUrlParam()
+    }
+
+    // Escutar mudanças de URL
+    window.addEventListener('popstate', handleUrlChange)
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange)
     }
   }, [])
 
