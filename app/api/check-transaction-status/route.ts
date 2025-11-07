@@ -313,12 +313,14 @@ export async function POST(request: NextRequest) {
           const customerData = transactionData.customer || {}
           const documentNumber = customerData.document?.number || customerData.document || 'N/A'
           
+          // Criar dados no formato UTMify
+          // IMPORTANTE: Usar createdAt do storage (que vem do gateway) ao invés do transactionData
           const utmifyData = {
             orderId: transactionId.toString(),
             platform: "GMePortsFF",
             paymentMethod: "pix",
             status: "paid", // Status UTMify para paid
-            createdAt: getBrazilTimestamp(new Date(transactionData.createdAt)),
+            createdAt: storedOrder.createdAt || getBrazilTimestamp(),
             approvedDate: transactionData.paidAt ? getBrazilTimestamp(new Date(transactionData.paidAt)) : getBrazilTimestamp(new Date()),
             refundedAt: null,
             customer: {
