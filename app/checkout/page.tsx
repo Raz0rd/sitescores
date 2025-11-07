@@ -821,12 +821,25 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    const now = new Date()
+    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
+    
     const utmifyData = {
         orderId: transactionData.transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "waiting_payment",
-        createdAt: getBrazilTimestamp(),
+        createdAt: formatDate(brazilTime),
         approvedDate: null,
         refundedAt: null,
         customer: {
@@ -915,13 +928,26 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    const now2 = new Date()
+    const brazilTime2 = new Date(now2.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate2 = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
+    
     const utmifyData = {
         orderId: transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "paid",
-        createdAt: getBrazilTimestamp(),
-        approvedDate: getBrazilTimestamp(),
+        createdAt: formatDate2(brazilTime2),
+        approvedDate: formatDate2(brazilTime2),
         refundedAt: null,
         customer: {
           name: fullName,
