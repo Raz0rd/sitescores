@@ -17,92 +17,17 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
-  // Função para tocar som ao clicar
+  // Função para tocar som ao clicar - Som digital/tech Matrix
   const playClickSound = () => {
-    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGe77OeeSwwPUKXh8LdjHAU7k9jyz3ksBS1+zPLaizsKGGS56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHg==')
-    audio.volume = 0.3
+    const audio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=')
+    audio.volume = 0.2
     audio.play().catch(() => {})
   }
   
   // Estados do Quiz Arena de Fogo
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [quizAnswers, setQuizAnswers] = useState<number[]>([])
-  const [quizResult, setQuizResult] = useState<string>('')
   const [timeLeft, setTimeLeft] = useState(15)
 
   // Perguntas do Quiz
-  const quizQuestions = [
-    {
-      question: "🔮 Qual é o seu estilo de jogo no Free Fire?",
-      options: [
-        { text: "Líder de Squad - Comando meu time", points: { lider: 3, estrategista: 1, atirador: 0, rusher: 0 } },
-        { text: "Sniper Silencioso - Elimino de longe", points: { atirador: 3, estrategista: 1, lider: 0, rusher: 0 } },
-        { text: "Rusher Insano - Vou pra cima!", points: { rusher: 3, lider: 1, atirador: 0, estrategista: 0 } },
-        { text: "Suporte Tático - Ajudo meu time", points: { estrategista: 3, lider: 1, atirador: 0, rusher: 0 } }
-      ]
-    },
-    {
-      question: "💥 Como você reage em uma situação 1v4?",
-      options: [
-        { text: "Planejo cada movimento com calma", points: { estrategista: 3, atirador: 1, lider: 0, rusher: 0 } },
-        { text: "Parto pra cima sem medo!", points: { rusher: 3, lider: 1, atirador: 0, estrategista: 0 } },
-        { text: "Uso granadas e táticas", points: { estrategista: 2, atirador: 2, lider: 0, rusher: 0 } },
-        { text: "Chamo reforços e coordeno", points: { lider: 3, estrategista: 1, atirador: 0, rusher: 0 } }
-      ]
-    },
-    {
-      question: "🎯 Qual arma você escolhe no início da partida?",
-      options: [
-        { text: "AWM - Precisão mortal", points: { atirador: 3, estrategista: 1, lider: 0, rusher: 0 } },
-        { text: "MP40 - Velocidade e agilidade", points: { rusher: 3, lider: 0, atirador: 0, estrategista: 0 } },
-        { text: "M1014 - Destruição garantida", points: { rusher: 2, lider: 1, atirador: 0, estrategista: 0 } },
-        { text: "SCAR - Versatilidade total", points: { estrategista: 2, lider: 2, atirador: 0, rusher: 0 } }
-      ]
-    },
-    {
-      question: "🏆 O que te motiva a jogar Free Fire?",
-      options: [
-        { text: "Ser o Mestre", points: { lider: 3, atirador: 1, estrategista: 0, rusher: 0 } },
-        { text: "Adrenalina pura", points: { rusher: 3, lider: 0, atirador: 0, estrategista: 0 } },
-        { text: "Estratégia e inteligência", points: { estrategista: 3, lider: 0, atirador: 0, rusher: 0 } },
-        { text: "Jogar com os amigos", points: { lider: 2, estrategista: 1, atirador: 0, rusher: 0 } }
-      ]
-    },
-    {
-      question: "🔮 Qual personagem te representa?",
-      options: [
-        { text: "Chrono - Controle do tempo", points: { estrategista: 3, lider: 0, atirador: 0, rusher: 0 } },
-        { text: "Wukong - Agilidade ninja", points: { rusher: 3, lider: 0, atirador: 0, estrategista: 0 } },
-        { text: "DJ Alok - Suporte e cura", points: { lider: 3, estrategista: 0, atirador: 0, rusher: 0 } },
-        { text: "Moco - Rastreamento preciso", points: { atirador: 3, lider: 0, estrategista: 0, rusher: 0 } }
-      ]
-    }
-  ]
-
-  // Perfis de resultado
-  const quizProfiles: Record<string, { title: string; description: string; emoji: string }> = {
-    lider: {
-      title: "🔮 O LÍDER DA FOGUEIRA",
-      description: "Você nasceu para comandar! Seu squad te segue até o fim. Estratégia e liderança são suas armas.",
-      emoji: "👑"
-    },
-    atirador: {
-      title: "🎯 O SNIPER LENDÁRIO",
-      description: "Precisão cirúrgica! Você elimina antes que vejam de onde veio. Cada tiro, uma baixa garantida.",
-      emoji: "🎯"
-    },
-    rusher: {
-      title: "💥 O RUSHER INSANO",
-      description: "Adrenalina pura! Você não conhece o medo. Vai de frente e deixa o caos para trás.",
-      emoji: "⚡"
-    },
-    estrategista: {
-      title: "🧠 O MESTRE ESTRATEGISTA",
-      description: "Você pensa 10 passos à frente. Cada movimento é calculado. A vitória é questão de tempo.",
-      emoji: "🧠"
-    }
-  }
-
   const handleInitialCheck = () => {
     setStep('verification')
   }
@@ -119,50 +44,11 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   // Funções do Quiz
   const [isTransitioning, setIsTransitioning] = useState(false)
   
-  const handleQuizAnswer = (answerIndex: number) => {
-    const newAnswers = [...quizAnswers, answerIndex]
-    setQuizAnswers(newAnswers)
-    
-    if (currentQuestion < quizQuestions.length - 1) {
-      // Mostrar transição
-      setIsTransitioning(true)
-      
-      // Aguardar animação antes de trocar pergunta
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1)
-        setTimeLeft(15)
-        setIsTransitioning(false)
-      }, 400)
-    } else {
-      // Calcular resultado
-      calculateQuizResult(newAnswers)
-    }
-  }
 
-  const calculateQuizResult = (answers: number[]) => {
-    const scores: Record<string, number> = {
-      lider: 0,
-      atirador: 0,
-      rusher: 0,
-      estrategista: 0
-    }
 
-    answers.forEach((answerIndex, questionIndex) => {
-      const selectedOption = quizQuestions[questionIndex].options[answerIndex]
-      Object.entries(selectedOption.points).forEach(([profile, points]) => {
-        scores[profile] = (scores[profile] || 0) + (points as number)
-      })
-    })
 
-    // Encontrar perfil com maior pontuação
-    const winnerProfile = Object.entries(scores).reduce((a, b) => a[1] > b[1] ? a : b)[0]
-    setQuizResult(winnerProfile)
-    setStep('result')
-  }
 
-  const handleSkipQuiz = () => {
-    setStep('verification')
-  }
+
 
   const handleAcceptReward = () => {
     // Salvar no localStorage que o quiz foi completado
@@ -172,14 +58,6 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
     // Ir para o modal de verificação de ID (não redireciona ainda)
     setStep('verification')
   }
-
-  // Verificar se o quiz já foi completado
-  useEffect(() => {
-    const quizCompleted = localStorage.getItem('quizCompleted')
-    if (quizCompleted === 'true' && step === 'initial') {
-      setStep('verification')
-    }
-  }, [step])
 
   // Timer do quiz
   useEffect(() => {
@@ -254,15 +132,12 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       document.cookie = `quiz_completed=true; ${cookieOptions}`
       document.cookie = `referer_verified=true; ${cookieOptions}`
       
-      console.log('🍪 [VERIFICAÇÃO] Cookies definidos')
-      console.log('   - quiz_completed=true')
-      console.log('   - referer_verified=true')
+
       
       setStep('loading')
       
       // Fechar modal após 2 segundos e liberar central de recargas
       setTimeout(() => {
-        console.log('✅ [VERIFICAÇÃO] Liberando acesso à central de recargas')
         onVerificationComplete() // Fecha o modal e libera a página
       }, 2000)
       
@@ -352,58 +227,58 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   if (step === 'loading') {
     return (
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1410 50%, #0a0a0a 100%)'
+        background: 'linear-gradient(135deg, #000000 0%, #001a00 50%, #000000 100%)'
       }}>
         {/* Efeitos de fundo */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Círculos decorativos */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-yellow-600/20 to-amber-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-amber-500/20 to-yellow-600/10 rounded-full blur-3xl" />
+          {/* Brilhos matrix */}
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-emerald-500/20 to-green-600/10 rounded-full blur-3xl" />
         </div>
         
         <div className="flex items-center justify-center min-h-screen p-4 relative z-10">
           <div className="text-center max-w-md w-full">
             {/* Logo/Ícone */}
             <div className="relative inline-block mb-4 sm:mb-6 md:mb-8">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-yellow-600 to-amber-500 flex items-center justify-center shadow-2xl border-4 border-white/20">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-2xl border-4 border-green-400/40" style={{boxShadow: '0 0 30px #00ff00, 0 0 50px #00ff41'}}>
                 <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
               </div>
               {/* Spinner ao redor */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-yellow-400 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 border-4 border-transparent border-t-green-400 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 10px #00ff00)'}}></div>
             </div>
 
             {/* Mensagem Principal */}
-            <div className="bg-neutral-900/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-yellow-500/30 mb-4 sm:mb-5 md:mb-6">
+            <div className="bg-black/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-green-500/50 mb-4 sm:mb-5 md:mb-6" style={{boxShadow: '0 0 20px rgba(0,255,65,0.3)'}}>
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 text-white" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
                 ✅ Verificação Concluída!
               </h2>
-              <p className="text-amber-200 text-sm sm:text-base mb-2">
+              <p className="text-green-200 text-sm sm:text-base mb-2">
                 Seu desconto foi ativado com sucesso
               </p>
-              <div className="flex items-center justify-center gap-2 text-yellow-300 font-bold text-sm sm:text-base">
-                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-yellow-300 border-t-transparent"></div>
+              <div className="flex items-center justify-center gap-2 text-green-400 font-bold text-sm sm:text-base">
+                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-green-400 border-t-transparent"></div>
                 <span>Redirecionando...</span>
               </div>
             </div>
 
             {/* Benefícios */}
             <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-              <div className="flex items-center justify-center gap-2 text-yellow-400">
+              <div className="flex items-center justify-center gap-2 text-green-400">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Desconto de 70% ativado</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-yellow-400">
+              <div className="flex items-center justify-center gap-2 text-green-400">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Conta verificada</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-yellow-400">
+              <div className="flex items-center justify-center gap-2 text-green-400">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
@@ -418,58 +293,69 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1410 50%, #0a0a0a 100%)'
+      background: 'linear-gradient(135deg, #000000 0%, #001a00 50%, #000000 100%)'
     }}>
-      {/* Efeitos de fundo luxuoso */}
+      {/* Efeitos de fundo Matrix */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Padrão art deco sutil */}
+        {/* Padrão de código binário */}
         <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, #ffd700 0px, #ffd700 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #ffd700 0px, #ffd700 1px, transparent 1px, transparent 20px)',
-          backgroundSize: '40px 40px'
+          backgroundImage: 'repeating-linear-gradient(0deg, #00ff00 0px, #00ff00 1px, transparent 1px, transparent 4px)',
+          backgroundSize: '100% 4px',
+          animation: 'matrix-scan 8s linear infinite'
         }} />
         
-        {/* Ornamento art deco canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-40 h-40 opacity-40">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-yellow-600">
-            <path d="M0,0 L50,0 L50,10 L10,10 L10,50 L0,50 Z" fill="currentColor" className="animate-pulse"/>
-            <circle cx="25" cy="25" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <path d="M15,15 L35,35 M35,15 L15,35" stroke="currentColor" strokeWidth="1.5"/>
+        {/* Código Matrix canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-40 h-40 opacity-60">
+          <svg viewBox="0 0 100 100" className="w-full h-full text-green-500" style={{filter: 'drop-shadow(0 0 10px #00ff00)'}}>
+            <text x="10" y="20" fontSize="12" fill="currentColor" className="animate-pulse">01001</text>
+            <text x="10" y="35" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.2s'}}>11010</text>
+            <text x="10" y="50" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.4s'}}>10110</text>
+            <rect x="5" y="5" width="60" height="60" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3"/>
+            <path d="M5,5 L65,65 M65,5 L5,65" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
           </svg>
         </div>
         
-        {/* Ornamento art deco canto superior direito */}
-        <div className="absolute top-0 right-0 w-40 h-40 opacity-40 transform scale-x-[-1]">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-amber-500">
-            <path d="M0,0 L50,0 L50,10 L10,10 L10,50 L0,50 Z" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.5s'}}/>
-            <circle cx="25" cy="25" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <path d="M15,15 L35,35 M35,15 L15,35" stroke="currentColor" strokeWidth="1.5"/>
+        {/* Código Matrix canto superior direito */}
+        <div className="absolute top-0 right-0 w-40 h-40 opacity-60">
+          <svg viewBox="0 0 100 100" className="w-full h-full text-emerald-400" style={{filter: 'drop-shadow(0 0 10px #00ff41)'}}>
+            <text x="30" y="20" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.1s'}}>10101</text>
+            <text x="30" y="35" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.3s'}}>01110</text>
+            <text x="30" y="50" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.5s'}}>11001</text>
+            <rect x="25" y="5" width="60" height="60" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3"/>
+            <circle cx="55" cy="35" r="20" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.2"/>
           </svg>
         </div>
         
-        {/* Ornamento art deco canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-40 h-40 opacity-40 transform scale-y-[-1]">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-yellow-500">
-            <path d="M0,0 L50,0 L50,10 L10,10 L10,50 L0,50 Z" fill="currentColor" className="animate-pulse" style={{animationDelay: '1s'}}/>
-            <rect x="15" y="15" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"/>
+        {/* Código Matrix canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-40 h-40 opacity-60">
+          <svg viewBox="0 0 100 100" className="w-full h-full text-green-400" style={{filter: 'drop-shadow(0 0 10px #00ff00)'}}>
+            <text x="10" y="50" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.6s'}}>11100</text>
+            <text x="10" y="65" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.8s'}}>00111</text>
+            <text x="10" y="80" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '1s'}}>10011</text>
+            <rect x="5" y="35" width="60" height="60" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3"/>
+            <path d="M5,95 L35,35 L65,95" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.2"/>
           </svg>
         </div>
         
-        {/* Ornamento art deco canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-40 h-40 opacity-40 transform scale-[-1]">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-amber-600">
-            <path d="M0,0 L50,0 L50,10 L10,10 L10,50 L0,50 Z" fill="currentColor" className="animate-pulse" style={{animationDelay: '1.5s'}}/>
-            <rect x="15" y="15" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"/>
+        {/* Código Matrix canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-40 h-40 opacity-60">
+          <svg viewBox="0 0 100 100" className="w-full h-full text-emerald-500" style={{filter: 'drop-shadow(0 0 10px #00ff41)'}}>
+            <text x="30" y="50" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.7s'}}>01011</text>
+            <text x="30" y="65" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '0.9s'}}>11110</text>
+            <text x="30" y="80" fontSize="12" fill="currentColor" className="animate-pulse" style={{animationDelay: '1.1s'}}>00101</text>
+            <rect x="25" y="35" width="60" height="60" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3"/>
+            <circle cx="55" cy="65" r="25" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.2"/>
           </svg>
         </div>
         
-        {/* Brilhos dourados */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-yellow-600/20 to-amber-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-amber-500/20 to-yellow-600/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}} />
+        {/* Brilhos Matrix */}
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-emerald-500/20 to-green-600/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}} />
       </div>
 
-      {/* Brilho dourado central */}
+      {/* Brilho Matrix central */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-96 h-96 rounded-full bg-gradient-to-r from-yellow-600/10 via-amber-500/10 to-yellow-600/10 animate-pulse-slow"></div>
+        <div className="w-96 h-96 rounded-full bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-green-600/10 animate-pulse-slow"></div>
       </div>
 
       <style jsx global>{`
@@ -494,8 +380,12 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           to { transform: rotate(0deg); }
         }
         @keyframes glow-pulse {
-          0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-          50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 193, 7, 0.6); }
+          0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
+          50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.8), 0 0 60px rgba(0, 255, 0, 0.6); }
+        }
+        @keyframes matrix-scan {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
         }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
@@ -531,21 +421,21 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           
           {/* Tela Inicial */}
           {step === 'initial' && (
-            <div className="bg-gradient-to-br from-black/95 via-neutral-900/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border border-yellow-600/60 overflow-hidden backdrop-blur-xl animate-glow">
-              {/* Header compacto luxuoso */}
-              <div className="relative h-14 sm:h-16 md:h-20 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500/10 to-black/40" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.3),transparent_50%)] animate-pulse"></div>
-                {/* Ornamentos no header */}
-                <div className="absolute top-2 left-2 w-4 h-4 border-2 border-yellow-200 rotate-45"></div>
-                <div className="absolute top-2 right-2 w-4 h-4 border-2 border-yellow-200 rotate-45"></div>
+            <div className="bg-gradient-to-br from-black/95 via-gray-900/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border border-green-500/60 overflow-hidden backdrop-blur-xl" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
+              {/* Header compacto Matrix */}
+              <div className="relative h-14 sm:h-16 md:h-20 bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/10 to-black/40" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.3),transparent_50%)] animate-pulse"></div>
+                {/* Código binário no header */}
+                <div className="absolute top-2 left-2 text-[8px] text-green-300 opacity-50 font-mono">01</div>
+                <div className="absolute top-2 right-2 text-[8px] text-green-300 opacity-50 font-mono">10</div>
                 <div className="absolute inset-0 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
                 </div>
-                <h1 className="relative text-base sm:text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2">
-                  <span className="text-xl sm:text-2xl md:text-3xl">👑</span>
+                <h1 className="relative text-base sm:text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2" style={{textShadow: '0 0 10px #00ff00'}}>
+                  <span className="text-xl sm:text-2xl md:text-3xl">💻</span>
                   <span>Bem-vindo!</span>
-                  <span className="text-xl sm:text-2xl md:text-3xl">👑</span>
+                  <span className="text-xl sm:text-2xl md:text-3xl">💻</span>
                 </h1>
               </div>
 
@@ -553,75 +443,76 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               <div className="p-3 sm:p-4 md:p-5 text-center">
                 {/* Ícone premium com ornamentos */}
                 <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4">
-                  {/* Moldura dourada externa */}
+                  {/* Moldura Matrix externa */}
                   <div className="absolute inset-0 animate-spin" style={{animationDuration: '4s'}}>
-                    <svg viewBox="0 0 100 100" className="w-full h-full text-yellow-500">
+                    <svg viewBox="0 0 100 100" className="w-full h-full text-green-500" style={{filter: 'drop-shadow(0 0 5px #00ff00)'}}>
                       <rect x="10" y="10" width="80" height="80" stroke="currentColor" strokeWidth="3" fill="none"/>
                       <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="2" fill="none"/>
                     </svg>
                   </div>
-                  {/* Estrela interna */}
+                  {/* Código interno */}
                   <div className="absolute inset-3 animate-spin-reverse" style={{animationDuration: '3s'}}>
-                    <svg viewBox="0 0 100 100" className="w-full h-full text-amber-500">
-                      <polygon points="50,15 61,45 92,45 67,63 78,92 50,73 22,92 33,63 8,45 39,45" stroke="currentColor" strokeWidth="2" fill="none"/>
+                    <svg viewBox="0 0 100 100" className="w-full h-full text-emerald-400">
+                      <text x="35" y="50" fontSize="20" fill="currentColor" fontFamily="monospace">01</text>
+                      <text x="35" y="70" fontSize="20" fill="currentColor" fontFamily="monospace">10</text>
                     </svg>
                   </div>
-                  {/* Núcleo dourado pulsante */}
-                  <div className="absolute inset-6 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 animate-pulse shadow-lg shadow-yellow-500/50"></div>
+                  {/* Núcleo Matrix pulsante */}
+                  <div className="absolute inset-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 animate-pulse shadow-lg" style={{boxShadow: '0 0 20px #00ff00'}}></div>
                   {/* Símbolo central */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-2xl animate-bounce" style={{ animationDelay: '0.2s' }}>💎</div>
+                    <div className="text-2xl animate-bounce" style={{ animationDelay: '0.2s' }}>🔐</div>
                   </div>
                 </div>
-                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 mb-2 sm:mb-3">
+                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 mb-2 sm:mb-3">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-amber-100 mb-2 sm:mb-3 md:mb-4 leading-relaxed text-xs sm:text-sm">
+                <p className="text-green-100 mb-2 sm:mb-3 md:mb-4 leading-relaxed text-xs sm:text-sm">
                   Valide sua identidade e tenha acesso a descontos especiais e bônus exclusivos!
                 </p>
                 
-                <div className="bg-gradient-to-br from-yellow-600/20 via-amber-500/15 to-yellow-600/20 border border-yellow-500/60 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4 backdrop-blur-md shadow-lg shadow-yellow-500/30 relative overflow-hidden">
-                  {/* Ornamentos art deco */}
-                  <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-yellow-400/40"></div>
-                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-amber-400/40"></div>
-                  <div className="absolute top-0 left-0 w-3 h-3 bg-yellow-400 rounded-full"></div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-amber-400 rounded-full"></div>
-                  <p className="text-yellow-300 font-bold text-sm sm:text-base md:text-lg mb-1.5 sm:mb-2 flex items-center justify-center gap-1.5 sm:gap-2 relative z-10">
-                    <span className="text-lg sm:text-xl md:text-2xl">🏆</span>
+                <div className="bg-gradient-to-br from-green-600/20 via-emerald-500/15 to-green-600/20 border border-green-500/60 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4 backdrop-blur-md shadow-lg relative overflow-hidden" style={{boxShadow: '0 0 20px rgba(0,255,0,0.3)'}}>
+                  {/* Código decorativo */}
+                  <div className="absolute top-1 right-1 text-[8px] text-green-400/40 font-mono">1010</div>
+                  <div className="absolute bottom-1 left-1 text-[8px] text-green-400/40 font-mono">0101</div>
+                  <div className="absolute top-0 right-0 w-12 h-12 border-t border-r border-green-400/30"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-green-400/30"></div>
+                  <p className="text-green-300 font-bold text-sm sm:text-base md:text-lg mb-1.5 sm:mb-2 flex items-center justify-center gap-1.5 sm:gap-2 relative z-10" style={{textShadow: '0 0 10px #00ff00'}}>
+                    <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
                     <span>Recompensa Exclusiva</span>
-                    <span className="text-lg sm:text-xl md:text-2xl">🏆</span>
+                    <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
                   </p>
-                  <p className="text-amber-50 text-xs sm:text-sm leading-relaxed relative z-10">
-                    Valide sua conta e ganhe <span className="font-bold text-yellow-300 text-sm sm:text-base">70% de desconto</span> na sua recarga!
+                  <p className="text-green-50 text-xs sm:text-sm leading-relaxed relative z-10">
+                    Valide sua conta e ganhe <span className="font-bold text-green-300 text-sm sm:text-base" style={{textShadow: '0 0 10px #00ff00'}}>70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
                 <button
                   onClick={handleInitialCheck}
-                  className="w-full bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-500 text-black font-bold text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-300 shadow-xl shadow-yellow-500/50 hover:shadow-yellow-400/70 hover:scale-[1.03] border border-yellow-400/60 hover:border-yellow-300 relative overflow-hidden group mb-2 sm:mb-3"
+                  className="w-full bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 hover:from-green-500 hover:via-emerald-400 hover:to-green-500 text-black font-bold text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-300 shadow-xl hover:scale-[1.03] border border-green-400/60 hover:border-green-300 relative overflow-hidden group mb-2 sm:mb-3" style={{boxShadow: '0 0 20px #00ff00, 0 0 30px #00ff41'}}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   <span className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2">
-                    <span className="text-base sm:text-lg md:text-xl">⭐</span>
+                    <span className="text-base sm:text-lg md:text-xl">⚡</span>
                     <span>Começar Agora</span>
-                    <span className="text-base sm:text-lg md:text-xl">✨</span>
+                    <span className="text-base sm:text-lg md:text-xl">🔐</span>
                   </span>
                 </button>
 
                 {/* Links de Termos e Políticas */}
                 <div className="mt-2 sm:mt-3 md:mt-4 text-center text-[10px] sm:text-xs">
-                  <p className="mb-2 text-amber-300">Ao continuar, você concorda com nossos</p>
+                  <p className="mb-2 text-green-300">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-yellow-300 hover:text-amber-200 underline transition-colors font-semibold"
+                      className="text-green-300 hover:text-emerald-200 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-yellow-500">•</span>
+                    <span className="text-green-500">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-yellow-300 hover:text-amber-200 underline transition-colors font-semibold"
+                      className="text-green-300 hover:text-emerald-200 underline transition-colors font-semibold"
                     >
                       Política de Privacidade
                     </button>
@@ -633,19 +524,19 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Termos */}
           {step === 'terms' && (
-            <div className="bg-gray-50 rounded-2xl border border-gray-300 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+            <div className="bg-black/90 rounded-2xl border border-green-500/50 p-8 shadow-2xl backdrop-blur-xl" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
               <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Termos de Uso e Política de Privacidade</h2>
-                <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto text-sm text-gray-700 leading-relaxed border">
+                <h2 className="text-2xl font-bold mb-4 text-green-400" style={{textShadow: '0 0 10px #00ff00'}}>Termos de Uso e Política de Privacidade</h2>
+                <div className="bg-gray-900/60 rounded-lg p-4 max-h-64 overflow-y-auto text-sm text-green-100 leading-relaxed border border-green-500/30">
                   
-                  <div className="bg-red-50 border-l-4 border-red-500 p-3 mb-4">
-                    <p className="text-red-700 font-semibold">
-                      🎁 <strong>EXCLUSIVIDADE:</strong> Deseja ganhar seu desconto especial? 
+                  <div className="bg-green-900/30 border-l-4 border-green-500 p-3 mb-4 rounded">
+                    <p className="text-green-300 font-semibold">
+                      ⚡ <strong>EXCLUSIVIDADE:</strong> Deseja ganhar seu desconto especial? 
                       Aceite os termos e tenha acesso a ofertas exclusivas!
                     </p>
                   </div>
 
-                  <h4 className="font-bold text-gray-800 mb-2">📋 TERMOS DE USO</h4>
+                  <h4 className="font-bold text-green-400 mb-2">💻 TERMOS DE USO</h4>
                   <p className="mb-3">
                     <strong>1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
                   </p>
@@ -668,7 +559,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     <strong>7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
                   </p>
 
-                  <h4 className="font-bold text-gray-800 mb-2 mt-4">🔒 POLÍTICA DE PRIVACIDADE</h4>
+                  <h4 className="font-bold text-green-400 mb-2 mt-4">🔐 POLÍTICA DE PRIVACIDADE</h4>
                   <p className="mb-3">
                     <strong>8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
                   </p>
@@ -688,13 +579,13 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     <strong>13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
                   </p>
                   
-                  <p className="text-xs text-gray-500 mt-4 italic">
+                  <p className="text-xs text-green-300/60 mt-4 italic">
                     Ao participar desta promoção, você concorda com estes termos e condições.
                   </p>
 
-                  <div className="bg-green-50 border-l-4 border-green-500 p-3 mt-4">
-                    <p className="text-green-700 text-xs">
-                      ✅ <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
+                  <div className="bg-emerald-900/30 border-l-4 border-emerald-500 p-3 mt-4 rounded">
+                    <p className="text-emerald-300 text-xs">
+                      ⚡ <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
                       Transações rápidas, seguras e com garantia de entrega.
                     </p>
                   </div>
@@ -702,23 +593,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               </div>
 
               <div className="mb-4">
-                <label className="flex items-start text-sm text-cyan-100">
+                <label className="flex items-start text-sm text-green-100">
                   <input
                     type="checkbox"
                     checked={accepted}
                     onChange={(e) => setAccepted(e.target.checked)}
-                    className="mr-3 w-5 h-5 text-cyan-500 rounded focus:ring-cyan-500 mt-0.5 bg-gray-800 border-cyan-400"
+                    className="mr-3 w-5 h-5 text-green-500 rounded focus:ring-green-500 mt-0.5 bg-gray-900 border-green-400"
                   />
                   <span>
                     Eu li e aceito os{' '}
-                    <span className="text-cyan-400 underline font-bold">
+                    <span className="text-green-400 underline font-bold">
                       Termos de Uso
                     </span>
                     {' '}e{' '}
-                    <span className="text-cyan-400 underline font-bold">
+                    <span className="text-green-400 underline font-bold">
                       Política de Privacidade
                     </span>, 
-                    e desejo ter acesso às <strong className="text-pink-400">ofertas exclusivas</strong> para usuários verificados
+                    e desejo ter acesso às <strong className="text-emerald-400">ofertas exclusivas</strong> para usuários verificados
                   </span>
                 </label>
               </div>
@@ -751,77 +642,20 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
             </div>
           )}
 
-          {/* Tela do QUIZ */}
-          {step === 'quiz' && (
-            <div className="bg-gradient-to-br from-black via-neutral-900 to-black rounded-3xl shadow-2xl border border-yellow-500/30 overflow-hidden backdrop-blur-xl">
-              {/* Progress Bar */}
-              <div className="h-1.5 bg-black">
-                <div 
-                  className="h-full bg-gradient-to-r from-yellow-600 to-amber-500 transition-all duration-300"
-                  style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
-                />
-              </div>
-
-              {/* Header */}
-              <div className="bg-gradient-to-r from-yellow-600 to-amber-500 p-4 flex justify-between items-center">
-                <div className="text-white font-semibold">
-                  Pergunta {currentQuestion + 1}/{quizQuestions.length}
-                </div>
-                <div className="bg-black/30 px-4 py-2 rounded-full text-white font-semibold flex items-center gap-2 backdrop-blur-sm">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                  </svg>
-                  {timeLeft}s
-                </div>
-              </div>
-
-              {/* Pergunta */}
-              <div className="p-6">
-                {isTransitioning ? (
-                  // Loading entre perguntas
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-yellow-500 border-t-transparent mb-4"></div>
-                    <p className="text-white font-semibold">Próxima pergunta...</p>
-                  </div>
-                ) : (
-                  <div className="animate-fade-in">
-                    <h3 className="text-xl font-bold text-white mb-6 text-center leading-relaxed">
-                      {quizQuestions[currentQuestion].question}
-                    </h3>
-
-                    {/* Opções */}
-                    <div className="space-y-3">
-                      {quizQuestions[currentQuestion].options.map((option, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleQuizAnswer(index)}
-                          disabled={isTransitioning}
-                          className="w-full bg-gradient-to-r from-neutral-800/50 to-neutral-700/50 hover:from-yellow-600 hover:to-amber-500 text-white font-medium py-4 px-6 rounded-2xl transition-all duration-200 border border-neutral-600/30 hover:border-yellow-400/50 text-left hover:scale-[1.02] hover:shadow-lg hover:shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <span className="text-yellow-400 font-bold mr-3">{String.fromCharCode(65 + index)}.</span>
-                          {option.text}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
             <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-              <div className="bg-gradient-to-br from-black/95 via-neutral-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-yellow-500/50">
+              <div className="bg-gradient-to-br from-black/95 via-gray-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-green-500/50" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 -m-6 p-6 rounded-t-2xl">
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <span className="text-3xl">📜</span>
+                  <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 -m-6 p-6 rounded-t-2xl">
+                    <h3 className="text-2xl font-bold text-white flex items-center gap-2" style={{textShadow: '0 0 10px #00ff00'}}>
+                      <span className="text-3xl">💻</span>
                       <span>Termos de Uso</span>
                     </h3>
                     <button 
                       onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                      className="text-white hover:text-yellow-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                      className="text-white hover:text-green-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -829,23 +663,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </button>
                   </div>
                   
-                  <div className="space-y-4 text-amber-100 text-sm leading-relaxed">
-                    <p><strong className="text-yellow-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
+                  <div className="space-y-4 text-green-100 text-sm leading-relaxed">
+                    <p><strong className="text-green-400 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
                     
-                    <p><strong className="text-yellow-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
+                    <p><strong className="text-green-400 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
                     
-                    <p><strong className="text-yellow-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus. As ofertas são limitadas e sujeitas a disponibilidade.</p>
+                    <p><strong className="text-green-400 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus. As ofertas são limitadas e sujeitas a disponibilidade.</p>
                     
-                    <p><strong className="text-yellow-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
+                    <p><strong className="text-green-400 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
                     
-                    <p><strong className="text-yellow-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
+                    <p><strong className="text-green-400 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
                     
-                    <p><strong className="text-yellow-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
+                    <p><strong className="text-green-400 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
                   </div>
                   
                   <button 
                     onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                    className="mt-6 w-full bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-500 text-black font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-yellow-500/50 hover:shadow-yellow-400/70 hover:scale-[1.02]"
+                    className="mt-6 w-full bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 hover:from-green-500 hover:via-emerald-400 hover:to-green-500 text-black font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]" style={{boxShadow: '0 0 20px #00ff00'}}
                   >
                     ✅ Entendi
                   </button>
@@ -854,118 +688,60 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
             </div>
           )}
 
-          {/* Tela de RESULTADO */}
-          {step === 'result' && (
-            <div className="bg-gradient-to-br from-black via-neutral-900 to-black rounded-3xl shadow-2xl border border-yellow-500/30 overflow-hidden backdrop-blur-xl">
-              {/* Header com animação */}
-              <div className="relative h-28 bg-gradient-to-r from-yellow-600 to-amber-500 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
-                <div className="relative text-center py-3">
-                  <div className="text-3xl mb-1">{quizProfiles[quizResult]?.emoji}</div>
-                  <h2 className="text-base font-bold text-white drop-shadow-lg">
-                    SEU PERFIL
-                  </h2>
-                </div>
-              </div>
-
-              {/* Resultado */}
-              <article className="p-8 text-center" role="main" aria-label="Resultado do Quiz">
-                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400 mb-4">
-                  {quizProfiles[quizResult]?.title}
-                </h3>
-                <p className="text-amber-200 text-base mb-8 leading-relaxed">
-                  {quizProfiles[quizResult]?.description}
-                </p>
-
-                {/* Recompensa */}
-                <div className="bg-gradient-to-r from-yellow-600/20 to-amber-500/20 rounded-2xl p-6 mb-6 border border-yellow-400/40 backdrop-blur-sm">
-                  <div className="text-4xl mb-2">👑</div>
-                  <h4 className="text-2xl font-bold text-white mb-2">
-                    Parabéns!
-                  </h4>
-                  <p className="text-amber-100 font-medium text-base mb-3">
-                    Você desbloqueou
-                  </p>
-                  <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400 mb-3">
-                    70% OFF
-                  </div>
-                  <p className="text-amber-200 text-sm">
-                    Desconto exclusivo na sua recarga!
-                  </p>
-                  <p className="text-yellow-300 text-xs mt-2 font-medium">
-                    ⏰ Válido por 24 horas
-                  </p>
-                </div>
-
-                <div className="flex justify-center">
-                  <button
-                    onClick={handleAcceptReward}
-                    className="bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-700 hover:to-amber-600 text-black font-bold text-lg py-5 px-8 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-[1.02]"
-                    aria-label="Resgatar desconto de 70% exclusivo"
-                  >
-                    Resgatar Meu Desconto 💎
-                  </button>
-                </div>
-
-                <p className="text-neutral-500 text-xs mt-4">
-                  #Gaming #Quiz #Desconto
-                </p>
-              </article>
-            </div>
-          )}
+          
 
           {/* Tela de Verificação */}
           {step === 'verification' && (
-            <div className="bg-gradient-to-br from-black/95 via-neutral-900/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-yellow-500/50 overflow-hidden backdrop-blur-xl">
+            <div className="bg-gradient-to-br from-black/95 via-gray-900/95 to-black/95 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-green-500/50 overflow-hidden backdrop-blur-xl" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
               {/* Header */}
-              <div className="relative h-14 sm:h-16 md:h-20 lg:h-24 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500/10 to-black/30" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.3),transparent_50%)] animate-pulse"></div>
-                <h2 className="relative text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2">
-                  <span className="text-lg sm:text-xl md:text-2xl">👑</span>
+              <div className="relative h-14 sm:h-16 md:h-20 lg:h-24 bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/10 to-black/30" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.3),transparent_50%)] animate-pulse"></div>
+                <h2 className="relative text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2" style={{textShadow: '0 0 10px #00ff00'}}>
+                  <span className="text-lg sm:text-xl md:text-2xl">💻</span>
                   <span>Validar Identidade</span>
-                  <span className="text-lg sm:text-xl md:text-2xl">👑</span>
+                  <span className="text-lg sm:text-xl md:text-2xl">🔐</span>
                 </h2>
               </div>
 
               <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-                <p className="text-amber-100 text-xs sm:text-sm mb-4 sm:mb-5 md:mb-6 text-center">
+                <p className="text-green-100 text-xs sm:text-sm mb-4 sm:mb-5 md:mb-6 text-center">
                   Insira seu ID de jogador para confirmar que você é um usuário real
                 </p>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm sm:text-base font-bold mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center gap-1.5 sm:gap-2">
+                    <label className="block text-sm sm:text-base font-bold mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 flex items-center gap-1.5 sm:gap-2">
                       <span className="text-base sm:text-lg md:text-xl">🎮</span>
                       <span>ID do Jogador</span>
-                      <span className="text-xs text-yellow-300 font-normal">(apenas números)</span>
+                      <span className="text-xs text-green-300 font-normal">(apenas números)</span>
                     </label>
                     <input
                       type="text"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Digite seu ID do jogo (ex: 5435431)"
-                      className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-neutral-900/60 to-black/60 border-2 border-yellow-500/40 rounded-xl sm:rounded-2xl text-white text-base sm:text-lg font-bold placeholder-amber-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 hover:border-yellow-400/70 transition-all duration-300 shadow-lg shadow-yellow-900/20"
+                      className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-gray-900/60 to-black/60 border-2 border-green-500/40 rounded-xl sm:rounded-2xl text-white text-base sm:text-lg font-bold placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 hover:border-green-400/70 transition-all duration-300 shadow-lg" style={{boxShadow: '0 0 10px rgba(0,255,0,0.2)'}}
                       disabled={isLoading}
                       maxLength={15}
                     />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-yellow-600/20 via-amber-500/15 to-yellow-600/20 border-2 border-yellow-400/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 backdrop-blur-md shadow-lg shadow-yellow-500/20">
-                    <p className="text-xs sm:text-sm text-yellow-300 font-bold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-base sm:text-lg">⭐</span>
+                  <div className="bg-gradient-to-br from-green-600/20 via-emerald-500/15 to-green-600/20 border-2 border-green-400/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 backdrop-blur-md shadow-lg" style={{boxShadow: '0 0 20px rgba(0,255,0,0.2)'}}>
+                    <p className="text-xs sm:text-sm text-green-300 font-bold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-base sm:text-lg">⚡</span>
                       <span>Importante:</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-amber-50 mb-2 sm:mb-3 leading-relaxed">
-                      Digite seu <span className="text-yellow-300 font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
+                    <p className="text-xs sm:text-sm text-green-50 mb-2 sm:mb-3 leading-relaxed">
+                      Digite seu <span className="text-green-300 font-bold" style={{textShadow: '0 0 10px #00ff00'}}>ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
                     </p>
-                    <p className="text-xs text-amber-100 mb-3 bg-neutral-900/40 rounded-lg p-2 border border-yellow-500/40">
-                      📍 <span className="text-yellow-300 font-semibold">Encontre seu ID em:</span><br/>
+                    <p className="text-xs text-green-100 mb-3 bg-gray-900/40 rounded-lg p-2 border border-green-500/40">
+                      📍 <span className="text-green-300 font-semibold">Encontre seu ID em:</span><br/>
                       <span className="text-white font-bold ml-4">Configurações → Informações Básicas → ID do Jogador</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
-                      className="text-xs sm:text-sm text-yellow-300 hover:text-amber-200 underline font-bold flex items-center gap-1"
+                      className="text-xs sm:text-sm text-green-300 hover:text-emerald-200 underline font-bold flex items-center gap-1"
                     >
                       📖 Ver tutorial completo de como encontrar seu ID
                     </button>
@@ -988,22 +764,26 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   className={`w-full font-bold text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
                     isLoading || !playerId.trim()
                       ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600'
-                      : 'bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-500 text-black shadow-2xl shadow-yellow-500/50 hover:shadow-yellow-400/70 hover:scale-[1.05] border-2 border-yellow-400/60 hover:border-yellow-300'
+                      : 'bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 hover:from-green-500 hover:via-emerald-400 hover:to-green-500 text-black hover:scale-[1.05] border-2 border-green-400/60 hover:border-green-300'
                   }`}
+                  style={!isLoading && playerId.trim() ? {boxShadow: '0 0 20px #00ff00, 0 0 30px #00ff41'} : {}}
                 >
                   {!isLoading && !(!playerId.trim()) && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   )}
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-3 border-white border-t-transparent mr-3"></div>
+                      <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                        <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" opacity="0.3"/>
+                        <path d="M12 2 L22 8.5" strokeLinecap="round"/>
+                      </svg>
                       <span className="animate-pulse">Verificando...</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-lg sm:text-xl md:text-2xl mr-1.5 sm:mr-2">👑</span>
+                      <span className="text-lg sm:text-xl md:text-2xl mr-1.5 sm:mr-2">💻</span>
                       <span className="relative z-10">Verificar Identidade</span>
-                      <span className="text-lg sm:text-xl md:text-2xl ml-1.5 sm:ml-2">💎</span>
+                      <span className="text-lg sm:text-xl md:text-2xl ml-1.5 sm:ml-2">🔐</span>
                     </>
                   )}
                 </button>
@@ -1017,16 +797,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       {/* Modal de Termos de Uso */}
       {showTermsModal && (
         <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-          <div className="bg-gradient-to-br from-black/95 via-neutral-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-yellow-500/50">
+          <div className="bg-gradient-to-br from-black/95 via-gray-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-green-500/50" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
             <div className="p-6">
-              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 -m-6 p-6 rounded-t-2xl">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-3xl">📜</span>
+              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 -m-6 p-6 rounded-t-2xl">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-2" style={{textShadow: '0 0 10px #00ff00'}}>
+                  <span className="text-3xl">💻</span>
                   <span>Termos de Uso</span>
                 </h3>
                 <button 
                   onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                  className="text-white hover:text-yellow-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                  className="text-white hover:text-green-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1034,23 +814,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </button>
               </div>
               
-              <div className="space-y-4 text-amber-100 text-sm leading-relaxed">
-                <p><strong className="text-yellow-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
+              <div className="space-y-4 text-green-100 text-sm leading-relaxed">
+                <p><strong className="text-green-400 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
                 
-                <p><strong className="text-yellow-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
+                <p><strong className="text-green-400 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
                 
-                <p><strong className="text-yellow-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus. As ofertas são limitadas e sujeitas a disponibilidade.</p>
+                <p><strong className="text-green-400 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, promoções exclusivas e bônus. As ofertas são limitadas e sujeitas a disponibilidade.</p>
                 
-                <p><strong className="text-yellow-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
+                <p><strong className="text-green-400 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
                 
-                <p><strong className="text-yellow-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
+                <p><strong className="text-green-400 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
                 
-                <p><strong className="text-yellow-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
+                <p><strong className="text-green-400 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
               </div>
               
               <button 
                 onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                className="mt-6 w-full bg-gradient-to-r from-cyan-600 via-blue-500 to-purple-600 hover:from-green-600 hover:via-emerald-500 hover:to-teal-600 text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-cyan-500/50 hover:shadow-teal-500/70 hover:scale-[1.02]"
+                className="mt-6 w-full bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 hover:from-green-500 hover:via-emerald-400 hover:to-green-500 text-black font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]" style={{boxShadow: '0 0 20px #00ff00'}}
               >
                 ✅ Entendi
               </button>
@@ -1062,16 +842,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
         <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-          <div className="bg-gradient-to-br from-black/95 via-neutral-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-yellow-500/50">
+          <div className="bg-gradient-to-br from-black/95 via-gray-900/95 to-black/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-green-500/50" style={{boxShadow: '0 0 30px rgba(0,255,0,0.4)'}}>
             <div className="p-6">
-              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 -m-6 p-6 rounded-t-2xl">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-3xl">🛡️</span>
+              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 -m-6 p-6 rounded-t-2xl">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-2" style={{textShadow: '0 0 10px #00ff00'}}>
+                  <span className="text-3xl">🔐</span>
                   <span>Política de Privacidade</span>
                 </h3>
                 <button 
                   onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                  className="text-white hover:text-yellow-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                  className="text-white hover:text-green-400 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1079,23 +859,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </button>
               </div>
               
-              <div className="space-y-4 text-amber-100 text-sm leading-relaxed">
-                <p><strong className="text-yellow-300 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
+              <div className="space-y-4 text-green-100 text-sm leading-relaxed">
+                <p><strong className="text-green-400 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
                 
-                <p><strong className="text-yellow-300 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações, oferecer suporte técnico e disponibilizar ofertas personalizadas.</p>
+                <p><strong className="text-green-400 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações, oferecer suporte técnico e disponibilizar ofertas personalizadas.</p>
                 
-                <p><strong className="text-yellow-300 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
+                <p><strong className="text-green-400 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
                 
-                <p><strong className="text-yellow-300 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
+                <p><strong className="text-green-400 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
                 
-                <p><strong className="text-yellow-300 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
+                <p><strong className="text-green-400 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
                 
-                <p><strong className="text-yellow-300 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
+                <p><strong className="text-green-400 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
               </div>
               
               <button 
                 onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                className="mt-6 w-full bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-500 text-black font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-yellow-500/50 hover:shadow-yellow-400/70 hover:scale-[1.02]"
+                className="mt-6 w-full bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 hover:from-green-500 hover:via-emerald-400 hover:to-green-500 text-black font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]" style={{boxShadow: '0 0 20px #00ff00'}}
               >
                 ✅ Entendi
               </button>
