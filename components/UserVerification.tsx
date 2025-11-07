@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import GoogleConversionTest from './GoogleConversionTest'
 
 interface UserVerificationProps {
   onVerificationComplete: () => void
@@ -352,76 +353,89 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   if (step === 'loading') {
     return (
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, rgba(100,150,255,0.15) 0%, rgba(255,100,200,0.12) 50%, rgba(150,200,255,0.15) 100%), linear-gradient(180deg, #0a0e1f 0%, #1a1f3a 100%)'
+        background: 'linear-gradient(135deg, rgba(255,107,53,0.18) 0%, rgba(211,47,47,0.15) 50%, rgba(255,193,7,0.12) 100%), linear-gradient(180deg, #1A1A1A 0%, #2d1810 100%)'
       }}>
-        {/* Efeitos de fundo Glass */}
+        {/* Efeitos de fundo Magma */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Orbes flutuantes */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float-slow" style={{
-            background: 'radial-gradient(circle, rgba(100,150,255,0.5) 0%, transparent 70%)'
+          {/* Bolhas de magma flutuantes */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-25 animate-magma-pulse" style={{
+            background: 'radial-gradient(circle, rgba(255,107,53,0.6) 0%, transparent 70%)'
           }} />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20 animate-float-medium" style={{
-            background: 'radial-gradient(circle, rgba(255,100,200,0.5) 0%, transparent 70%)'
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-25 animate-magma-pulse-delayed" style={{
+            background: 'radial-gradient(circle, rgba(211,47,47,0.6) 0%, transparent 70%)'
           }} />
         </div>
         
         <div className="flex items-center justify-center min-h-screen p-4 relative z-10">
           <div className="text-center max-w-md w-full">
-            {/* Logo/Ícone Glass */}
+            {/* Logo/Ícone Magma */}
             <div className="relative inline-block mb-8">
-              <div className="w-28 h-28 rounded-full flex items-center justify-center animate-float-slow" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
+              <div className="w-28 h-28 rounded-full flex items-center justify-center animate-magma-pulse" style={{
+                background: 'linear-gradient(135deg, rgba(255,107,53,0.4), rgba(211,47,47,0.3))',
                 backdropFilter: 'blur(20px)',
-                border: '2px solid rgba(255,255,255,0.2)',
-                boxShadow: '0 8px 32px 0 rgba(100,150,255,0.4), 0 0 60px rgba(255,100,200,0.3)'
+                border: '2px solid rgba(255,193,7,0.3)',
+                boxShadow: '0 10px 40px 0 rgba(255,107,53,0.6), 0 0 70px rgba(211,47,47,0.4)'
               }}>
-                <svg className="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
+                <div className="w-14 h-14 animate-obsidian-rotate" style={{
+                  background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(211,47,47,0.6))',
+                  clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                  boxShadow: '0 0 25px rgba(255,193,7,0.9)'
+                }} />
               </div>
-              {/* Spinner glass ao redor */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-pink-300 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 10px rgba(255,100,200,0.8))'}}></div>
+              {/* Spinner magma ao redor */}
+              <div className="absolute inset-0 border-4 border-transparent border-t-yellow-300 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 15px rgba(255,193,7,0.9))'}}></div>
             </div>
 
             {/* Mensagem Principal */}
             <div className="p-6 mb-6" style={{
-              background: 'rgba(255, 255, 255, 0.08)',
+              background: 'rgba(255, 107, 53, 0.12)',
               backdropFilter: 'blur(20px)',
               borderRadius: '25px',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+              border: '1px solid rgba(255, 193, 7, 0.25)',
+              boxShadow: '0 10px 40px 0 rgba(255, 107, 53, 0.3)'
             }}>
-              <h2 className="text-2xl font-bold mb-3 text-white">
-                ✨ Verificação Concluída!
+              <h2 className="text-2xl font-bold mb-3 text-white flex items-center justify-center gap-2">
+                <div className="w-6 h-6" style={{
+                  background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                  clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                  boxShadow: '0 0 15px rgba(255,193,7,0.8)'
+                }} />
+                <span>Verificação Concluída!</span>
               </h2>
-              <p className="text-blue-100/80 text-base mb-2">
+              <p className="text-orange-100/90 text-base mb-2">
                 Seu desconto foi ativado com sucesso
               </p>
-              <div className="flex items-center justify-center gap-2 text-pink-300 font-bold text-base">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-pink-300 border-t-transparent"></div>
+              <div className="flex items-center justify-center gap-2 text-yellow-300 font-bold text-base">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-yellow-300 border-t-transparent"></div>
                 <span>Redirecionando...</span>
               </div>
             </div>
 
             {/* Benefícios */}
             <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-center gap-2 text-blue-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
+              <div className="flex items-center justify-center gap-2 text-orange-200">
+                <div className="w-5 h-5" style={{
+                  background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                  clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                  boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                }} />
                 <span>Desconto de 70% ativado</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-pink-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
+              <div className="flex items-center justify-center gap-2 text-red-200">
+                <div className="w-5 h-5" style={{
+                  background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
+                  clipPath: 'ellipse(50% 60% at 50% 40%)',
+                  boxShadow: '0 0 10px rgba(211,47,47,0.7)',
+                  filter: 'blur(0.5px)'
+                }} />
                 <span>Conta verificada</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-purple-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
+              <div className="flex items-center justify-center gap-2 text-yellow-200">
+                <div className="w-5 h-5" style={{
+                  background: 'linear-gradient(180deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                  clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
+                  boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                }} />
                 <span>Acesso liberado</span>
               </div>
             </div>
@@ -433,114 +447,115 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
+      background: 'linear-gradient(135deg, rgba(255,107,53,0.18) 0%, rgba(211,47,47,0.15) 50%, rgba(255,193,7,0.12) 100%), linear-gradient(180deg, #1A1A1A 0%, #2d1810 100%)'
     }}>
-      {/* Efeitos de fundo Aurora Cristalina */}
+      {/* Efeitos de fundo Magma Vulcânico */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Partículas de luz flutuantes */}
-        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-aurora-float" style={{
-          background: 'radial-gradient(circle, rgba(0,212,255,0.5) 0%, rgba(183,148,246,0.3) 50%, transparent 70%)'
+        {/* Bolhas de magma flutuantes */}
+        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-25 animate-magma-pulse" style={{
+          background: 'radial-gradient(circle, rgba(255,107,53,0.6) 0%, rgba(211,47,47,0.4) 50%, transparent 70%)'
         }} />
-        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-aurora-float-delayed" style={{
-          background: 'radial-gradient(circle, rgba(183,148,246,0.5) 0%, rgba(0,212,255,0.3) 50%, transparent 70%)'
+        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-25 animate-magma-pulse-delayed" style={{
+          background: 'radial-gradient(circle, rgba(211,47,47,0.6) 0%, rgba(255,193,7,0.4) 50%, transparent 70%)'
         }} />
         
-        {/* Cristal hexagonal canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-24 h-24 sm:w-32 md:w-40 sm:h-32 md:h-40 opacity-30 animate-crystal-float">
+        {/* Gota de lava canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 md:w-32 lg:w-40 sm:h-24 md:h-32 lg:h-40 opacity-35 animate-lava-drip">
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(183,148,246,0.3))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 30px rgba(0,212,255,0.5), inset 0 0 15px rgba(224,247,255,0.2)'
+            background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
+            clipPath: 'ellipse(50% 60% at 50% 40%)',
+            boxShadow: '0 0 40px rgba(255,107,53,0.7), inset 0 0 20px rgba(255,193,7,0.3)',
+            filter: 'blur(1px)'
           }} />
         </div>
         
-        {/* Cristal hexagonal canto superior direito */}
-        <div className="absolute top-0 right-0 w-20 h-20 sm:w-28 md:w-32 sm:h-28 md:h-32 opacity-35 animate-crystal-rotate" style={{animationDelay: '1.2s'}}>
+        {/* Cristal de obsidiana canto superior direito */}
+        <div className="absolute top-0 right-0 w-14 h-14 sm:w-20 md:w-28 lg:w-32 sm:h-20 md:h-28 lg:h-32 opacity-40 animate-obsidian-rotate" style={{animationDelay: '1.2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(183,148,246,0.45), rgba(0,212,255,0.3))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 25px rgba(183,148,246,0.6), inset 0 0 12px rgba(224,247,255,0.25)'
+            background: 'linear-gradient(135deg, rgba(211,47,47,0.5), rgba(26,26,26,0.6))',
+            clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+            boxShadow: '0 0 30px rgba(211,47,47,0.7), inset 0 0 15px rgba(255,107,53,0.3)'
           }} />
         </div>
         
-        {/* Cristal hexagonal canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-22 h-22 sm:w-30 md:w-36 sm:h-30 md:h-36 opacity-32 animate-crystal-float" style={{animationDelay: '2s'}}>
+        {/* Fissura de magma canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 md:w-30 lg:w-36 sm:h-24 md:h-30 lg:h-36 opacity-38 animate-lava-drip" style={{animationDelay: '2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.42), rgba(183,148,246,0.28))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 28px rgba(0,212,255,0.55), inset 0 0 14px rgba(224,247,255,0.22)'
+            background: 'linear-gradient(180deg, rgba(255,193,7,0.5), rgba(255,107,53,0.4))',
+            clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
+            boxShadow: '0 0 35px rgba(255,193,7,0.6), inset 0 0 18px rgba(255,107,53,0.3)'
           }} />
         </div>
         
-        {/* Cristal hexagonal canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-28 h-28 sm:w-36 md:w-44 sm:h-36 md:h-44 opacity-28 animate-crystal-rotate" style={{animationDelay: '2.8s'}}>
+        {/* Rocha vulcânica canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-20 h-20 sm:w-28 md:w-36 lg:w-44 sm:h-28 md:h-36 lg:h-44 opacity-32 animate-obsidian-rotate" style={{animationDelay: '2.8s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(183,148,246,0.48), rgba(0,212,255,0.32))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 32px rgba(183,148,246,0.65), inset 0 0 16px rgba(224,247,255,0.28)'
+            background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
+            clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',
+            boxShadow: '0 0 38px rgba(255,107,53,0.7), inset 0 0 20px rgba(255,193,7,0.3)'
           }} />
         </div>
       </div>
 
       <style>{`
-        @keyframes aurora-float {
+        @keyframes magma-pulse {
           0%, 100% { 
             transform: translate(0, 0) scale(1); 
-            opacity: 0.2; 
-          }
-          33% { 
-            transform: translate(40px, -40px) scale(1.08); 
-            opacity: 0.28; 
-          }
-          66% { 
-            transform: translate(-30px, 30px) scale(0.95); 
-            opacity: 0.22; 
-          }
-        }
-        @keyframes aurora-float-delayed {
-          0%, 100% { 
-            transform: translate(0, 0) scale(1) rotate(0deg); 
-            opacity: 0.2; 
-          }
-          50% { 
-            transform: translate(-35px, 35px) scale(1.1) rotate(180deg); 
             opacity: 0.25; 
           }
+          33% { 
+            transform: translate(30px, -30px) scale(1.15); 
+            opacity: 0.35; 
+          }
+          66% { 
+            transform: translate(-25px, 25px) scale(0.9); 
+            opacity: 0.28; 
+          }
         }
-        @keyframes crystal-float {
+        @keyframes magma-pulse-delayed {
           0%, 100% { 
-            transform: translateY(0) rotate(0deg); 
-            opacity: 0.3; 
+            transform: translate(0, 0) scale(1); 
+            opacity: 0.25; 
           }
           50% { 
-            transform: translateY(-15px) rotate(180deg); 
-            opacity: 0.45; 
+            transform: translate(-30px, 30px) scale(1.2); 
+            opacity: 0.32; 
           }
         }
-        @keyframes crystal-rotate {
-          0% { 
-            transform: rotate(0deg) scale(1); 
+        @keyframes lava-drip {
+          0%, 100% { 
+            transform: translateY(0) scaleY(1); 
             opacity: 0.35; 
           }
           50% { 
-            transform: rotate(180deg) scale(1.1); 
+            transform: translateY(10px) scaleY(1.1); 
             opacity: 0.5; 
+          }
+        }
+        @keyframes obsidian-rotate {
+          0% { 
+            transform: rotate(0deg) scale(1); 
+            opacity: 0.4; 
+          }
+          50% { 
+            transform: rotate(180deg) scale(1.08); 
+            opacity: 0.55; 
           }
           100% { 
             transform: rotate(360deg) scale(1); 
-            opacity: 0.35; 
+            opacity: 0.4; 
           }
         }
-        @keyframes shimmer-aurora {
-          0% { 
-            transform: translateX(-100%) skewX(-15deg); 
+        @keyframes magma-glow {
+          0%, 100% { 
+            transform: translateX(-100%); 
             opacity: 0; 
           }
           50% { 
-            opacity: 0.6; 
+            opacity: 0.7; 
           }
           100% { 
-            transform: translateX(200%) skewX(-15deg); 
+            transform: translateX(200%); 
             opacity: 0; 
           }
         }
@@ -548,17 +563,17 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-aurora-float {
-          animation: aurora-float 25s ease-in-out infinite;
+        .animate-magma-pulse {
+          animation: magma-pulse 20s ease-in-out infinite;
         }
-        .animate-aurora-float-delayed {
-          animation: aurora-float-delayed 20s ease-in-out infinite;
+        .animate-magma-pulse-delayed {
+          animation: magma-pulse-delayed 18s ease-in-out infinite;
         }
-        .animate-crystal-float {
-          animation: crystal-float 8s ease-in-out infinite;
+        .animate-lava-drip {
+          animation: lava-drip 6s ease-in-out infinite;
         }
-        .animate-crystal-rotate {
-          animation: crystal-rotate 12s linear infinite;
+        .animate-obsidian-rotate {
+          animation: obsidian-rotate 15s linear infinite;
         }
       `}</style>
 
@@ -568,144 +583,185 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Tela Inicial */}
           {step === 'initial' && (
             <div className="relative overflow-hidden" style={{
-              background: 'rgba(10, 14, 39, 0.4)',
+              background: 'rgba(26, 26, 26, 0.5)',
               backdropFilter: 'blur(25px)',
               borderRadius: '24px',
-              border: '1px solid rgba(0, 212, 255, 0.25)',
-              boxShadow: '0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(183, 148, 246, 0.15)'
+              border: '1px solid rgba(255, 107, 53, 0.3)',
+              boxShadow: '0 0 50px rgba(255, 107, 53, 0.4), inset 0 0 30px rgba(211, 47, 47, 0.2)'
             }}>
-              {/* Header Aurora Cristalina */}
-              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(0,212,255,0.2), rgba(183,148,246,0.18))',
+              {/* Header Magma Vulcânico */}
+              <div className="relative h-16 sm:h-20 md:h-24 flex items-center justify-center overflow-hidden" style={{
+                background: 'linear-gradient(135deg, rgba(255,107,53,0.25), rgba(211,47,47,0.22))',
                 backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(0,212,255,0.3)',
-                boxShadow: '0 4px 20px rgba(0,212,255,0.2)'
+                borderBottom: '1px solid rgba(255,107,53,0.4)',
+                boxShadow: '0 4px 25px rgba(255,107,53,0.3)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(224,247,255,0.08) to-transparent" />
-                {/* Part\u00edculas cristalinas no header */}
-                <div className="absolute top-2 left-2 w-2 h-2 animate-crystal-float" style={{
-                  background: 'radial-gradient(circle, rgba(0,212,255,0.9), rgba(0,212,255,0.3))',
-                  boxShadow: '0 0 12px rgba(0,212,255,0.8)',
-                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(255,193,7,0.1) to-transparent" />
+                {/* Partículas de lava no header */}
+                <div className="absolute top-1 left-1 sm:top-2 sm:left-2 w-2 h-2 sm:w-3 sm:h-3 animate-lava-drip" style={{
+                  background: 'radial-gradient(circle, rgba(255,193,7,0.9), rgba(255,107,53,0.4))',
+                  boxShadow: '0 0 15px rgba(255,193,7,0.9)',
+                  clipPath: 'ellipse(50% 60% at 50% 40%)',
+                  filter: 'blur(0.5px)'
                 }} />
-                <div className="absolute top-2 right-2 w-2 h-2 animate-crystal-rotate" style={{
-                  background: 'radial-gradient(circle, rgba(183,148,246,0.9), rgba(183,148,246,0.3))',
-                  boxShadow: '0 0 12px rgba(183,148,246,0.8)',
-                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-2 h-2 sm:w-3 sm:h-3 animate-obsidian-rotate" style={{
+                  background: 'radial-gradient(circle, rgba(211,47,47,0.9), rgba(255,107,53,0.4))',
+                  boxShadow: '0 0 15px rgba(211,47,47,0.9)',
+                  clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
                 }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(224,247,255,0.15) to-transparent" style={{animation: 'shimmer-aurora 4s ease-in-out infinite'}}></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(255,193,7,0.2) to-transparent" style={{animation: 'magma-glow 5s ease-in-out infinite'}}></div>
                 </div>
-                <h1 className="relative text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <div className="w-6 h-6" style={{
-                    background: 'linear-gradient(135deg, rgba(0,212,255,0.6), rgba(183,148,246,0.4))',
-                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                    boxShadow: '0 0 15px rgba(0,212,255,0.6)'
+                <h1 className="relative text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1 sm:gap-2 px-2">
+                  <div className="w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7" style={{
+                    background: 'linear-gradient(135deg, rgba(255,193,7,0.7), rgba(255,107,53,0.5))',
+                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                    boxShadow: '0 0 18px rgba(255,193,7,0.8)'
                   }} />
                   <span>Bem-vindo!</span>
-                  <div className="w-6 h-6" style={{
-                    background: 'linear-gradient(135deg, rgba(183,148,246,0.6), rgba(0,212,255,0.4))',
-                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                    boxShadow: '0 0 15px rgba(183,148,246,0.6)'
+                  <div className="w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7" style={{
+                    background: 'linear-gradient(135deg, rgba(211,47,47,0.7), rgba(255,107,53,0.5))',
+                    clipPath: 'ellipse(50% 60% at 50% 40%)',
+                    boxShadow: '0 0 18px rgba(211,47,47,0.8)',
+                    filter: 'blur(0.5px)'
                   }} />
                 </h1>
               </div>
 
-              {/* Conteúdo compacto */}
-              <div className="p-5 text-center">
-                {/* Ícone Glass com orbes */}
-                <div className="relative w-20 h-20 mx-auto mb-4">
-                  {/* Orbe externa */}
-                  <div className="absolute inset-0 rounded-full animate-float-slow" style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
+              {/* Conteúdo responsivo */}
+              <div className="p-4 sm:p-6 md:p-8 text-center">
+                {/* Ícone Magma com camadas */}
+                <div className="relative w-16 h-16 sm:w-20 md:w-24 sm:h-20 md:h-24 mx-auto mb-4 sm:mb-5 md:mb-6">
+                  {/* Camada externa - lava */}
+                  <div className="absolute inset-0 rounded-full animate-magma-pulse" style={{
+                    background: 'linear-gradient(135deg, rgba(255,107,53,0.4), rgba(211,47,47,0.3))',
+                    backdropFilter: 'blur(12px)',
+                    border: '2px solid rgba(255,193,7,0.3)',
+                    boxShadow: '0 10px 40px 0 rgba(255,107,53,0.5)'
+                  }} />
+                  {/* Camada interna - magma */}
+                  <div className="absolute inset-3 rounded-full animate-magma-pulse-delayed" style={{
+                    background: 'linear-gradient(135deg, rgba(255,193,7,0.5), rgba(255,107,53,0.4))',
                     backdropFilter: 'blur(10px)',
-                    border: '2px solid rgba(255,255,255,0.2)',
-                    boxShadow: '0 8px 32px 0 rgba(100,150,255,0.3)'
+                    border: '1px solid rgba(211,47,47,0.4)'
                   }} />
-                  {/* Orbe interna */}
-                  <div className="absolute inset-3 rounded-full animate-float-medium" style={{
-                    background: 'linear-gradient(135deg, rgba(255,100,200,0.4), rgba(150,200,255,0.3))',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.3)'
-                  }} />
-                  {/* Símbolo central */}
+                  {/* Símbolo central - cristal vulcânico */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-3xl">💎</div>
+                    <div className="w-5 h-5 sm:w-6 md:w-8 sm:h-6 md:h-8 animate-obsidian-rotate" style={{
+                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(211,47,47,0.6))',
+                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                      boxShadow: '0 0 20px rgba(255,193,7,0.9)'
+                    }} />
                   </div>
                 </div>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 mb-3">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-red-300 to-yellow-300 mb-3 sm:mb-4">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-blue-100/80 mb-4 leading-relaxed text-xs sm:text-sm">
+                <p className="text-orange-100/90 mb-4 sm:mb-5 md:mb-6 leading-relaxed text-xs sm:text-sm md:text-base">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
-                <div className="relative p-4 mb-4 overflow-hidden" style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(15px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 4px 16px 0 rgba(100, 150, 255, 0.15)'
+                <div className="relative p-3 sm:p-4 md:p-5 mb-4 sm:mb-5 md:mb-6 overflow-hidden" style={{
+                  background: 'rgba(255, 107, 53, 0.12)',
+                  backdropFilter: 'blur(18px)',
+                  borderRadius: '24px',
+                  border: '1px solid rgba(255, 193, 7, 0.25)',
+                  boxShadow: '0 6px 20px 0 rgba(255, 107, 53, 0.3)'
                 }}>
-                  {/* Orbes decorativos */}
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
-                    background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
+                  {/* Partículas de lava decorativas */}
+                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7 opacity-50 animate-lava-drip" style={{
+                    background: 'radial-gradient(circle, rgba(255,193,7,0.7), transparent)',
+                    clipPath: 'ellipse(50% 60% at 50% 40%)',
+                    filter: 'blur(1px)'
                   }} />
-                  <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
-                    background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
+                  <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7 opacity-50 animate-obsidian-rotate" style={{
+                    background: 'radial-gradient(circle, rgba(211,47,47,0.7), transparent)',
+                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
                   }} />
-                  <p className="text-blue-100 font-bold text-sm sm:text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
-                    <span className="text-xl md:text-2xl">✨</span>
+                  <p className="text-orange-100 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3 flex items-center justify-center gap-1 sm:gap-2 relative z-10">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
+                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                      boxShadow: '0 0 12px rgba(255,193,7,0.8)'
+                    }} />
                     <span>Benefício Exclusivo</span>
-                    <span className="text-xl md:text-2xl">💎</span>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
+                      background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
+                      clipPath: 'ellipse(50% 60% at 50% 40%)',
+                      boxShadow: '0 0 12px rgba(211,47,47,0.8)',
+                      filter: 'blur(0.5px)'
+                    }} />
                   </p>
-                  <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-pink-300 text-base">70% de desconto</span> na sua recarga!
+                  <p className="text-orange-100/90 text-xs sm:text-sm md:text-base leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-yellow-300 text-sm sm:text-base md:text-lg">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-blue-200 relative z-10">
-                    <span className="text-xl">✨</span>
-                    <span className="font-semibold text-sm">Validação rápida e segura</span>
+                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5 md:mb-6">
+                  <div className="flex items-center gap-2 sm:gap-3 text-orange-200 relative z-10">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
+                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                      boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                    }} />
+                    <span className="font-semibold text-xs sm:text-sm">Validação rápida e segura</span>
                   </div>
-                  <div className="flex items-center gap-2 text-pink-200 relative z-10">
-                    <span className="text-xl">💎</span>
-                    <span className="font-semibold text-sm">Descontos de até 70%</span>
+                  <div className="flex items-center gap-2 sm:gap-3 text-red-200 relative z-10">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
+                      background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
+                      clipPath: 'ellipse(50% 60% at 50% 40%)',
+                      boxShadow: '0 0 10px rgba(211,47,47,0.7)',
+                      filter: 'blur(0.5px)'
+                    }} />
+                    <span className="font-semibold text-xs sm:text-sm">Descontos de até 70%</span>
                   </div>
-                  <div className="flex items-center gap-2 text-purple-200 relative z-10">
-                    <span className="text-xl">⭐</span>
-                    <span className="font-semibold text-sm">Diamantes extras grátis</span>
+                  <div className="flex items-center gap-2 sm:gap-3 text-yellow-200 relative z-10">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
+                      background: 'linear-gradient(180deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                      clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
+                      boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                    }} />
+                    <span className="font-semibold text-xs sm:text-sm">Diamantes extras grátis</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => { playClickSound(); setStep('terms'); }}
-                  className="w-full font-bold text-base py-4 px-6 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow"
+                  className="w-full font-bold text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 px-4 sm:px-6 md:px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.05]"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
                     backdropFilter: 'blur(20px)',
-                    borderRadius: '25px',
-                    border: '1px solid rgba(255,255,255,0.25)'
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255,193,7,0.4)',
+                    boxShadow: '0 0 30px rgba(255,107,53,0.5)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  <span className="text-xl mr-2">✨</span>
-                  <span className="relative z-10">Iniciar</span>
-                  <span className="text-xl ml-2"></span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" style={{
+                    background: 'linear-gradient(135deg, rgba(255,193,7,0.9), rgba(255,107,53,0.7))',
+                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                    boxShadow: '0 0 15px rgba(255,193,7,0.9)'
+                  }} />
+                  <span className="relative z-10">Iniciar Verificação</span>
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" style={{
+                    background: 'linear-gradient(135deg, rgba(211,47,47,0.9), rgba(255,107,53,0.7))',
+                    clipPath: 'ellipse(50% 60% at 50% 40%)',
+                    boxShadow: '0 0 15px rgba(211,47,47,0.9)',
+                    filter: 'blur(0.5px)'
+                  }} />
                 </button>
 
                 {/* Links de Termos e Políticas */}
-                <div className="mt-4 text-center text-xs">
-                  <p className="mb-2 text-blue-200/70">Ao continuar, você concorda com nossos</p>
+                <div className="mt-4 sm:mt-5 md:mt-6 text-center text-xs">
+                  <p className="mb-2 text-orange-200/80">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
+                      className="text-orange-300 hover:text-yellow-300 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-blue-300">•</span>
+                    <span className="text-orange-300">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
                       className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
@@ -931,27 +987,31 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {showTermsModal && (
             <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
               <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(20px)',
+                background: 'rgba(26, 26, 26, 0.5)',
+                backdropFilter: 'blur(25px)',
                 borderRadius: '30px',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
+                border: '1px solid rgba(255, 107, 53, 0.3)',
+                boxShadow: '0 10px 40px 0 rgba(255, 107, 53, 0.4)'
               }}>
                 <div className="p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-6 -m-6 p-6" style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                    backdropFilter: 'blur(15px)',
+                    background: 'linear-gradient(135deg, rgba(255,107,53,0.25), rgba(211,47,47,0.22))',
+                    backdropFilter: 'blur(20px)',
                     borderTopLeftRadius: '30px',
                     borderTopRightRadius: '30px',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)'
+                    borderBottom: '1px solid rgba(255,107,53,0.3)'
                   }}>
                     <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <span className="text-3xl">✨</span>
+                      <div className="w-7 h-7" style={{
+                        background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
+                        clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                        boxShadow: '0 0 15px rgba(255,193,7,0.8)'
+                      }} />
                       <span>Termos de Uso</span>
                     </h3>
                     <button 
                       onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                      className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                      className="text-white hover:text-yellow-300 transition-colors bg-white/10 hover:bg-orange-500/20 rounded-lg p-2"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -959,31 +1019,37 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </button>
                   </div>
                   
-                  <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
-                    <p><strong className="text-pink-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
+                  <div className="space-y-4 text-orange-100/90 text-sm leading-relaxed">
+                    <p><strong className="text-yellow-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
                     
-                    <p><strong className="text-blue-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
+                    <p><strong className="text-orange-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
                     
-                    <p><strong className="text-pink-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
+                    <p><strong className="text-yellow-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
                     
-                    <p><strong className="text-blue-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
+                    <p><strong className="text-orange-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
                     
-                    <p><strong className="text-pink-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
+                    <p><strong className="text-yellow-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
                     
-                    <p><strong className="text-blue-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
+                    <p><strong className="text-orange-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
                   </div>
                   
                   <button 
                     onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                    className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                    className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02] flex items-center justify-center gap-2"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                      background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
                       backdropFilter: 'blur(20px)',
                       borderRadius: '20px',
-                      border: '1px solid rgba(255,255,255,0.25)'
+                      border: '1px solid rgba(255,193,7,0.4)',
+                      boxShadow: '0 0 30px rgba(255,107,53,0.5)'
                     }}
                   >
-                    ✨ Entendi
+                    <div className="w-5 h-5" style={{
+                      background: 'linear-gradient(135deg, rgba(255,193,7,0.9), rgba(255,107,53,0.7))',
+                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
+                      boxShadow: '0 0 12px rgba(255,193,7,0.9)'
+                    }} />
+                    <span>Entendi</span>
                   </button>
                 </div>
               </div>
@@ -1199,27 +1265,32 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       {showPrivacyModal && (
         <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
           <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(26, 26, 26, 0.5)',
+            backdropFilter: 'blur(25px)',
             borderRadius: '30px',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
+            border: '1px solid rgba(255, 107, 53, 0.3)',
+            boxShadow: '0 10px 40px 0 rgba(255, 107, 53, 0.4)'
           }}>
             <div className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4 sm:mb-6 -m-4 sm:-m-6 p-4 sm:p-6" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                backdropFilter: 'blur(15px)',
+                background: 'linear-gradient(135deg, rgba(255,107,53,0.25), rgba(211,47,47,0.22))',
+                backdropFilter: 'blur(20px)',
                 borderTopLeftRadius: '30px',
                 borderTopRightRadius: '30px',
-                borderBottom: '1px solid rgba(255,255,255,0.1)'
+                borderBottom: '1px solid rgba(255,107,53,0.3)'
               }}>
                 <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-3xl">💎</span>
+                  <div className="w-7 h-7" style={{
+                    background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
+                    clipPath: 'ellipse(50% 60% at 50% 40%)',
+                    boxShadow: '0 0 15px rgba(211,47,47,0.8)',
+                    filter: 'blur(0.5px)'
+                  }} />
                   <span>Política de Privacidade</span>
                 </h3>
                 <button 
                   onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                  className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                  className="text-white hover:text-yellow-300 transition-colors bg-white/10 hover:bg-orange-500/20 rounded-lg p-2"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1227,31 +1298,38 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </button>
               </div>
               
-              <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
-                <p><strong className="text-pink-300 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
+              <div className="space-y-4 text-orange-100/90 text-sm leading-relaxed">
+                <p><strong className="text-yellow-300 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
                 
-                <p><strong className="text-blue-300 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
+                <p><strong className="text-orange-300 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
                 
-                <p><strong className="text-pink-300 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
+                <p><strong className="text-yellow-300 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
                 
-                <p><strong className="text-blue-300 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
+                <p><strong className="text-orange-300 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
                 
-                <p><strong className="text-pink-300 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
+                <p><strong className="text-yellow-300 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
                 
-                <p><strong className="text-blue-300 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
+                <p><strong className="text-orange-300 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
               </div>
               
               <button 
                 onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02] flex items-center justify-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                  background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
                   backdropFilter: 'blur(20px)',
                   borderRadius: '20px',
-                  border: '1px solid rgba(255,255,255,0.25)'
+                  border: '1px solid rgba(255,193,7,0.4)',
+                  boxShadow: '0 0 30px rgba(255,107,53,0.5)'
                 }}
               >
-                💎 Entendi
+                <div className="w-5 h-5" style={{
+                  background: 'linear-gradient(135deg, rgba(211,47,47,0.9), rgba(255,107,53,0.7))',
+                  clipPath: 'ellipse(50% 60% at 50% 40%)',
+                  boxShadow: '0 0 12px rgba(211,47,47,0.9)',
+                  filter: 'blur(0.5px)'
+                }} />
+                <span>Entendi</span>
               </button>
             </div>
           </div>
@@ -1308,6 +1386,9 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           </div>
         </div>
       )}
+
+      {/* Botão de teste Google Ads - Renderizado dentro do modal */}
+      <GoogleConversionTest />
     </div>
   )
 }

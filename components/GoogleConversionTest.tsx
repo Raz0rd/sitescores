@@ -7,37 +7,15 @@ export default function GoogleConversionTest() {
   const [isSending, setIsSending] = useState(false)
   const [result, setResult] = useState<string>('')
 
-
   useEffect(() => {
-    // Função para verificar o parâmetro na URL
-    const checkUrlParam = () => {
-      if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search)
-        const activateParam = urlParams.get('fireboost')
-        console.log('🔍 [GoogleConversionTest] Verificando parâmetro fireboost:', activateParam)
-        if (activateParam === 'activar') {
-          console.log('✅ [GoogleConversionTest] Parâmetro encontrado! Mostrando botão...')
-          setIsVisible(true)
-        } else {
-          console.log('❌ [GoogleConversionTest] Parâmetro não encontrado')
-        }
+    // Verificar se o parâmetro está presente na URL
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const activateParam = urlParams.get('fireboost')
+      
+      if (activateParam === 'activar') {
+        setIsVisible(true)
       }
-    }
-
-    // Verificar imediatamente
-    checkUrlParam()
-
-    // Também verificar quando a URL mudar (para SPAs)
-    const handleUrlChange = () => {
-      checkUrlParam()
-    }
-
-    // Escutar mudanças de URL
-    window.addEventListener('popstate', handleUrlChange)
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('popstate', handleUrlChange)
     }
   }, [])
 
@@ -96,7 +74,15 @@ export default function GoogleConversionTest() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-4 right-4 z-[10001] max-w-sm">
+    <div 
+      className="fixed bottom-4 right-4 max-w-sm"
+      style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        zIndex: 999999
+      }}
+    >
       <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg shadow-2xl p-6 text-white">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">🧪</span>
