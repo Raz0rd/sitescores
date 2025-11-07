@@ -81,7 +81,7 @@ export default function CheckoutPage() {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
   const [toastType, setToastType] = useState<"success" | "error" | "info">("success")
-  const [pixData, setPixData] = useState<{code: string, qrCode: string, transactionId: string} | null>(null)
+  const [pixData, setPixData] = useState<{code: string, qrCode: string, transactionId: string, createdAt?: string, updatedAt?: string} | null>(null)
   const [showPixInline, setShowPixInline] = useState(false)
   const [pixError, setPixError] = useState("")
   const [isCopied, setIsCopied] = useState(false)
@@ -485,7 +485,9 @@ export default function CheckoutPage() {
         setPixData({
           code: data.pixCode,
           qrCode: data.qrCode,
-          transactionId: data.transactionId
+          transactionId: data.transactionId,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt
         })
         
         setQrCodeImage(qrCodeImageData)
@@ -821,25 +823,17 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
-    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    // Usar a data que vem do gateway (já no formato correto)
+    // Se não tiver, usar a data atual do servidor em UTC no formato YYYY-MM-DD HH:mm:ss
     const now = new Date()
-    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
-    const formatDate = (date: Date) => {
-      const year = date.getUTCFullYear()
-      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-      const day = String(date.getUTCDate()).padStart(2, '0')
-      const hours = String(date.getUTCHours()).padStart(2, '0')
-      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
-      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-    }
+    const defaultDate = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')} ${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}:${String(now.getUTCSeconds()).padStart(2, '0')}`
     
     const utmifyData = {
         orderId: transactionData.transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "waiting_payment",
-        createdAt: formatDate(brazilTime),
+        createdAt: transactionData.createdAt || defaultDate,
         approvedDate: null,
         refundedAt: null,
         customer: {
@@ -928,26 +922,18 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
-    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    // Usar a data que vem do gateway (já no formato correto)
+    // Se não tiver, usar a data atual do servidor em UTC no formato YYYY-MM-DD HH:mm:ss
     const now2 = new Date()
-    const brazilTime2 = new Date(now2.getTime() - (3 * 60 * 60 * 1000))
-    const formatDate2 = (date: Date) => {
-      const year = date.getUTCFullYear()
-      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-      const day = String(date.getUTCDate()).padStart(2, '0')
-      const hours = String(date.getUTCHours()).padStart(2, '0')
-      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
-      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-    }
+    const defaultDate2 = `${now2.getUTCFullYear()}-${String(now2.getUTCMonth() + 1).padStart(2, '0')}-${String(now2.getUTCDate()).padStart(2, '0')} ${String(now2.getUTCHours()).padStart(2, '0')}:${String(now2.getUTCMinutes()).padStart(2, '0')}:${String(now2.getUTCSeconds()).padStart(2, '0')}`
     
     const utmifyData = {
         orderId: transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "paid",
-        createdAt: formatDate2(brazilTime2),
-        approvedDate: formatDate2(brazilTime2),
+        createdAt: pixData?.createdAt || defaultDate2,
+        approvedDate: pixData?.updatedAt || defaultDate2,
         refundedAt: null,
         customer: {
           name: fullName,

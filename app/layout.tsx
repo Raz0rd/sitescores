@@ -10,7 +10,7 @@ import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
 
 export const metadata: Metadata = {
-  title: "Recarga Jogo",
+  title: "Descontos Free Fire e Jogos",
   description: "Site oficial de recarga para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Recarga rápida, bônus exclusivos e preços promocionais. Centro de recarga oficial de jogos mobile.",
   keywords: [
     // Free Fire - Principal
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Recarga Jogo",
+    title: "Central de Recarga Jogo",
     description: "🔥 Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança! Recarga oficial com bônus exclusivos e preços promocionais.",
     url: "/",
     siteName: "Centro de Recarga Oficial",
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Recarga Jogo",
+    title: "Central de Recarga Jogo",
     description: "🔥 Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança! Recarga oficial.",
     images: ["/images/twitter-card.jpg"],
   },
@@ -127,7 +127,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Recarga Jogo"
+    title: "Central de Recarga Jogo"
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,

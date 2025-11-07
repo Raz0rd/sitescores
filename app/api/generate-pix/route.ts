@@ -419,11 +419,13 @@ async function generatePixNitro(body: any, baseUrl: string) {
     hasQrCode: !!qrCodeBase64
   })
 
-  // Retornar apenas dados essenciais para o frontend
+  // Retornar dados essenciais para o frontend + created_at e updated_at
   return {
     transactionId,
     pixCode,
     qrCode: qrCodeBase64,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
     success: true
   }
 }
