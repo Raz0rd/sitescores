@@ -167,10 +167,10 @@ export default function HomePage() {
       promotionalValues: ["2.180", "5.600", "15.600"],
       specialOffers: [
         { id: 'firepower', name: 'Poder do Fogo (3 unidades Restantes)', image: '/images/firepower.png', description: 'Personagem "Poder do Fogo" - (3 unidades Restantes)' },
-        { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
-        { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
-        { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Ganhe todos os privilégios e recompensas do Booyah Pass Premium + recompensas exclusivas + 50 níveis do Booyah Pass instantaneamente + 5.600 diamantes de bônus!' },
-        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie recompensas incríveis, incluindo skins exclusivas e diamantes.' }
+        { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Receba 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
+        { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Receba 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
+        { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Receba todos os privilégios e benefícios do Booyah Pass Premium + benefícios exclusivos + 50 níveis do Booyah Pass instantaneamente + 5.600 diamantes extras!' },
+        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie benefícios incríveis, incluindo skins exclusivas e diamantes.' }
       ]
     },
     deltaforce: {
@@ -883,7 +883,7 @@ export default function HomePage() {
                 </div>
 
                 <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                  Cole este código no checkout para ganhar 5% de desconto adicional na sua recarga!
+                  Cole este código no checkout para receber 5% de desconto adicional na sua recarga!
                 </p>
               </div>
 

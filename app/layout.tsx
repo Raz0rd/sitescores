@@ -11,7 +11,7 @@ import { DevToolsBlocker } from "@/components/DevToolsBlocker"
 
 export const metadata: Metadata = {
   title: "Recarga Jogo Free Fire",
-  description: "Site oficial de recarga para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Recarga rápida, bônus exclusivos e preços promocionais. Centro de recarga oficial de jogos mobile.",
+  description: "Site oficial de recarga para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Recarga rápida, diamantes extras e pacotes especiais. Centro de recarga oficial de jogos mobile.",
   keywords: [
     // Free Fire - Principal
     "recarga free fire",
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
     "centro de recarga",
     "recarga segura jogos",
     "recarga rapida jogos",
-    "bonus recarga jogos",
-    "promocao recarga jogos",
+    "diamantes extras jogos",
+    "pacotes especiais jogos",
     "recarga jogos pix",
     "recarga jogos barato"
   ],

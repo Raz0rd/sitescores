@@ -965,7 +965,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   {quizProfiles[quizResult]?.description}
                 </p>
 
-                {/* Recompensa */}
+                {/* Benefício */}
                 <div className="bg-gradient-to-r from-yellow-600/20 to-amber-500/20 rounded-2xl p-6 mb-6 border border-yellow-400/40 backdrop-blur-sm">
                   <div className="text-4xl mb-2">👑</div>
                   <h4 className="text-2xl font-bold text-white mb-2">
@@ -1261,15 +1261,5 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
         </div>
       )}
     </div>
-  )
-}
-
-// Renderizar GoogleConversionTest junto com UserVerification
-export function UserVerificationWithTest({ onVerificationComplete }: UserVerificationProps) {
-  return (
-    <>
-      <GoogleConversionTest />
-      <UserVerification onVerificationComplete={onVerificationComplete} />
-    </>
   )
 }
