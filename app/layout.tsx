@@ -10,22 +10,22 @@ import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
 
 export const metadata: Metadata = {
-  title: "Recarga Jogo Free Fire",
-  description: "Site oficial de recarga para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Recarga rápida, diamantes extras e pacotes especiais. Centro de recarga oficial de jogos mobile.",
+  title: "Recarga para Jogos de Tiro e RPG | Free Fire, Delta Force e Haikyu com Segurança",
+  description: "Recarga oficial de jogos mobile! Adquira diamantes Free Fire, créditos Delta Force e moedas Haikyu com total segurança e entrega imediata. Site seguro e confiável de recargas digitais.",
   keywords: [
     // Free Fire - Principal
     "recarga free fire",
     "comprar diamantes free fire", 
-    "diamantes free fire barato",
+    "diamantes ff barato",
     "free fire recarga oficial",
-    "site recarga free fire",
+    "site seguro recarga jogos",
     "diamantes ff",
     "recarga ff oficial",
     "free fire diamantes",
     "recarga free fire pix",
     "comprar diamantes ff",
     "free fire recarga rapida",
-    "diamantes free fire promocao",
+    "entrega imediata free fire",
     
     // Delta Force - Principal
     "recarga delta force",
@@ -59,18 +59,18 @@ export const metadata: Metadata = {
     "melhor site delta force",
     "recarga haikyu confiavel",
     
-    // Geral - Conversão
-    "recarga jogo",
+    // Geral - Conversão (OTIMIZADO)
+    "recarga de jogos mobile",
     "site de recarga de jogos",
     "recarga jogos mobile",
     "comprar creditos jogos",
     "recarga oficial jogos",
-    "centro de recarga",
+    "plataforma de recarga digital",
     "recarga segura jogos",
-    "recarga rapida jogos",
-    "diamantes extras jogos",
-    "pacotes especiais jogos",
-    "recarga jogos pix",
+    "entrega imediata",
+    "recarga digital segura",
+    "site confiavel de recargas",
+    "recarga jogos via pix",
     "recarga jogos barato"
   ],
   authors: [{ name: "Centro Oficial de Recarga" }],
