@@ -8,6 +8,7 @@ import PWAInstaller from "@/components/PWAInstaller"
 import DynamicTheme from "@/components/DynamicTheme"
 import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
+import GoogleConversionTest from "@/components/GoogleConversionTest"
 
 export const metadata: Metadata = {
   title: "Recarga Jogo",
@@ -146,6 +147,9 @@ export default function RootLayout({
         <DynamicTheme />
         <PWAInstaller />
         <DevToolsBlocker />
+        <Suspense fallback={null}>
+          <GoogleConversionTest />
+        </Suspense>
         <VerificationWrapper>
           <ClickTracker>
             <Suspense fallback={null}>{children}</Suspense>
