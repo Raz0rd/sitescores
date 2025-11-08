@@ -665,125 +665,40 @@ export default function CheckoutPage() {
               const gad_campaignid = urlParams.get('gad_campaignid') || ''
               const gbraid = urlParams.get('gbraid') || ''
               
-              // Obter domínio de origem do cookie (salvo quando usuário entrou)
-              const getCookie = (name: string) => {
-                const value = `; ${document.cookie}`
-                const parts = value.split(`; ${name}=`)
-                if (parts.length === 2) return parts.pop()?.split(';').shift()
-                return null
-              }
-              
-              // Decodificar domínio de origem do base64
-              let originDomainFromCookie = null
-              const encodedOrigin = getCookie('_ref_origin')
-              if (encodedOrigin) {
-                try {
-                  originDomainFromCookie = atob(encodedOrigin) // Decodificar base64
-                } catch (e) {
-                  console.error('❌ [PAID] Erro ao decodificar origem:', e)
-                }
-              }
-              
-              // Usar domínio do cookie OU fallback para .env
-              const whitePageBaseUrl = originDomainFromCookie || 
-                                       process.env.NEXT_PUBLIC_WHITEPAGE_URL || 
-                                       process.env.NEXT_PUBLIC_UTMIFY_WHITEPAGE_URL
-              
-              if (!whitePageBaseUrl) {
-                console.error('❌ [PAID] Domínio de conversão não encontrado (cookie ou .env)')
-                return
-              }
-              
-              console.log('🎯 [PAID] Redirecionando conversão para:', whitePageBaseUrl)
-              console.log('📍 [PAID] Origem:', originDomainFromCookie ? 'Cookie (referer detectado)' : 'Fallback (.env)')
-              
-              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso`)
+              // Construir URL da página de sucesso INTERNA
+              const sucessoUrl = new URL('/sucesso', window.location.origin)
               
               // Dados da compra
-              whitePageUrl.searchParams.set('transactionId', pixData.transactionId)
-              whitePageUrl.searchParams.set('amount', (totalValue * 100).toString())
-              whitePageUrl.searchParams.set('playerName', playerName)
-              whitePageUrl.searchParams.set('itemValue', itemValue)
-              whitePageUrl.searchParams.set('game', currentGame)
+              sucessoUrl.searchParams.set('transactionId', pixData.transactionId)
+              sucessoUrl.searchParams.set('amount', totalValue.toString())
+              sucessoUrl.searchParams.set('currency', 'BRL')
               
               // Parâmetros de tracking principais
-              if (gclid) whitePageUrl.searchParams.set('gclid', gclid)
-              if (utm_source) whitePageUrl.searchParams.set('utm_source', utm_source)
-              if (utm_campaign) whitePageUrl.searchParams.set('utm_campaign', utm_campaign)
-              if (utm_medium) whitePageUrl.searchParams.set('utm_medium', utm_medium)
-              if (utm_content) whitePageUrl.searchParams.set('utm_content', utm_content)
-              if (utm_term) whitePageUrl.searchParams.set('utm_term', utm_term)
+              if (gclid) sucessoUrl.searchParams.set('gclid', gclid)
+              if (utm_source) sucessoUrl.searchParams.set('utm_source', utm_source)
+              if (utm_campaign) sucessoUrl.searchParams.set('utm_campaign', utm_campaign)
+              if (utm_medium) sucessoUrl.searchParams.set('utm_medium', utm_medium)
+              if (utm_content) sucessoUrl.searchParams.set('utm_content', utm_content)
+              if (utm_term) sucessoUrl.searchParams.set('utm_term', utm_term)
               
               // Parâmetros adicionais do Google Ads
-              if (keyword) whitePageUrl.searchParams.set('keyword', keyword)
-              if (device) whitePageUrl.searchParams.set('device', device)
-              if (network) whitePageUrl.searchParams.set('network', network)
-              if (gad_source) whitePageUrl.searchParams.set('gad_source', gad_source)
-              if (gad_campaignid) whitePageUrl.searchParams.set('gad_campaignid', gad_campaignid)
-              if (gbraid) whitePageUrl.searchParams.set('gbraid', gbraid)
+              if (keyword) sucessoUrl.searchParams.set('keyword', keyword)
+              if (device) sucessoUrl.searchParams.set('device', device)
+              if (network) sucessoUrl.searchParams.set('network', network)
+              if (gad_source) sucessoUrl.searchParams.set('gad_source', gad_source)
+              if (gad_campaignid) sucessoUrl.searchParams.set('gad_campaignid', gad_campaignid)
+              if (gbraid) sucessoUrl.searchParams.set('gbraid', gbraid)
               
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-              console.log('🎯 [PAID] REDIRECIONANDO PARA ROTA DE CONVERSÃO')
+              console.log('🎯 [PAID] REDIRECIONANDO PARA PÁGINA DE SUCESSO')
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-              console.log('📍 Whitepage:', whitePageBaseUrl)
               console.log('💳 Transaction ID:', pixData.transactionId)
               console.log('💰 Valor:', `R$ ${totalValue.toFixed(2)}`)
-              console.log('')
-              console.log('📊 PARAMS QUE SERÃO ENVIADOS:')
-              console.log('   🔑 gclid:', gclid || '❌ NÃO ENCONTRADO')
-              console.log('   📱 gad_source:', gad_source || '❌ NÃO ENCONTRADO')
-              console.log('   🔗 gbraid:', gbraid || '❌ NÃO ENCONTRADO')
-              console.log('   📢 utm_source:', utm_source || '❌ NÃO ENCONTRADO')
-              console.log('   🎯 utm_campaign:', utm_campaign || '❌ NÃO ENCONTRADO')
-              console.log('   📺 utm_medium:', utm_medium || '❌ NÃO ENCONTRADO')
-              console.log('   📝 utm_content:', utm_content || 'N/A')
-              console.log('   🏷️  utm_term:', utm_term || 'N/A')
-              console.log('   🔍 keyword:', keyword || 'N/A')
-              console.log('   💻 device:', device || 'N/A')
-              console.log('   🌐 network:', network || 'N/A')
-              console.log('   💳 transactionId:', pixData.transactionId)
-              console.log('   💰 amount:', (totalValue * 100).toString())
-              console.log('   👤 playerName:', playerName)
-              console.log('   🎮 game:', currentGame)
-              console.log('')
-              console.log('⚠️  IMPORTANTE: Se gclid estiver vazio, Google Ads NÃO vai contabilizar!')
-              console.log('')
-              console.log('🔗 URL COMPLETA DA CONVERSÃO:')
-              console.log(whitePageUrl.toString())
+              console.log('🔗 URL:', sucessoUrl.toString())
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               
-              // Disparar conversão do Google Ads ANTES de redirecionar
-              console.log('🎯 [GOOGLE ADS] Disparando conversão...')
-              if (typeof window !== 'undefined' && (window as any).gtag) {
-                const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID
-                const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL
-                
-                if (awId && conversionLabel) {
-                  (window as any).gtag('event', 'conversion', {
-                    'send_to': `${awId}/${conversionLabel}`,
-                    'value': totalValue,
-                    'currency': 'BRL',
-                    'transaction_id': pixData.transactionId
-                  })
-                  console.log('✅ [GOOGLE ADS] Conversão disparada!')
-                  console.log('   - AW ID:', awId)
-                  console.log('   - Label:', conversionLabel)
-                  console.log('   - Transaction ID:', pixData.transactionId)
-                  console.log('   - Valor:', totalValue)
-                } else {
-                  console.warn('⚠️ [GOOGLE ADS] Variáveis não configuradas')
-                }
-              } else {
-                console.warn('⚠️ [GOOGLE ADS] gtag não encontrado')
-              }
-              
-              // Aguardar 3 segundos para garantir que a conversão foi enviada
-              console.log('⏳ Aguardando 3s para enviar conversão...')
-              setTimeout(() => {
-                console.log('✅ Redirecionando para whitepage...')
-                // Redirecionar para whitepage SEM enviar referer
-                window.location.replace(whitePageUrl.toString())
-              }, 3000)
+              // Redirecionar imediatamente para a página de sucesso
+              window.location.href = sucessoUrl.toString()
               
               // Enviar para UTMify com status PAID (não-bloqueante)
               // NOTA: O webhook já envia PAID para UTMify, mas mantemos este envio como fallback

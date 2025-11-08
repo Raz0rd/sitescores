@@ -7,10 +7,20 @@ import UserVerificationWithTest from '../../components/UserVerificationWithTest'
 export default function SucessoPage() {
   const searchParams = useSearchParams()
   const [conversionFired, setConversionFired] = useState(false)
-  const [isVerified, setIsVerified] = useState(true) // Sempre verificado para página de sucesso
+  const [isVerified, setIsVerified] = useState(false)
 
-  // Não precisa verificar cookie na página de sucesso
-  // O usuário já passou pela verificação no checkout
+  // Verificar cookie de verificação
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
+      cookie.trim().startsWith('user_verified=')
+    )
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+  }, [])
 
   useEffect(() => {
     // Só executar se estiver verificado
@@ -69,265 +79,209 @@ export default function SucessoPage() {
     setConversionFired(true)
   }, [searchParams, conversionFired, isVerified])
 
-  // Pegar dados da URL
-  const transactionId = searchParams.get('transactionId') || ''
-  const amount = searchParams.get('amount') || '0'
-  const playerName = searchParams.get('playerName') || ''
-  const itemValue = searchParams.get('itemValue') || ''
-  const game = searchParams.get('game') || 'freefire'
-  
-  // Converter amount de centavos para reais
-  const amountInReais = (parseFloat(amount) / 100).toFixed(2)
+  // Renderizar tela de verificação se não estiver verificado
+  if (!isVerified) {
+    return (
+      <UserVerificationWithTest 
+        onVerificationComplete={() => {
+          setIsVerified(true)
+        }} 
+      />
+    )
+  }
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-y-auto overflow-x-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(107,70,193,0.12) 0%, rgba(59,130,246,0.08) 50%, rgba(236,72,153,0.10) 100%), linear-gradient(180deg, #0f0a1f 0%, #1a0f2e 100%)'
-    }}>
-      {/* Efeitos de fundo Aurora Boreal Digital */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Ondas de aurora flutuantes */}
-        <div className="absolute top-10 left-5 sm:top-20 sm:left-20 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-3xl opacity-20 animate-pulse" style={{
-          background: 'radial-gradient(circle, rgba(124,58,237,0.5) 0%, rgba(59,130,246,0.3) 50%, transparent 70%)',
-          animation: 'pulse 4s ease-in-out infinite'
-        }} />
-        <div className="absolute bottom-10 right-5 sm:bottom-20 sm:right-20 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-3xl opacity-20" style={{
-          background: 'radial-gradient(circle, rgba(236,72,153,0.5) 0%, rgba(139,92,246,0.3) 50%, transparent 70%)',
-          animation: 'pulse 5s ease-in-out infinite 1s'
-        }} />
-        
-        {/* Cristal aurora canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 opacity-30" style={{
-          animation: 'float 6s ease-in-out infinite'
-        }}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.7), rgba(59,130,246,0.6))',
-            clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-            boxShadow: '0 0 40px rgba(124,58,237,0.8), inset 0 0 20px rgba(59,130,246,0.5)',
-            filter: 'brightness(1.4)'
-          }} />
-        </div>
-        
-        {/* Diamante aurora canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 opacity-30" style={{
-          animation: 'rotate 20s linear infinite'
-        }}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.8), rgba(236,72,153,0.7))',
-            clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-            boxShadow: '0 0 40px rgba(124,58,237,0.9), inset 0 0 20px rgba(236,72,153,0.6)'
-          }} />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Efeitos de fundo animados - TEMA VERDE */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { 
-            transform: scale(1); 
-            opacity: 0.2; 
-          }
-          50% { 
-            transform: scale(1.1); 
-            opacity: 0.3; 
-          }
-        }
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0px) rotate(0deg); 
-          }
-          50% { 
-            transform: translateY(-20px) rotate(10deg); 
-          }
-        }
-        @keyframes rotate {
-          from { 
-            transform: rotate(0deg); 
-          }
-          to { 
-            transform: rotate(360deg); 
-          }
-        }
-        @keyframes checkmark {
-          0% {
-            stroke-dashoffset: 100;
-          }
-          100% {
-            stroke-dashoffset: 0;
-          }
-        }
-      `}</style>
-
-      <div className="relative flex items-center justify-center min-h-screen py-4 px-3 sm:p-4">
-        <div className="w-full max-w-[98%] xs:max-w-[95%] sm:max-w-md md:max-w-lg my-auto">
-          <div className="relative overflow-hidden" style={{
-            background: 'rgba(15, 10, 31, 0.75)',
-            backdropFilter: 'blur(25px)',
-            borderRadius: '20px',
-            border: '1px solid rgba(124, 58, 237, 0.45)',
-            boxShadow: '0 0 60px rgba(124, 58, 237, 0.5), 0 0 30px rgba(236, 72, 153, 0.35), inset 0 0 40px rgba(139, 92, 246, 0.15)'
-          }}>
-            {/* Header Aurora Boreal */}
-            <div className="relative h-16 sm:h-20 md:h-22 flex items-center justify-center overflow-hidden px-3" style={{
-              background: 'linear-gradient(135deg, rgba(124,58,237,0.28), rgba(236,72,153,0.22))',
-              backdropFilter: 'blur(20px)',
-              borderBottom: '1px solid rgba(124,58,237,0.45)',
-              boxShadow: '0 4px 30px rgba(124,58,237,0.4), 0 2px 15px rgba(236,72,153,0.3)'
-            }}>
-              <h1 className="relative text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 md:gap-3">
-                <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 flex-shrink-0" style={{
-                  background: 'linear-gradient(135deg, rgba(124,58,237,0.95), rgba(59,130,246,0.8))',
-                  clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                  boxShadow: '0 0 20px rgba(124,58,237,0.95)',
-                  filter: 'brightness(1.5)'
-                }} />
-                <span className="truncate">Pagamento Confirmado!</span>
-                <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 rounded-full flex-shrink-0" style={{
-                  background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
-                  boxShadow: '0 0 20px rgba(236,72,153,0.95)'
-                }} />
-              </h1>
+      <div className="max-w-3xl w-full relative z-10">
+        {/* Card principal */}
+        <div 
+          className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 text-center border border-green-500/20"
+          style={{
+            boxShadow: '0 0 60px rgba(16, 185, 129, 0.5), 0 0 30px rgba(52, 211, 153, 0.35), inset 0 0 40px rgba(34, 197, 94, 0.15)'
+          }}
+        >
+          {/* Ícone de sucesso animado */}
+          <div className="mb-8 flex justify-center">
+            <div 
+              className="relative w-32 h-32 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center"
+              style={{
+                boxShadow: '0 0 40px rgba(34, 197, 94, 0.6), 0 0 80px rgba(34, 197, 94, 0.3)',
+                animation: 'bounce 1s ease-in-out 3'
+              }}
+            >
+              <svg className="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              
+              {/* Círculos decorativos */}
+              <div className="absolute -inset-4 border-4 border-green-500/30 rounded-full animate-ping"></div>
+              <div className="absolute -inset-8 border-2 border-green-500/20 rounded-full animate-pulse"></div>
             </div>
+          </div>
 
-            {/* Conteúdo */}
-            <div className="p-4 sm:p-6 md:p-7 lg:p-8 text-center">
-              {/* Ícone de Sucesso Animado */}
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto mb-4 sm:mb-5 md:mb-6">
-                {/* Camada externa */}
-                <div className="absolute inset-0 rounded-full" style={{
-                  background: 'radial-gradient(circle at 35% 35%, rgba(124,58,237,0.6), rgba(59,130,246,0.4))',
-                  backdropFilter: 'blur(15px)',
-                  border: '2px solid rgba(124,58,237,0.5)',
-                  boxShadow: '0 10px 45px 0 rgba(124,58,237,0.6), 0 5px 25px rgba(59,130,246,0.4)',
-                  animation: 'pulse 2s ease-in-out infinite'
-                }} />
-                {/* Camada interna */}
-                <div className="absolute inset-2 sm:inset-3 rounded-full" style={{
-                  background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.7), rgba(139,92,246,0.5))',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(236,72,153,0.6)'
-                }} />
-                {/* Checkmark */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14" viewBox="0 0 52 52" style={{
-                    filter: 'drop-shadow(0 0 10px rgba(124,58,237,0.9))'
-                  }}>
-                    <path
-                      fill="none"
-                      stroke="rgba(124,58,237,1)"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14 27l7 7 16-16"
-                      style={{
-                        strokeDasharray: 100,
-                        strokeDashoffset: 0,
-                        animation: 'checkmark 0.8s ease-in-out'
-                      }}
-                    />
+          {/* Título com gradiente VERDE */}
+          <h1 
+            className="text-3xl sm:text-4xl md:text-5xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-emerald-300 via-green-400 to-teal-400 bg-clip-text text-transparent px-2"
+            style={{
+              textShadow: '0 0 30px rgba(34, 197, 94, 0.5)'
+            }}
+          >
+            🎉 Pagamento Confirmado!
+          </h1>
+
+          {/* Subtítulo */}
+          <p className="text-lg sm:text-xl md:text-2xl text-green-300 mb-4 sm:mb-6 font-semibold px-2">
+            Sua compra foi aprovada com sucesso!
+          </p>
+
+          {/* Box de informação de entrega - DESTAQUE */}
+          <div 
+            className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border-2 border-green-500/40"
+            style={{
+              boxShadow: '0 0 30px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(34, 197, 94, 0.1)'
+            }}
+          >
+            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 text-left">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
               </div>
-
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-blue-400 mb-3 sm:mb-4 px-2">
-                Compra Realizada com Sucesso!
-              </h2>
-              
-              <p className="text-purple-100/90 mb-4 sm:mb-5 md:mb-6 leading-relaxed text-xs sm:text-sm md:text-base px-2">
-                Seu pagamento foi confirmado! Os itens adquiridos serão enviados diretamente para seu ID no jogo em até 12 horas.
-              </p>
-
-              {/* Informações da Compra */}
-              <div className="relative p-3 sm:p-4 md:p-5 mb-4 sm:mb-5 md:mb-6 overflow-hidden" style={{
-                background: 'rgba(124, 58, 237, 0.12)',
-                backdropFilter: 'blur(22px)',
-                borderRadius: '20px',
-                border: '1px solid rgba(124, 58, 237, 0.4)',
-                boxShadow: '0 8px 30px 0 rgba(124, 58, 237, 0.4), 0 4px 15px rgba(236, 72, 153, 0.3)'
-              }}>
-                <p className="text-purple-100 font-bold text-sm sm:text-base md:text-lg mb-3 sm:mb-4 flex items-center justify-center gap-1.5 sm:gap-2">
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{
-                    background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(236,72,153,0.9))',
-                    clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                    boxShadow: '0 0 15px rgba(124,58,237,0.95)',
-                    filter: 'brightness(1.5)'
-                  }} />
-                  <span>Detalhes da Compra</span>
+              <div className="flex-1">
+                <h3 className="text-base sm:text-lg font-bold text-green-300 mb-2">⚡ Entrega Rápida Garantida</h3>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-3">
+                  Seus <span className="text-green-400 font-bold">diamantes</span> serão creditados automaticamente na conta vinculada ao <span className="text-green-400 font-bold">ID informado</span>.
                 </p>
-
-                <div className="space-y-2 sm:space-y-3 text-left">
-                  {playerName && (
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="text-purple-200/80 text-xs sm:text-sm flex-shrink-0">Jogador:</span>
-                      <span className="text-purple-100 font-semibold text-xs sm:text-sm truncate">{playerName}</span>
-                    </div>
-                  )}
-                  
-                  {game && (
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="text-purple-200/80 text-xs sm:text-sm flex-shrink-0">Jogo:</span>
-                      <span className="text-purple-100 font-semibold text-xs sm:text-sm capitalize">{game}</span>
-                    </div>
-                  )}
-                  
-                  {itemValue && (
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="text-purple-200/80 text-xs sm:text-sm flex-shrink-0">Itens:</span>
-                      <span className="text-pink-300 font-bold text-sm sm:text-base">{itemValue} 💎</span>
-                    </div>
-                  )}
-                  
-                  <div className="h-px bg-purple-500/20 my-2"></div>
-                  
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="text-purple-200/80 text-xs sm:text-sm flex-shrink-0">Valor Pago:</span>
-                    <span className="text-pink-300 font-bold text-base sm:text-lg md:text-xl">R$ {amountInReais}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <p className="text-green-200 text-sm sm:text-base font-semibold">
+                      Tempo médio: <span className="text-green-400 font-bold">5 a 10 minutos</span>
+                    </p>
                   </div>
-                  
-                  {transactionId && (
-                    <>
-                      <div className="h-px bg-purple-500/20 my-2"></div>
-                      <div>
-                        <span className="text-purple-200/80 text-xs block mb-1">ID da Transação:</span>
-                        <span className="text-purple-100/70 font-mono text-[10px] sm:text-xs break-all leading-tight">{transactionId}</span>
-                      </div>
-                    </>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <p className="text-gray-300 text-xs sm:text-sm">
+                      Prazo máximo: <span className="text-emerald-300 font-semibold">até 12 horas</span>
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Aviso Importante */}
-              <div className="relative p-3 sm:p-4 mb-4 sm:mb-5 overflow-hidden" style={{
-                background: 'rgba(139, 92, 246, 0.12)',
-                backdropFilter: 'blur(15px)',
-                borderRadius: '16px',
-                border: '1px solid rgba(139, 92, 246, 0.35)'
-              }}>
-                <p className="text-purple-100/90 text-[11px] sm:text-xs md:text-sm leading-relaxed">
-                  ⏱️ <strong>Importante:</strong> Os itens serão enviados automaticamente para seu ID no jogo em até 12 horas. Caso não receba, entre em contato com nosso suporte.
+          {/* Instruções claras */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 text-left border border-green-500/20">
+            <h3 className="text-green-400 font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              O que fazer agora?
+            </h3>
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-xs sm:text-sm font-bold">1</span>
+                <p className="text-gray-300 text-xs sm:text-sm pt-0.5">
+                  <span className="font-semibold text-green-300">Abra seu jogo</span> e aguarde alguns minutos
                 </p>
               </div>
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-xs sm:text-sm font-bold">2</span>
+                <p className="text-gray-300 text-xs sm:text-sm pt-0.5">
+                  Os diamantes aparecerão <span className="font-semibold text-green-300">automaticamente</span> na conta do ID informado
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-xs sm:text-sm font-bold">3</span>
+                <p className="text-gray-300 text-xs sm:text-sm pt-0.5">
+                  Se não receber em até 12h, <span className="font-semibold text-green-300">entre em contato</span> com nosso suporte
+                </p>
+              </div>
+            </div>
+          </div>
 
-              {/* Botão de Retorno */}
-              <a
-                href="/"
-                className="w-full font-bold text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 px-4 sm:px-6 md:px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.03] active:scale-[0.98] inline-block"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(124,58,237,0.45), rgba(236,72,153,0.4))',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(124,58,237,0.55)',
-                  boxShadow: '0 0 40px rgba(124,58,237,0.6), 0 0 20px rgba(236,72,153,0.4)'
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <span className="relative z-10">Voltar para o Início</span>
-              </a>
+          {/* Informações da transação */}
+          {searchParams.get('transactionId') && (
+            <div 
+              className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 text-left border border-green-500/20"
+              style={{
+                boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)'
+              }}
+            >
+              <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-xs sm:text-sm text-green-400 font-semibold uppercase tracking-wider">Detalhes da Compra</p>
+              </div>
+              
+              <div className="space-y-3 sm:space-y-4">
+                <div>
+                  <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">ID da Transação</p>
+                  <p className="text-xs sm:text-sm font-mono text-gray-200 break-all bg-black/30 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg border border-gray-700">
+                    {searchParams.get('transactionId')}
+                  </p>
+                </div>
+                
+                {searchParams.get('amount') && (
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">Valor Pago</p>
+                    <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                      R$ {parseFloat(searchParams.get('amount') || '0').toFixed(2)}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
-              {/* Suporte */}
-              <p className="text-purple-200/60 text-[10px] sm:text-xs md:text-sm mt-4 sm:mt-5 px-2">
-                Dúvidas? Entre em contato com nosso suporte
+          {/* Botão de retorno */}
+          <a
+            href="/"
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 text-base sm:text-lg"
+            style={{
+              boxShadow: '0 0 30px rgba(34, 197, 94, 0.4)'
+            }}
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Voltar para o Início
+          </a>
+
+          {/* Aviso de suporte */}
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-green-500/20">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <p className="text-gray-300 text-center sm:text-left">
+                Precisa de ajuda? <span className="text-green-400 font-semibold">Entre em contato com nosso suporte</span>
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Mensagem extra de confirmação */}
+        <div className="mt-4 sm:mt-6 text-center space-y-2 sm:space-y-3">
+          <div className="flex items-center justify-center gap-2">
+            <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <p className="text-green-300 text-xs sm:text-sm font-semibold">
+              Pedido processado com segurança
+            </p>
+          </div>
+          <p className="text-gray-400 text-xs">
+            Obrigado por confiar em nossos serviços! 💚
+          </p>
         </div>
       </div>
     </div>
