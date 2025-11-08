@@ -697,7 +697,7 @@ export default function CheckoutPage() {
               console.log('🎯 [PAID] Redirecionando conversão para:', whitePageBaseUrl)
               console.log('📍 [PAID] Origem:', originDomainFromCookie ? 'Cookie (referer detectado)' : 'Fallback (.env)')
               
-              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso/index.html`)
+              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso`)
               
               // Dados da compra
               whitePageUrl.searchParams.set('transactionId', pixData.transactionId)

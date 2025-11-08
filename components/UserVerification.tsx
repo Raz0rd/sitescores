@@ -447,51 +447,51 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.10) 50%, rgba(34,197,94,0.06) 100%), linear-gradient(180deg, #0a1f14 0%, #0f2d1f 100%)'
+      background: 'linear-gradient(135deg, rgba(107,70,193,0.12) 0%, rgba(59,130,246,0.08) 50%, rgba(236,72,153,0.10) 100%), linear-gradient(180deg, #0f0a1f 0%, #1a0f2e 100%)'
     }}>
-      {/* Efeitos de fundo Verde Esmeralda */}
+      {/* Efeitos de fundo Aurora Boreal Digital */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Partículas verdes flutuantes */}
+        {/* Ondas de aurora flutuantes */}
         <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-plasma-pulse" style={{
-          background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, rgba(5,150,105,0.25) 50%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(124,58,237,0.5) 0%, rgba(59,130,246,0.3) 50%, transparent 70%)'
         }} />
         <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-plasma-pulse-delayed" style={{
-          background: 'radial-gradient(circle, rgba(5,150,105,0.4) 0%, rgba(34,197,94,0.25) 50%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(236,72,153,0.5) 0%, rgba(139,92,246,0.3) 50%, transparent 70%)'
         }} />
         
-        {/* Cristal esmeralda canto superior esquerdo */}
+        {/* Cristal aurora canto superior esquerdo */}
         <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 md:w-32 lg:w-40 sm:h-24 md:h-32 lg:h-40 opacity-30 animate-electric-bolt">
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.6), rgba(5,150,105,0.5))',
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.7), rgba(59,130,246,0.6))',
             clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-            boxShadow: '0 0 40px rgba(16,185,129,0.7), inset 0 0 20px rgba(5,150,105,0.4)',
-            filter: 'brightness(1.3)'
+            boxShadow: '0 0 40px rgba(124,58,237,0.8), inset 0 0 20px rgba(59,130,246,0.5)',
+            filter: 'brightness(1.4)'
           }} />
         </div>
         
-        {/* Esfera verde canto superior direito */}
+        {/* Esfera aurora canto superior direito */}
         <div className="absolute top-0 right-0 w-14 h-14 sm:w-20 md:w-28 lg:w-32 sm:h-20 md:h-28 lg:h-32 opacity-35 animate-plasma-sphere" style={{animationDelay: '1.2s'}}>
           <div className="w-full h-full rounded-full" style={{
-            background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.7), rgba(5,150,105,0.5), rgba(34,197,94,0.3))',
-            boxShadow: '0 0 35px rgba(16,185,129,0.7), inset 0 0 20px rgba(5,150,105,0.5)'
+            background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.8), rgba(139,92,246,0.6), rgba(16,185,129,0.4))',
+            boxShadow: '0 0 35px rgba(236,72,153,0.8), inset 0 0 20px rgba(139,92,246,0.6)'
           }} />
         </div>
         
-        {/* Folha verde canto inferior esquerdo */}
+        {/* Onda aurora canto inferior esquerdo */}
         <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 md:w-30 lg:w-36 sm:h-24 md:h-30 lg:h-36 opacity-32 animate-energy-arc" style={{animationDelay: '2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(90deg, rgba(34,197,94,0.6), rgba(5,150,105,0.5))',
+            background: 'linear-gradient(90deg, rgba(16,185,129,0.7), rgba(59,130,246,0.6))',
             clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)',
-            boxShadow: '0 0 35px rgba(34,197,94,0.7), inset 0 0 18px rgba(5,150,105,0.4)'
+            boxShadow: '0 0 35px rgba(16,185,129,0.8), inset 0 0 18px rgba(59,130,246,0.5)'
           }} />
         </div>
         
-        {/* Diamante esmeralda canto inferior direito */}
+        {/* Diamante aurora canto inferior direito */}
         <div className="absolute bottom-0 right-0 w-20 h-20 sm:w-28 md:w-36 lg:w-44 sm:h-28 md:h-36 lg:h-44 opacity-30 animate-charged-particle" style={{animationDelay: '2.8s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.6))',
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.8), rgba(236,72,153,0.7))',
             clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-            boxShadow: '0 0 40px rgba(16,185,129,0.8), inset 0 0 20px rgba(5,150,105,0.5)'
+            boxShadow: '0 0 40px rgba(124,58,237,0.9), inset 0 0 20px rgba(236,72,153,0.6)'
           }} />
         </div>
       </div>
@@ -615,142 +615,142 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Tela Inicial */}
           {step === 'initial' && (
             <div className="relative overflow-hidden" style={{
-              background: 'rgba(10, 31, 20, 0.7)',
+              background: 'rgba(15, 10, 31, 0.75)',
               backdropFilter: 'blur(25px)',
               borderRadius: '28px',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              boxShadow: '0 0 60px rgba(16, 185, 129, 0.4), 0 0 30px rgba(5, 150, 105, 0.3), inset 0 0 40px rgba(34, 197, 94, 0.12)'
+              border: '1px solid rgba(124, 58, 237, 0.45)',
+              boxShadow: '0 0 60px rgba(124, 58, 237, 0.5), 0 0 30px rgba(236, 72, 153, 0.35), inset 0 0 40px rgba(139, 92, 246, 0.15)'
             }}>
-              {/* Header Verde Esmeralda */}
+              {/* Header Aurora Boreal */}
               <div className="relative h-20 sm:h-22 md:h-24 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.2))',
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.28), rgba(236,72,153,0.22))',
                 backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(16,185,129,0.4)',
-                boxShadow: '0 4px 30px rgba(16,185,129,0.35), 0 2px 15px rgba(5,150,105,0.25)'
+                borderBottom: '1px solid rgba(124,58,237,0.45)',
+                boxShadow: '0 4px 30px rgba(124,58,237,0.4), 0 2px 15px rgba(236,72,153,0.3)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(16,185,129,0.08) to-transparent" />
-                {/* Partículas verdes no header */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(124,58,237,0.1) to-transparent" />
+                {/* Partículas aurora no header */}
                 <div className="absolute top-1 left-2 sm:top-2 sm:left-3 w-2 h-2 sm:w-3 sm:h-3 animate-plasma-sphere" style={{
-                  background: 'radial-gradient(circle, rgba(16,185,129,0.9), rgba(5,150,105,0.7))',
-                  boxShadow: '0 0 15px rgba(16,185,129,0.9)',
+                  background: 'radial-gradient(circle, rgba(124,58,237,0.95), rgba(59,130,246,0.8))',
+                  boxShadow: '0 0 15px rgba(124,58,237,0.95)',
                   clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)'
                 }} />
                 <div className="absolute top-1 right-2 sm:top-2 sm:right-3 w-2 h-2 sm:w-3 sm:h-3 animate-electric-bolt" style={{
-                  background: 'radial-gradient(circle, rgba(5,150,105,0.9), rgba(34,197,94,0.7))',
-                  boxShadow: '0 0 15px rgba(5,150,105,0.9)',
+                  background: 'radial-gradient(circle, rgba(236,72,153,0.95), rgba(139,92,246,0.8))',
+                  boxShadow: '0 0 15px rgba(236,72,153,0.95)',
                   clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
                   animationDelay: '0.5s'
                 }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(16,185,129,0.2) to-transparent" style={{animation: 'electric-flow 5s ease-in-out infinite'}}></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(124,58,237,0.25) to-transparent" style={{animation: 'electric-flow 5s ease-in-out infinite'}}></div>
                 </div>
                 <h1 className="relative text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 sm:gap-3 px-2">
                   <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8" style={{
-                    background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.7))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.95), rgba(59,130,246,0.8))',
                     clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                    boxShadow: '0 0 20px rgba(16,185,129,0.9)',
-                    filter: 'brightness(1.4)'
+                    boxShadow: '0 0 20px rgba(124,58,237,0.95)',
+                    filter: 'brightness(1.5)'
                   }} />
                   <span>Bem-vindo!</span>
                   <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
-                    boxShadow: '0 0 20px rgba(16,185,129,0.9)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
+                    boxShadow: '0 0 20px rgba(236,72,153,0.95)'
                   }} />
                 </h1>
               </div>
 
-              {/* Conteúdo verde */}
+              {/* Conteúdo aurora */}
               <div className="p-6 sm:p-7 md:p-8 text-center">
-                {/* Ícone Verde com camadas */}
+                {/* Ícone Aurora com camadas */}
                 <div className="relative w-20 h-20 sm:w-24 md:w-28 sm:h-24 md:h-28 mx-auto mb-5 sm:mb-6 md:mb-7">
-                  {/* Camada externa - esmeralda */}
+                  {/* Camada externa - aurora roxa */}
                   <div className="absolute inset-0 rounded-full animate-plasma-pulse" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.5), rgba(5,150,105,0.3))',
+                    background: 'radial-gradient(circle at 35% 35%, rgba(124,58,237,0.6), rgba(59,130,246,0.4))',
                     backdropFilter: 'blur(15px)',
-                    border: '2px solid rgba(16,185,129,0.4)',
-                    boxShadow: '0 10px 45px 0 rgba(16,185,129,0.5), 0 5px 25px rgba(5,150,105,0.35)'
+                    border: '2px solid rgba(124,58,237,0.5)',
+                    boxShadow: '0 10px 45px 0 rgba(124,58,237,0.6), 0 5px 25px rgba(59,130,246,0.4)'
                   }} />
-                  {/* Camada interna - verde */}
+                  {/* Camada interna - aurora rosa */}
                   <div className="absolute inset-3 rounded-full animate-plasma-pulse-delayed" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(5,150,105,0.6), rgba(34,197,94,0.4))',
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.7), rgba(139,92,246,0.5))',
                     backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(5,150,105,0.5)'
+                    border: '1px solid rgba(236,72,153,0.6)'
                   }} />
-                  {/* Símbolo central - diamante */}
+                  {/* Símbolo central - diamante aurora */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-6 h-6 sm:w-8 md:w-10 sm:h-8 md:h-10 animate-electric-bolt" style={{
-                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
+                      background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(236,72,153,0.9))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 25px rgba(16,185,129,0.9)',
-                      filter: 'brightness(1.5)'
+                      boxShadow: '0 0 25px rgba(124,58,237,0.95)',
+                      filter: 'brightness(1.6)'
                     }} />
                   </div>
                 </div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-green-400 to-emerald-500 mb-4 sm:mb-5">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-blue-400 mb-4 sm:mb-5">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-emerald-100/90 mb-5 sm:mb-6 md:mb-7 leading-relaxed text-sm sm:text-base md:text-lg">
+                <p className="text-purple-100/90 mb-5 sm:mb-6 md:mb-7 leading-relaxed text-sm sm:text-base md:text-lg">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
                 <div className="relative p-4 sm:p-5 md:p-6 mb-5 sm:mb-6 md:mb-7 overflow-hidden" style={{
-                  background: 'rgba(16, 185, 129, 0.08)',
+                  background: 'rgba(124, 58, 237, 0.12)',
                   backdropFilter: 'blur(22px)',
                   borderRadius: '26px',
-                  border: '1px solid rgba(16, 185, 129, 0.35)',
-                  boxShadow: '0 8px 30px 0 rgba(16, 185, 129, 0.35), 0 4px 15px rgba(5, 150, 105, 0.25)'
+                  border: '1px solid rgba(124, 58, 237, 0.4)',
+                  boxShadow: '0 8px 30px 0 rgba(124, 58, 237, 0.4), 0 4px 15px rgba(236, 72, 153, 0.3)'
                 }}>
-                  {/* Partículas verdes decorativas */}
+                  {/* Partículas aurora decorativas */}
                   <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full opacity-50 animate-plasma-sphere" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
-                    boxShadow: '0 0 18px rgba(16,185,129,0.8)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
+                    boxShadow: '0 0 18px rgba(236,72,153,0.9)'
                   }} />
                   <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 opacity-50 animate-electric-bolt" style={{
-                    background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.8))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.95), rgba(59,130,246,0.85))',
                     clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                    boxShadow: '0 0 18px rgba(16,185,129,0.8)',
-                    filter: 'brightness(1.4)'
+                    boxShadow: '0 0 18px rgba(124,58,237,0.9)',
+                    filter: 'brightness(1.5)'
                   }} />
-                  <p className="text-emerald-100 font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3 relative z-10">
+                  <p className="text-purple-100 font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3 relative z-10">
                     <div className="w-5 h-5 sm:w-6 sm:h-6" style={{
-                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
+                      background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(236,72,153,0.9))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 15px rgba(16,185,129,0.9)',
-                      filter: 'brightness(1.4)'
+                      boxShadow: '0 0 15px rgba(124,58,237,0.95)',
+                      filter: 'brightness(1.5)'
                     }} />
                     <span>Benefício Exclusivo</span>
                     <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full" style={{
-                      background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
-                      boxShadow: '0 0 15px rgba(16,185,129,0.9)'
+                      background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
+                      boxShadow: '0 0 15px rgba(236,72,153,0.95)'
                     }} />
                   </p>
-                  <p className="text-emerald-100/90 text-sm sm:text-base md:text-lg leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-green-300 text-base sm:text-lg md:text-xl">70% de desconto</span> na sua recarga!
+                  <p className="text-purple-100/90 text-sm sm:text-base md:text-lg leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-pink-300 text-base sm:text-lg md:text-xl">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
                 <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 md:mb-7">
-                  <div className="flex items-center gap-3 sm:gap-4 text-emerald-200 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-purple-200 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
+                      background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(59,130,246,0.85))',
                       clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                      boxShadow: '0 0 12px rgba(16,185,129,0.9)',
-                      filter: 'brightness(1.4)'
+                      boxShadow: '0 0 12px rgba(124,58,237,0.95)',
+                      filter: 'brightness(1.5)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Validação rápida e segura</span>
                   </div>
-                  <div className="flex items-center gap-3 sm:gap-4 text-green-200 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-pink-200 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full" style={{
-                      background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
-                      boxShadow: '0 0 12px rgba(16,185,129,0.9)'
+                      background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
+                      boxShadow: '0 0 12px rgba(236,72,153,0.95)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Descontos de até 70%</span>
                   </div>
-                  <div className="flex items-center gap-3 sm:gap-4 text-emerald-100 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-blue-100 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
+                      background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(236,72,153,0.9))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 12px rgba(16,185,129,0.9)'
+                      boxShadow: '0 0 12px rgba(124,58,237,0.95)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Diamantes extras grátis</span>
                   </div>
@@ -760,41 +760,41 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   onClick={() => { playClickSound(); setStep('terms'); }}
                   className="w-full font-bold text-base sm:text-lg md:text-xl py-4 sm:py-5 md:py-6 px-6 sm:px-8 md:px-10 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.03]"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(16,185,129,0.4), rgba(5,150,105,0.35))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.45), rgba(236,72,153,0.4))',
                     backdropFilter: 'blur(20px)',
                     borderRadius: '24px',
-                    border: '1px solid rgba(16,185,129,0.5)',
-                    boxShadow: '0 0 40px rgba(16,185,129,0.5), 0 0 20px rgba(5,150,105,0.35)'
+                    border: '1px solid rgba(124,58,237,0.55)',
+                    boxShadow: '0 0 40px rgba(124,58,237,0.6), 0 0 20px rgba(236,72,153,0.4)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4" style={{
-                    background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.98), rgba(236,72,153,0.9))',
                     clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                    boxShadow: '0 0 18px rgba(16,185,129,0.9)',
-                    filter: 'brightness(1.5)'
+                    boxShadow: '0 0 18px rgba(124,58,237,0.95)',
+                    filter: 'brightness(1.6)'
                   }} />
                   <span className="relative z-10">Iniciar Verificação</span>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 ml-3 sm:ml-4 rounded-full" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
-                    boxShadow: '0 0 18px rgba(16,185,129,0.9)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.95), rgba(139,92,246,0.8), rgba(16,185,129,0.5))',
+                    boxShadow: '0 0 18px rgba(236,72,153,0.95)'
                   }} />
                 </button>
 
                 {/* Links de Termos e Políticas */}
                 <div className="mt-5 sm:mt-6 md:mt-7 text-center text-xs sm:text-sm">
-                  <p className="mb-2 text-emerald-200/85">Ao continuar, você concorda com nossos</p>
+                  <p className="mb-2 text-purple-200/85">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-emerald-300 hover:text-green-300 underline transition-colors font-semibold"
+                      className="text-purple-300 hover:text-pink-300 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-emerald-300">•</span>
+                    <span className="text-purple-300">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-green-300 hover:text-emerald-300 underline transition-colors font-semibold"
+                      className="text-pink-300 hover:text-purple-300 underline transition-colors font-semibold"
                     >
                       Política de Privacidade
                     </button>
@@ -806,83 +806,83 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Termos */}
           {step === 'terms' && (
-            <div className="p-5" style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '30px',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+            <div className="p-4 sm:p-5 md:p-6" style={{
+              background: 'rgba(15, 10, 31, 0.75)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '28px',
+              border: '1px solid rgba(124, 58, 237, 0.45)',
+              boxShadow: '0 0 60px rgba(124, 58, 237, 0.5), 0 0 30px rgba(236, 72, 153, 0.35), inset 0 0 40px rgba(139, 92, 246, 0.15)'
             }}>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300">Termos de Uso e Política de Privacidade</h2>
-                <div className="p-4 max-h-64 overflow-y-auto text-sm text-blue-100/80 leading-relaxed" style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  backdropFilter: 'blur(10px)',
+              <div className="mb-5 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-blue-400">Termos de Uso e Política de Privacidade</h2>
+                <div className="p-3 sm:p-4 max-h-64 overflow-y-auto text-xs sm:text-sm text-purple-100/80 leading-relaxed" style={{
+                  background: 'rgba(124, 58, 237, 0.08)',
+                  backdropFilter: 'blur(15px)',
                   borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                  border: '1px solid rgba(124, 58, 237, 0.3)'
                 }}>
                   
                   <div className="p-3 mb-4" style={{
-                    background: 'rgba(100,150,255,0.1)',
-                    borderLeft: '4px solid rgba(100,150,255,0.5)',
+                    background: 'rgba(124,58,237,0.15)',
+                    borderLeft: '4px solid rgba(124,58,237,0.6)',
                     borderRadius: '10px'
                   }}>
-                    <p className="text-blue-200 font-semibold">
+                    <p className="text-purple-200 font-semibold">
                       ✨ <strong>EXCLUSIVIDADE:</strong> Deseja receber seu desconto especial? 
                       Aceite os termos e tenha acesso a ofertas exclusivas!
                     </p>
                   </div>
 
-                  <h4 className="font-bold text-blue-200 mb-2">💎 TERMOS DE USO</h4>
+                  <h4 className="font-bold text-purple-200 mb-2">💎 TERMOS DE USO</h4>
                   <p className="mb-3">
                     <strong className="text-pink-300">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-blue-300">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de jogadores ativos são aceitos.
+                    <strong className="text-purple-300">2. Usuários Verificados:</strong> Este site é exclusivo para usuários reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de usuários ativos são aceitos.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-pink-300">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.
+                    <strong className="text-pink-300">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e itens extras. As ofertas são limitadas e sujeitas a disponibilidade.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-blue-300">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
+                    <strong className="text-purple-300">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
                   </p>
                   <p className="mb-3">
                     <strong className="text-pink-300">5. Validade da Oferta:</strong> O desconto de 70% é válido para recargas e não pode ser combinado com outras promoções. Esta oferta está sujeita à disponibilidade e pode ser encerrada a qualquer momento sem aviso prévio.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-blue-300">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
+                    <strong className="text-purple-300">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
                   </p>
                   <p className="mb-3">
                     <strong className="text-pink-300">7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
                   </p>
 
-                  <h4 className="font-bold text-purple-200 mb-2 mt-4">⭐ POLÍTICA DE PRIVACIDADE</h4>
+                  <h4 className="font-bold text-blue-200 mb-2 mt-4">⭐ POLÍTICA DE PRIVACIDADE</h4>
                   <p className="mb-3">
-                    <strong className="text-blue-300">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
+                    <strong className="text-purple-300">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do usuário, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
                   </p>
                   <p className="mb-3">
                     <strong className="text-pink-300">9. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-blue-300">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
+                    <strong className="text-purple-300">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
                   </p>
                   <p className="mb-3">
                     <strong className="text-pink-300">11. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-blue-300">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
+                    <strong className="text-purple-300">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
                   </p>
                   <p className="mb-3">
                     <strong className="text-pink-300">13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
                   </p>
                   
-                  <p className="text-xs text-pink-200/70 mt-4 italic">
+                  <p className="text-xs text-purple-200/70 mt-4 italic">
                     Ao participar desta promoção, você concorda com estes termos e condições.
                   </p>
 
                   <div className="p-3 mt-4" style={{
-                    background: 'rgba(255,100,200,0.1)',
-                    borderLeft: '4px solid rgba(255,100,200,0.5)',
+                    background: 'rgba(236,72,153,0.15)',
+                    borderLeft: '4px solid rgba(236,72,153,0.6)',
                     borderRadius: '10px'
                   }}>
                     <p className="text-pink-200 text-xs">
@@ -894,12 +894,12 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               </div>
 
               <div className="mb-4">
-                <label className="flex items-start text-sm text-blue-100/80">
+                <label className="flex items-start text-xs sm:text-sm text-purple-100/80">
                   <input
                     type="checkbox"
                     checked={accepted}
                     onChange={(e) => setAccepted(e.target.checked)}
-                    className="mr-3 w-5 h-5 text-blue-400 rounded focus:ring-blue-400 mt-0.5 bg-white/10 border-blue-300"
+                    className="mr-2 sm:mr-3 w-4 h-4 sm:w-5 sm:h-5 text-purple-400 rounded focus:ring-purple-400 mt-0.5 bg-white/10 border-purple-300"
                   />
                   <span>
                     Eu li e aceito os{' '}
@@ -907,7 +907,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                       Termos de Uso
                     </span>
                     {' '}e{' '}
-                    <span className="text-blue-300 underline font-bold">
+                    <span className="text-purple-300 underline font-bold">
                       Política de Privacidade
                     </span>, 
                     e desejo ter acesso às <strong className="text-pink-300">ofertas exclusivas</strong> para usuários verificados
@@ -921,15 +921,15 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
               )}
 
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 <button
                   onClick={() => setStep('initial')}
-                  className="flex-1 font-medium py-3 px-4 transition-all duration-200 text-blue-200"
+                  className="flex-1 font-medium py-3 px-3 sm:px-4 transition-all duration-200 text-purple-200 text-sm sm:text-base hover:scale-105"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                    background: 'rgba(124, 58, 237, 0.15)',
+                    backdropFilter: 'blur(15px)',
+                    borderRadius: '18px',
+                    border: '1px solid rgba(124, 58, 237, 0.35)'
                   }}
                 >
                   ← Voltar
@@ -937,17 +937,18 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 <button
                   onClick={handleAcceptTerms}
                   disabled={!accepted}
-                  className={`flex-1 font-bold py-3 px-4 transition-all duration-300 ${
+                  className={`flex-1 font-bold py-3 px-3 sm:px-4 transition-all duration-300 text-sm sm:text-base ${
                     accepted
                       ? 'text-white shadow-lg hover:scale-105'
                       : 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600'
                   }`}
                   style={accepted ? {
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.45), rgba(236,72,153,0.4))',
                     backdropFilter: 'blur(20px)',
-                    borderRadius: '15px',
-                    border: '1px solid rgba(255,255,255,0.25)'
-                  } : {}}
+                    borderRadius: '18px',
+                    border: '1px solid rgba(124,58,237,0.55)',
+                    boxShadow: '0 0 30px rgba(124,58,237,0.5)'
+                  } : { borderRadius: '18px' }}
                 >
                   Continuar ✨
                 </button>
@@ -1149,94 +1150,94 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Tela de Verificação */}
           {step === 'verification' && (
             <div className="overflow-hidden" style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '30px',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+              background: 'rgba(15, 10, 31, 0.75)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '28px',
+              border: '1px solid rgba(124, 58, 237, 0.45)',
+              boxShadow: '0 0 60px rgba(124, 58, 237, 0.5), 0 0 30px rgba(236, 72, 153, 0.35), inset 0 0 40px rgba(139, 92, 246, 0.15)'
             }}>
-              {/* Header Glass */}
-              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                backdropFilter: 'blur(15px)',
-                borderBottom: '1px solid rgba(255,255,255,0.1)'
+              {/* Header Aurora */}
+              <div className="relative h-16 sm:h-20 flex items-center justify-center overflow-hidden" style={{
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.28), rgba(236,72,153,0.22))',
+                backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(124,58,237,0.45)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-                {/* Orbes decorativos */}
-                <div className="absolute top-2 left-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(150,200,255,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(150,200,255,0.5)'
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(124,58,237,0.1) to-transparent" />
+                {/* Partículas decorativas */}
+                <div className="absolute top-2 left-2 w-2 h-2 sm:w-3 sm:h-3 rounded-full" style={{
+                  background: 'radial-gradient(circle, rgba(124,58,237,0.95), transparent)',
+                  boxShadow: '0 0 10px rgba(124,58,237,0.8)'
                 }} />
-                <div className="absolute top-2 right-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(255,150,200,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(255,150,200,0.5)'
+                <div className="absolute top-2 right-2 w-2 h-2 sm:w-3 sm:h-3 rounded-full" style={{
+                  background: 'radial-gradient(circle, rgba(236,72,153,0.95), transparent)',
+                  boxShadow: '0 0 10px rgba(236,72,153,0.8)'
                 }} />
-                <h2 className="relative text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <span className="text-xl md:text-2xl">✨</span>
+                <h2 className="relative text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1.5 sm:gap-2 px-2">
+                  <span className="text-lg sm:text-xl md:text-2xl">✨</span>
                   <span>Validar Identidade</span>
-                  <span className="text-xl md:text-2xl">💎</span>
+                  <span className="text-lg sm:text-xl md:text-2xl">💎</span>
                 </h2>
               </div>
 
-              <div className="p-5">
-                <p className="text-blue-100/80 text-sm mb-6 text-center">
-                  Insira seu ID de jogador para confirmar que você é um usuário real
+              <div className="p-4 sm:p-5">
+                <p className="text-purple-100/80 text-xs sm:text-sm mb-5 sm:mb-6 text-center">
+                  Insira seu ID de usuário para confirmar que você é um usuário real
                 </p>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <label className="block text-base font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 flex items-center gap-2">
-                      <span className="text-lg md:text-xl">🎮</span>
-                      <span>ID do Jogador</span>
-                      <span className="text-xs text-blue-200 font-normal">(apenas números)</span>
+                    <label className="block text-sm sm:text-base font-bold mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-blue-400 flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-base sm:text-lg md:text-xl">🎮</span>
+                      <span>ID do Usuário</span>
+                      <span className="text-xs text-purple-200 font-normal">(apenas números)</span>
                     </label>
                     <input
                       type="text"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value.replace(/[^0-9]/g, ''))}
-                      placeholder="Digite seu ID do jogo (ex: 5435431)"
-                      className="w-full px-5 py-4 text-white text-lg font-bold placeholder-blue-200/40 focus:outline-none transition-all duration-300 shadow-lg"
+                      placeholder="Digite seu ID (ex: 5435431)"
+                      className="w-full px-4 sm:px-5 py-3 sm:py-4 text-white text-base sm:text-lg font-bold placeholder-purple-200/40 focus:outline-none transition-all duration-300 shadow-lg"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(10px)',
+                        background: 'rgba(124, 58, 237, 0.12)',
+                        backdropFilter: 'blur(15px)',
                         borderRadius: '20px',
-                        border: '1px solid rgba(255, 255, 255, 0.15)'
+                        border: '1px solid rgba(124, 58, 237, 0.35)'
                       }}
                       disabled={isLoading}
                       maxLength={15}
                     />
                   </div>
                   
-                  <div className="p-5 shadow-lg relative overflow-hidden" style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(15px)',
+                  <div className="p-3 sm:p-4 md:p-5 shadow-lg relative overflow-hidden" style={{
+                    background: 'rgba(124, 58, 237, 0.12)',
+                    backdropFilter: 'blur(18px)',
                     borderRadius: '20px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                    border: '1px solid rgba(124, 58, 237, 0.35)'
                   }}>
-                    {/* Orbes decorativos */}
-                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
-                      background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
+                    {/* Partículas decorativas */}
+                    <div className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full opacity-40" style={{
+                      background: 'radial-gradient(circle, rgba(236,72,153,0.8), transparent)'
                     }} />
-                    <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
-                      background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
+                    <div className="absolute bottom-2 left-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full opacity-40" style={{
+                      background: 'radial-gradient(circle, rgba(124,58,237,0.8), transparent)'
                     }} />
-                    <p className="text-sm text-blue-200 font-bold mb-3 flex items-center gap-2 relative z-10">
-                      <span className="text-lg">✨</span>
+                    <p className="text-xs sm:text-sm text-purple-200 font-bold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2 relative z-10">
+                      <span className="text-base sm:text-lg">✨</span>
                       <span>Importante:</span>
                     </p>
-                    <p className="text-sm text-blue-100/80 mb-3 leading-relaxed relative z-10">
-                      Digite seu <span className="text-pink-300 font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
+                    <p className="text-xs sm:text-sm text-purple-100/80 mb-2 sm:mb-3 leading-relaxed relative z-10">
+                      Digite seu <span className="text-pink-300 font-bold">ID REAL</span>! IDs falsos ou inválidos não passarão na verificação.
                     </p>
-                    <p className="text-xs text-blue-100/70 mb-3 rounded-lg p-2 relative z-10" style={{
-                      background: 'rgba(100,150,255,0.1)',
-                      border: '1px solid rgba(100,150,255,0.2)'
+                    <p className="text-[10px] sm:text-xs text-purple-100/70 mb-2 sm:mb-3 rounded-lg p-2 relative z-10" style={{
+                      background: 'rgba(124,58,237,0.15)',
+                      border: '1px solid rgba(124,58,237,0.3)'
                     }}>
-                      📍 <span className="text-blue-200 font-semibold">Encontre seu ID em:</span><br/>
-                      <span className="text-white font-bold ml-4">Configurações → Informações Básicas → ID do Jogador</span>
+                      📍 <span className="text-purple-200 font-semibold">Encontre seu ID em:</span><br/>
+                      <span className="text-white font-bold ml-3 sm:ml-4">Configurações → Informações Básicas → ID do Usuário</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
-                      className="text-sm text-pink-300 hover:text-blue-300 underline font-bold flex items-center gap-1 relative z-10"
+                      className="text-xs sm:text-sm text-pink-300 hover:text-purple-300 underline font-bold flex items-center gap-1 relative z-10"
                     >
                       📖 Ver tutorial completo de como encontrar seu ID
                     </button>
@@ -1252,35 +1253,36 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
               )}
 
-              <div className="px-5 pb-5">
+              <div className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <button
                   onClick={handleVerification}
                   disabled={isLoading || !playerId.trim()}
-                  className={`w-full font-bold text-lg py-5 px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
+                  className={`w-full font-bold text-base sm:text-lg py-4 sm:py-5 px-6 sm:px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
                     isLoading || !playerId.trim()
                       ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600 rounded-2xl'
-                      : 'text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow'
+                      : 'text-white shadow-2xl hover:scale-[1.05]'
                   }`}
                   style={!isLoading && playerId.trim() ? {
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    background: 'linear-gradient(135deg, rgba(124,58,237,0.45), rgba(236,72,153,0.4))',
                     backdropFilter: 'blur(20px)',
-                    borderRadius: '25px',
-                    border: '1px solid rgba(255,255,255,0.25)'
+                    borderRadius: '22px',
+                    border: '1px solid rgba(124,58,237,0.55)',
+                    boxShadow: '0 0 40px rgba(124,58,237,0.6), 0 0 20px rgba(236,72,153,0.4)'
                   } : {}}
                 >
                   {!isLoading && !(!playerId.trim()) && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   )}
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-3 border-white border-t-transparent mr-3"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-3 border-white border-t-transparent mr-2 sm:mr-3"></div>
                       <span className="animate-pulse">Verificando...</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-xl md:text-2xl mr-2">✨</span>
+                      <span className="text-lg sm:text-xl md:text-2xl mr-1.5 sm:mr-2">✨</span>
                       <span className="relative z-10">Entrar</span>
-                      <span className="text-xl md:text-2xl ml-2">💎</span>
+                      <span className="text-lg sm:text-xl md:text-2xl ml-1.5 sm:ml-2">💎</span>
                     </>
                   )}
                 </button>

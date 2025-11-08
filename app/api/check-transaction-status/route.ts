@@ -318,7 +318,7 @@ export async function POST(request: NextRequest) {
             platform: "GMePortsFF",
             paymentMethod: "pix",
             status: "paid", // Status UTMify para paid
-            createdAt: storedOrder.createdAt || getBrazilTimestamp(),
+            createdAt: storedOrder.createdAt ? getBrazilTimestamp(new Date(storedOrder.createdAt)) : getBrazilTimestamp(),
             approvedDate: transactionData.paidAt ? getBrazilTimestamp(new Date(transactionData.paidAt)) : getBrazilTimestamp(new Date()),
             refundedAt: null,
             customer: {
@@ -366,6 +366,8 @@ export async function POST(request: NextRequest) {
           console.log(`[CHECK-STATUS] 📤 Enviando PAID para UTMify:`)
           console.log(`   - Order ID: ${utmifyData.orderId}`)
           console.log(`   - Status: ${utmifyData.status}`)
+          console.log(`   - CreatedAt (UTC): ${utmifyData.createdAt}`)
+          console.log(`   - ApprovedDate (UTC): ${utmifyData.approvedDate}`)
           console.log(`   - Valor: R$ ${(utmifyData.products[0].priceInCents / 100).toFixed(2)}`)
           console.log(`   - Cliente: ${utmifyData.customer.name}`)
           console.log(`   - Email: ${utmifyData.customer.email}`)
