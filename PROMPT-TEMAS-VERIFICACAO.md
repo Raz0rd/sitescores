@@ -6,105 +6,157 @@ Copie o prompt abaixo e cole no chat, substituindo [TEMA] pelo tema desejado.
 ---
 
 ## 🚀 PROMPT UNIVERSAL:
+🧠 Prompt aprimorado (geração aleatória de tema e estilo visual)
 
-Altere o tema visual do componente UserVerification.tsx para o tema [TEMA].
+Recrie o estilo visual completo do componente UserVerification.tsx com base em um tema gerado aleatoriamente.
 
-REGRAS IMPORTANTES:
-- NÃO altere NENHUMA funcionalidade
-- NÃO remova verificações ou validações
-- NÃO mude a estrutura de steps (initial, terms, quiz, result, verification)
-- APENAS altere: cores, gradientes, ícones/emojis, formas geométricas, animações CSS
+O tema deve ser coerente, criativo e visualmente distinto, mas nunca reutilizar o mesmo padrão visual.
 
-REQUISITOS DO TEMA [TEMA]:
-1. Modal Compacto: Header 20px (h-20), padding 5 (p-5), textos menores
-2. Formas nos Cantos: Adicione 4 formas/padrões SVG nos cantos da tela relacionadas ao tema
-3. Paleta de Cores: Use 3 cores principais do tema em gradientes
-4. Ícones/Emojis: Substitua todos os emojis por símbolos relacionados ao tema
-5. Animações: Adicione pelo menos 1 animação CSS customizada relacionada ao tema
-6. Background: Altere o background principal e adicione efeitos visuais temáticos
-7. Formas Decorativas: Adicione formas geométricas pequenas no header e nas caixas
+Não use ícones prontos (como FontAwesome, Material Icons, emojis etc). Prefira formas criadas com CSS/SVG e animações sutis e fluidas.
 
-ESTRUTURA A MANTER:
-- Arquivo: components/UserVerification.tsx
-- Steps: initial, terms, quiz, result, verification
-- Todas as props e estados
-- Todas as funções de validação
-- Sistema de verificação de ID
+Cada execução deve gerar um novo conceito estético, como: “Energia Cósmica”, “Neon Urbano”, “Névoa Digital”, “Fibras de Luz”, “Areia Dourada”, “Gelo Futurista”, “Cidades Espelhadas”, etc.
 
----
+⚙️ REGRAS FIXAS:
+
+Não altere funcionalidades, estados, ou validações.
+
+Não modifique a estrutura dos steps (initial, terms, quiz, result, verification).
+
+Mantenha todas as props e funções originais.
+
+Alterações somente visuais (cores, gradientes, formas, CSS, animações, modal).
+
+🎨 DIRETRIZES PARA O NOVO TEMA (gerado automaticamente):
+
+Nome do tema: gere um nome criativo aleatório.
+
+Cores: escolha 3–4 cores principais que harmonizem entre si.
+
+Formas: crie formas decorativas com CSS/SVG relacionadas ao tema.
+
+Animações: adicione pelo menos uma animação CSS relevante (ex: pulsar, rotação suave, fluidez, deslocamento, reflexão).
+
+Gradientes: utilize gradientes modernos (linear, radial ou cônicos) em elementos de fundo.
+
+Fundo: altere o background principal com textura, brilho ou movimento leve.
+
+Sem ícones ou emojis: substitua por elementos visuais gerados via CSS (formas geométricas, partículas, brilhos etc).
+
+🪟 ESTILO DO MODAL (variável por tema):
+
+Gere um layout único para o modal, variando levemente entre:
+
+Compacto (h-20, p-5, textos pequenos)
+
+Espaçado (h-24, p-8, fontes médias)
+
+Minimalista (fundo translúcido com blur)
+
+Vibrante (gradiente animado com borda suave)
+
+Sempre use o tema visual gerado para guiar o estilo.
+
+📜 ESTRUTURA A MANTER:
+
+Arquivo: components/UserVerification.tsx
+
+Steps: initial, terms, quiz, result, verification
+
+Props, estados e validações originais
+
+Sistema de verificação de ID
 
 ## 🎭 EXEMPLOS DE TEMAS:
 
-### Tema Espacial/Galáxia:
-[TEMA] = Espacial/Galáxia com estrelas, planetas e nebulosas
-Cores: Roxo escuro, Azul espacial, Rosa nebulosa
-Formas: Estrelas, planetas, órbitas, constelações
-Emojis: 🌌 🚀 ⭐ 🪐 🌠
-Animações: Estrelas piscando, planetas orbitando
+Tema Plasma/Energia Dinâmica
 
-### Tema Neon/Cyberpunk:
-[TEMA] = Neon/Cyberpunk com luzes neon e circuitos
-Cores: Rosa neon, Cyan elétrico, Roxo neon
-Formas: Circuitos, linhas de código, hexágonos tech
-Emojis: ⚡ 🔮 💠 🎯 ⚙️
-Animações: Pulso neon, scan lines, glitch effect
+[TEMA] = Energia fluida e pulsante, com gradientes em movimento
+Cores: Roxo elétrico, Azul plasma, Rosa neon
+Formas: Manchas fluidas, ondas contínuas, gradientes animados
+CSS: background: radial-gradient(...) com animation: pulse 6s infinite alternate;
+Efeitos: Mistura de camadas com mix-blend-mode: overlay, blur dinâmico, brilho em hover
+Sensação: Movimento constante, energia digital fluindo
 
-### Tema Natureza/Floresta:
-[TEMA] = Natureza/Floresta com folhas e elementos orgânicos
-Cores: Verde floresta, Verde musgo, Dourado
-Formas: Folhas, galhos, flores, raízes
-Emojis: 🌿 🍃 🌳 🌺 ✨
-Animações: Folhas caindo, vento suave, crescimento
+Tema Minimalista/Geometria Limpa
 
-### Tema Fogo/Lava:
-[TEMA] = Fogo/Lava com chamas e calor intenso
-Cores: Vermelho fogo, Laranja lava, Amarelo
-Formas: Chamas, ondas de calor, brasas
-Emojis: 🔥 💥 ⚡ 🌋 💢
-Animações: Chamas dançando, calor tremulando
+[TEMA] = Layouts com formas vetoriais puras e contraste equilibrado
+Cores: Branco gelo, Preto suave, Azul acinzentado
+Formas: Linhas diagonais, triângulos sutis, grids geométricos
+CSS: clip-path em seções e transform: skewY() para blocos
+Efeitos: Sombras suaves (box-shadow) e micro animações de escala (transform: scale(1.02))
+Sensação: Profissionalismo, organização, clareza
 
-### Tema Gelo/Inverno:
-[TEMA] = Gelo/Inverno com cristais e neve
-Cores: Azul gelo, Branco neve, Azul escuro
-Formas: Cristais de gelo, flocos de neve, fractais
-Emojis: ❄️ 💎 ⭐ 🔷 ✨
-Animações: Neve caindo, cristais formando
+Tema Vapor/Blur Futurista
 
-### Tema Oceano/Aquático:
-[TEMA] = Oceano/Aquático com ondas e vida marinha
-Cores: Azul oceano, Turquesa, Azul profundo
-Formas: Ondas, bolhas, corais, peixes
-Emojis: 🌊 🐠 💧 🐚 ⚓
-Animações: Ondas fluindo, bolhas subindo
+[TEMA] = Fundo com transparências e efeitos de vidro
+Cores: Azul translúcido, Rosa etéreo, Branco gelo
+Formas: Camadas translúcidas com bordas curvas
+CSS: backdrop-filter: blur(20px); e border-radius: 30px;
+Efeitos: Transição suave entre cores e reflexos móveis
+Sensação: Interface moderna tipo Apple Glass / UI futurista
 
-### Tema Dourado/Luxo:
-[TEMA] = Dourado/Luxo com elementos premium
-Cores: Dourado, Preto elegante, Branco pérola
-Formas: Ornamentos, molduras, art deco
-Emojis: 👑 💎 ⭐ 🏆 ✨
-Animações: Brilho dourado, reflexos, shimmer
+Tema Digital Grid / Tech Mesh
 
-### Tema Arcade/Retro:
-[TEMA] = Arcade/Retro com pixel art e 8-bit
-Cores: Rosa retro, Cyan arcade, Roxo
-Formas: Pixels, blocos, sprites
-Emojis: 🎮 👾 🕹️ 💾 ⚡
-Animações: Pixel blink, scan lines
+[TEMA] = Rede digital simulando circuitos e conexões
+Cores: Azul escuro, Ciano, Verde neon
+Formas: Linhas finas, pontos conectados, malhas 3D simuladas
+CSS: linear-gradient com repeating-linear-gradient sobrepostos
+Efeitos: Linhas piscando com animation-delay aleatórios
+Sensação: Tecnologia, precisão, sistemas avançados
 
-### Tema Místico/Magia:
-[TEMA] = Místico/Magia com runas e energia mágica
-Cores: Roxo místico, Dourado mágico, Azul arcano
-Formas: Runas, círculos mágicos, símbolos
-Emojis: 🔮 ✨ 🌟 ⚡ 🎭
-Animações: Partículas mágicas, runas brilhando
+Tema Holográfico/Reflexo Iridescente
 
-### Tema Matrix/Código:
-[TEMA] = Matrix/Código com caracteres caindo
-Cores: Verde matrix, Preto, Verde escuro
-Formas: Caracteres, binário, linhas de código
-Emojis: 💻 🔢 ⚡ 🔐 🎯
-Animações: Código caindo, scan effect
+[TEMA] = Gradientes mutáveis com brilho holográfico
+Cores: Azul celeste, Rosa claro, Lilás perolado
+Formas: Superfícies onduladas, luz refletida, refração
+CSS: background: linear-gradient(120deg, #a8edea, #fed6e3); com animation: hueRotate
+Efeitos: Alteração suave de matiz e rotação do gradiente
+Sensação: Inovação, luxo digital, estética premium
 
+Tema Partículas/Atmosfera
+
+[TEMA] = Fundo dinâmico com partículas flutuando
+Cores: Azul petróleo, Preto, Dourado suave
+Formas: Pontos, círculos, pequenas partículas animadas
+CSS: @keyframes float com transform: translateY() aleatório
+Efeitos: Movimento contínuo e leve paralaxe com perspective
+Sensação: Profundidade e movimento realista
+
+Tema Neon Outline / Linha Viva
+
+[TEMA] = Bordas animadas simulando energia percorrendo os contornos
+Cores: Verde neon, Azul elétrico, Preto
+Formas: Contornos brilhantes, linhas contínuas, retângulos energizados
+CSS: border-image: linear-gradient() com animation: gradientMove
+Efeitos: Linhas que “correm” nas bordas com gradiente em loop
+Sensação: Alta tecnologia, identidade gamer ou tech
+
+Tema Futuro Minimalista/Space Clean
+
+[TEMA] = Espaço limpo com efeitos sutis de luz e sombra
+Cores: Branco fosco, Cinza grafite, Azul gelo
+Formas: Retângulos sobrepostos, seções com luz lateral
+CSS: box-shadow: inset e background: conic-gradient(...)
+Efeitos: Movimento lento de luz simulando reflexo
+Sensação: Modernidade, marca de alto padrão
+
+Tema Energia Pulsar/Heartbeat
+
+[TEMA] = Efeito de pulsação suave simulando energia viva
+Cores: Vermelho profundo, Rosa neon, Preto
+Formas: Ondas concêntricas, círculos pulsando
+CSS: animation: pulseGlow 2.5s ease-in-out infinite;
+Efeitos: Escala e brilho alternando em loop suave
+Sensação: Intensidade, poder, ritmo
+
+Tema Origami/Vetor Modular
+
+[TEMA] = Formas triangulares sobrepostas criando textura
+Cores: Azul petróleo, Verde acinzentado, Cinza claro
+Formas: Triângulos em padrões clip-path: polygon(...)
+CSS: transform: rotateZ() com opacity alternada
+Efeitos: Movimento leve, textura dinâmica sem imagens
+Sensação: Sofisticação, design autoral, estética digital
 ---
 
 ## 📝 EXEMPLO DE USO COMPLETO:

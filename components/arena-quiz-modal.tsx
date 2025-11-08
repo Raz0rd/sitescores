@@ -116,10 +116,10 @@ export default function ArenaQuizModal({
                 
                 <div className="bg-red-900/30 border border-red-600/50 rounded-lg p-4 mb-6">
                   <p className="text-yellow-400 font-bold text-lg mb-2">
-                    🎁 RECOMPENSA EXCLUSIVA
+                    🎁 BENEFÍCIO EXCLUSIVO
                   </p>
                   <p className="text-white text-sm">
-                    Ao completar o quiz, você ganha <span className="font-black text-yellow-400">70% DE DESCONTO</span> na sua recarga!
+                    Ao completar o quiz, você recebe <span className="font-black text-yellow-400">70% DE DESCONTO</span> na sua recarga!
                   </p>
                 </div>
 
@@ -217,7 +217,7 @@ export default function ArenaQuizModal({
                   {quizProfiles[quizResult as keyof typeof quizProfiles].description}
                 </p>
 
-                {/* Recompensa */}
+                {/* Benefício */}
                 <div className="bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl p-6 mb-6 border-2 border-yellow-400 animate-pulse">
                   <div className="text-4xl mb-2">🎁</div>
                   <h4 className="text-2xl font-black text-white mb-2">
@@ -230,7 +230,7 @@ export default function ArenaQuizModal({
                     70% OFF
                   </div>
                   <p className="text-white/90 text-sm">
-                    Desconto exclusivo para a Arena de Fogo!
+                    Oferta exclusiva para a Arena de Fogo!
                   </p>
                   <p className="text-yellow-200 text-xs mt-2 font-bold">
                     ⏰ Válido por 24 horas
@@ -242,7 +242,7 @@ export default function ArenaQuizModal({
                   className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-black text-xl py-5 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-red-600/50 border-2 border-white/20 hover:scale-105"
                   style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}
                 >
-                  RESGATAR MEU DESCONTO 🔥
+                  ATIVAR MINHA OFERTA 🔥
                 </button>
 
                 <p className="text-gray-400 text-xs mt-4">
@@ -272,7 +272,7 @@ export default function ArenaQuizModal({
                 />
                 <div className="text-center mt-3">
                   <div className="text-lg font-bold text-white">Free Fire</div>
-                  <div className="text-sm text-gray-400">Valide seu ID para resgatar o desconto</div>
+                  <div className="text-sm text-gray-400">Valide seu ID para ativar a oferta</div>
                 </div>
               </div>
 

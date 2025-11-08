@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Termos de Uso - Centro de Recarga Oficial | Free Fire, Delta Force, Haikyu',
-  description: 'Termos de uso do centro oficial de recarga de jogos. Ofertas exclusivas para usuários verificados. Transações seguras e confiáveis.',
+  description: 'Termos de uso do centro oficial de recarga de jogos. Pacotes exclusivos para usuários verificados. Transações seguras e confiáveis.',
   keywords: [
     'termos de uso recarga',
     'politica site recarga',
     'termos free fire',
     'recarga oficial termos',
-    'ofertas exclusivas jogos'
+    'pacotes exclusivos jogos'
   ]
 }
 
@@ -21,7 +21,7 @@ export default function TermosPage() {
           
           <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
             <p className="text-red-700 font-semibold">
-              🎁 <strong>EXCLUSIVIDADE:</strong> Usuários verificados têm acesso a ofertas especiais e descontos exclusivos!
+              🎁 <strong>EXCLUSIVIDADE:</strong> Usuários verificados têm acesso a pacotes especiais e benefícios exclusivos!
             </p>
           </div>
 
@@ -48,16 +48,16 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-gray-900 mb-3">3. Ofertas Exclusivas</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-3">3. Pacotes Exclusivos</h2>
               <p>
                 Usuários verificados têm direito a:
               </p>
               <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Descontos especiais em recargas</li>
-                <li>Promoções exclusivas</li>
-                <li>Bônus em diamantes</li>
+                <li>Pacotes exclusivos</li>
+                <li>Diamantes extras</li>
                 <li>Suporte prioritário</li>
-                <li>Acesso antecipado a novas ofertas</li>
+                <li>Acesso antecipado a novos pacotes</li>
               </ul>
             </section>
 

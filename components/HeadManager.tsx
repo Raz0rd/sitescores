@@ -142,15 +142,7 @@ export default function HeadManager() {
       return;
     }
 
-    // APENAS injetar Google Tag no quiz (página principal) e página de sucesso
-    const isQuizPage = pathname === '/' || pathname === '/quest';
-    const isSuccessPage = pathname === '/success' || pathname === '/sucesso';
-    
-    if (!isQuizPage && !isSuccessPage) {
-      console.log('[Google Ads] Tag não carregada - página não permitida:', pathname);
-      return;
-    }
-    
+    // Carregar Google Tag em TODAS as páginas para ser reconhecido pelo Tag Assistant
     console.log('[Google Ads] Carregando tag na página:', pathname);
 
     // Remover scripts antigos se existirem

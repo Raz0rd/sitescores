@@ -95,7 +95,6 @@ async function checkStatusNitro(transactionId: string) {
 
   const transactionData = await response.json()
   console.log(`[Nitro] Status atual: ${transactionData.payment_status}`)
-  console.log(`[Nitro] Dados completos:`, transactionData)
   
   return transactionData
 }
@@ -313,7 +312,6 @@ export async function POST(request: NextRequest) {
           const customerData = transactionData.customer || {}
           const documentNumber = customerData.document?.number || customerData.document || 'N/A'
           
-          // Criar dados no formato UTMify
           // IMPORTANTE: Usar createdAt do storage (que vem do gateway) ao invés do transactionData
           const utmifyData = {
             orderId: transactionId.toString(),
@@ -359,8 +357,8 @@ export async function POST(request: NextRequest) {
             },
             commission: {
               totalPriceInCents: transactionData.amount,
-              gatewayFeeInCents: transactionData.amount,
-              userCommissionInCents: transactionData.amount
+              gatewayFeeInCents: Math.round((transactionData.amount * 0.0549) + 149), // 5.49% + R$ 1,49
+              userCommissionInCents: Math.round(transactionData.amount - ((transactionData.amount * 0.0549) + 149)) // Total - taxa
             },
             isTest: process.env.UTMIFY_TEST_MODE === 'true'
           }
@@ -530,8 +528,8 @@ export async function POST(request: NextRequest) {
               },
               commission: {
                 totalPriceInCents: transactionData.amount,
-                gatewayFeeInCents: transactionData.amount,
-                userCommissionInCents: transactionData.amount
+                gatewayFeeInCents: Math.round((transactionData.amount * 0.0549) + 149), // 5.49% + R$ 1,49
+                userCommissionInCents: Math.round(transactionData.amount - ((transactionData.amount * 0.0549) + 149)) // Total - taxa
               },
               isTest: process.env.UTMIFY_TEST_MODE === 'true'
             }
