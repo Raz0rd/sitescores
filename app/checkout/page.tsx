@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Toast from "../../components/toast"
 import PendingPaymentModal from "../../components/pending-payment-modal"
+import UserVerificationWithTest from "../../components/UserVerificationWithTest"
 import { useUtmParams } from "@/hooks/useUtmParams"
 import QRCode from "qrcode"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
@@ -93,6 +94,21 @@ export default function CheckoutPage() {
   const [selectedPromos, setSelectedPromos] = useState<string[]>([])
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação ao carregar (PROTEÇÃO)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
+      cookie.trim().startsWith('user_verified=')
+    )
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+    // Se não tiver cookie, isVerified fica false e renderiza UserVerificationWithTest
+  }, [])
 
   // Get URL parameters
   const itemType = searchParams.get("type") || searchParams.get("itemType") || "recharge"
@@ -362,11 +378,11 @@ export default function CheckoutPage() {
   }
 
   const promoItems = [
-    { id: 'sombra-roxa', name: 'Sombra Roxa', image: '/images/sombraRoxa.png', oldPrice: 99.75, price: 9.99 },
+    { id: 'jimg-violento', name: 'Jimg Violento', image: '/images/jimg_violento.png', oldPrice: 149.29, price: 54.19 },
     { id: 'barba-velho', name: 'Barba do Velho', image: '/images/Barba do Velho.png', oldPrice: 89.99, price: 10.99 },
-    { id: 'pacote-coelhao', name: 'Pacote Coelhão', image: '/images/Pacote Coelhão.png', oldPrice: 49.29, price: 9.99 },
+    { id: 'jimg-ambicioso', name: 'Jimg Ambicioso', image: '/images/jimg_ambicioso.png', oldPrice: 149.29, price: 54.39 },
     { id: 'calca-angelical', name: 'Calça Angelical Azul', image: '/images/Calça Angelical Azul.png', oldPrice: 129.90, price: 39.80 },
-    { id: 'dunk-master', name: 'Dunk Master', image: '/images/Dunk Master.png', oldPrice: 75.90, price: 9.99 }
+    { id: 'jimg-pisico', name: 'Jimg Piscoco', image: '/images/jimg_pisico.png', oldPrice: 149.29, price: 54.29 },
   ]
 
   const togglePromoItem = (itemId: string) => {
@@ -649,96 +665,40 @@ export default function CheckoutPage() {
               const gad_campaignid = urlParams.get('gad_campaignid') || ''
               const gbraid = urlParams.get('gbraid') || ''
               
-              // Obter domínio de origem do cookie (salvo quando usuário entrou)
-              const getCookie = (name: string) => {
-                const value = `; ${document.cookie}`
-                const parts = value.split(`; ${name}=`)
-                if (parts.length === 2) return parts.pop()?.split(';').shift()
-                return null
-              }
-              
-              // Decodificar domínio de origem do base64
-              let originDomainFromCookie = null
-              const encodedOrigin = getCookie('_ref_origin')
-              if (encodedOrigin) {
-                try {
-                  originDomainFromCookie = atob(encodedOrigin) // Decodificar base64
-                  console.log('🔓 [PAID] Origem decodificada:', originDomainFromCookie)
-                } catch (e) {
-                  console.error('❌ [PAID] Erro ao decodificar origem:', e)
-                }
-              }
-              
-              // Usar domínio do cookie OU fallback para .env
-              const whitePageBaseUrl = originDomainFromCookie || 
-                                       process.env.NEXT_PUBLIC_WHITEPAGE_URL || 
-                                       process.env.NEXT_PUBLIC_UTMIFY_WHITEPAGE_URL
-              
-              if (!whitePageBaseUrl) {
-                console.error('❌ [PAID] Domínio de conversão não encontrado (cookie ou .env)')
-                return
-              }
-              
-              console.log('🎯 [PAID] Redirecionando conversão para:', whitePageBaseUrl)
-              console.log('📍 [PAID] Origem:', originDomainFromCookie ? 'Cookie (referer detectado)' : 'Fallback (.env)')
-              
-              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso/index.html`)
+              // Construir URL da página de sucesso INTERNA
+              const sucessoUrl = new URL('/sucesso', window.location.origin)
               
               // Dados da compra
-              whitePageUrl.searchParams.set('transactionId', pixData.transactionId)
-              whitePageUrl.searchParams.set('amount', (totalValue * 100).toString())
-              whitePageUrl.searchParams.set('playerName', playerName)
-              whitePageUrl.searchParams.set('itemValue', itemValue)
-              whitePageUrl.searchParams.set('game', currentGame)
+              sucessoUrl.searchParams.set('transactionId', pixData.transactionId)
+              sucessoUrl.searchParams.set('amount', totalValue.toString())
+              sucessoUrl.searchParams.set('currency', 'BRL')
               
               // Parâmetros de tracking principais
-              if (gclid) whitePageUrl.searchParams.set('gclid', gclid)
-              if (utm_source) whitePageUrl.searchParams.set('utm_source', utm_source)
-              if (utm_campaign) whitePageUrl.searchParams.set('utm_campaign', utm_campaign)
-              if (utm_medium) whitePageUrl.searchParams.set('utm_medium', utm_medium)
-              if (utm_content) whitePageUrl.searchParams.set('utm_content', utm_content)
-              if (utm_term) whitePageUrl.searchParams.set('utm_term', utm_term)
+              if (gclid) sucessoUrl.searchParams.set('gclid', gclid)
+              if (utm_source) sucessoUrl.searchParams.set('utm_source', utm_source)
+              if (utm_campaign) sucessoUrl.searchParams.set('utm_campaign', utm_campaign)
+              if (utm_medium) sucessoUrl.searchParams.set('utm_medium', utm_medium)
+              if (utm_content) sucessoUrl.searchParams.set('utm_content', utm_content)
+              if (utm_term) sucessoUrl.searchParams.set('utm_term', utm_term)
               
               // Parâmetros adicionais do Google Ads
-              if (keyword) whitePageUrl.searchParams.set('keyword', keyword)
-              if (device) whitePageUrl.searchParams.set('device', device)
-              if (network) whitePageUrl.searchParams.set('network', network)
-              if (gad_source) whitePageUrl.searchParams.set('gad_source', gad_source)
-              if (gad_campaignid) whitePageUrl.searchParams.set('gad_campaignid', gad_campaignid)
-              if (gbraid) whitePageUrl.searchParams.set('gbraid', gbraid)
+              if (keyword) sucessoUrl.searchParams.set('keyword', keyword)
+              if (device) sucessoUrl.searchParams.set('device', device)
+              if (network) sucessoUrl.searchParams.set('network', network)
+              if (gad_source) sucessoUrl.searchParams.set('gad_source', gad_source)
+              if (gad_campaignid) sucessoUrl.searchParams.set('gad_campaignid', gad_campaignid)
+              if (gbraid) sucessoUrl.searchParams.set('gbraid', gbraid)
               
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-              console.log('🎯 [PAID] REDIRECIONANDO PARA ROTA DE CONVERSÃO')
+              console.log('🎯 [PAID] REDIRECIONANDO PARA PÁGINA DE SUCESSO')
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-              console.log('📍 Whitepage:', whitePageBaseUrl)
               console.log('💳 Transaction ID:', pixData.transactionId)
               console.log('💰 Valor:', `R$ ${totalValue.toFixed(2)}`)
-              console.log('')
-              console.log('📊 PARAMS QUE SERÃO ENVIADOS:')
-              console.log('   🔑 gclid:', gclid || '❌ NÃO ENCONTRADO')
-              console.log('   📱 gad_source:', gad_source || '❌ NÃO ENCONTRADO')
-              console.log('   🔗 gbraid:', gbraid || '❌ NÃO ENCONTRADO')
-              console.log('   📢 utm_source:', utm_source || '❌ NÃO ENCONTRADO')
-              console.log('   🎯 utm_campaign:', utm_campaign || '❌ NÃO ENCONTRADO')
-              console.log('   📺 utm_medium:', utm_medium || '❌ NÃO ENCONTRADO')
-              console.log('   📝 utm_content:', utm_content || 'N/A')
-              console.log('   🏷️  utm_term:', utm_term || 'N/A')
-              console.log('   🔍 keyword:', keyword || 'N/A')
-              console.log('   💻 device:', device || 'N/A')
-              console.log('   🌐 network:', network || 'N/A')
-              console.log('   💳 transactionId:', pixData.transactionId)
-              console.log('   💰 amount:', (totalValue * 100).toString())
-              console.log('   👤 playerName:', playerName)
-              console.log('   🎮 game:', currentGame)
-              console.log('')
-              console.log('⚠️  IMPORTANTE: Se gclid estiver vazio, Google Ads NÃO vai contabilizar!')
-              console.log('')
-              console.log('🔗 URL COMPLETA DA CONVERSÃO:')
-              console.log(whitePageUrl.toString())
+              console.log('🔗 URL:', sucessoUrl.toString())
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               
-              // Redirecionar para whitepage SEM enviar referer
-              window.location.replace(whitePageUrl.toString())
+              // Redirecionar imediatamente para a página de sucesso
+              window.location.href = sucessoUrl.toString()
               
               // Enviar para UTMify com status PAID (não-bloqueante)
               // NOTA: O webhook já envia PAID para UTMify, mas mantemos este envio como fallback
@@ -821,12 +781,25 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    const now = new Date()
+    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
+    
     const utmifyData = {
         orderId: transactionData.transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "waiting_payment",
-        createdAt: getBrazilTimestamp(),
+        createdAt: formatDate(brazilTime),
         approvedDate: null,
         refundedAt: null,
         customer: {
@@ -915,13 +888,26 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    const now = new Date()
+    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
+    
     const utmifyData = {
         orderId: transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "paid",
-        createdAt: getBrazilTimestamp(),
-        approvedDate: getBrazilTimestamp(),
+        createdAt: formatDate(brazilTime),
+        approvedDate: formatDate(brazilTime),
         refundedAt: null,
         customer: {
           name: fullName,
@@ -1003,6 +989,17 @@ export default function CheckoutPage() {
     
     // Redirecionar
     window.location.href = successUrl.toString()
+  }
+
+  // Renderizar tela de verificação se não estiver verificado
+  if (!isVerified) {
+    return (
+      <UserVerificationWithTest 
+        onVerificationComplete={() => {
+          setIsVerified(true)
+        }} 
+      />
+    )
   }
 
   return (
@@ -1426,12 +1423,18 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between p-2 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3 pointer-events-none">
-                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 relative">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Tag HOT para os 3 Jimg */}
+                      {item.name.includes('Jimg') && (
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl">
+                          HOT
+                        </div>
+                      )}
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{item.name}</p>
