@@ -312,10 +312,38 @@ export async function POST(request: NextRequest) {
           const customerData = transactionData.customer || {}
           const documentNumber = customerData.document?.number || customerData.document || 'N/A'
           
+          // Detectar nome do site baseado no host
+          const host = request.headers.get('host') || ''
+          let siteName = "GMePorts"
+          
+          if (host.includes('cuponeriavirtual')) {
+            siteName = "Cuponeriaqpon"
+          } else if (host.includes('ffireshop') || host.includes('ffdiamantes')) {
+            siteName = "FFDiamantesTop"
+          } else if (host.includes('fireboost')) {
+            siteName = "FireBoostStore"
+          } else if (host.includes('gamerecargas')) {
+            siteName = "FreeGameRecargas"
+          } else if (host.includes('recargafreefire')) {
+            siteName = "JogoRecargaFF"
+          } else if (host.includes('maisacao')) {
+            siteName = "MaisAcaoProSeuGame"
+          } else if (host.includes('novaeradiamantes')) {
+            if (host.includes('qpon')) {
+              siteName = "NovaEraDiamantesQpon"
+            } else {
+              siteName = "NovaEraDiamantesShop"
+            }
+          } else if (host.includes('promocoes')) {
+            siteName = "PromocoesQpon"
+          } else if (host.includes('recargasdejogos')) {
+            siteName = "RecargasDeJogosShop"
+          }
+          
           // IMPORTANTE: Usar createdAt do storage (que vem do gateway) ao invés do transactionData
           const utmifyData = {
             orderId: transactionId.toString(),
-            platform: "GMePortsFF",
+            platform: siteName,
             paymentMethod: "pix",
             status: "paid", // Status UTMify para paid
             createdAt: storedOrder.createdAt ? getBrazilTimestamp(new Date(storedOrder.createdAt)) : getBrazilTimestamp(),
@@ -332,7 +360,7 @@ export async function POST(request: NextRequest) {
             products: [
               {
                 id: `recarga-${transactionId}`,
-                name: "GMePorts",
+                name: siteName,
                 planId: null,
                 planName: null,
                 quantity: 1,
@@ -366,6 +394,7 @@ export async function POST(request: NextRequest) {
           console.log(`[CHECK-STATUS] 📤 Enviando PAID para UTMify:`)
           console.log(`   - Order ID: ${utmifyData.orderId}`)
           console.log(`   - Status: ${utmifyData.status}`)
+          console.log(`   - Site: ${siteName} (host: ${host})`)
           console.log(`   - CreatedAt (UTC): ${utmifyData.createdAt}`)
           console.log(`   - ApprovedDate (UTC): ${utmifyData.approvedDate}`)
           console.log(`   - Valor: R$ ${(utmifyData.products[0].priceInCents / 100).toFixed(2)}`)
@@ -377,7 +406,6 @@ export async function POST(request: NextRequest) {
 
           // Detectar URL base automaticamente
           const protocol = request.headers.get('x-forwarded-proto') || 'https'
-          const host = request.headers.get('host')
           const baseUrl = `${protocol}://${host}`
           
           // Usar a mesma API que usamos para pending
