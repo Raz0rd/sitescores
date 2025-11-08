@@ -447,51 +447,51 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(218,165,32,0.10) 50%, rgba(255,193,7,0.06) 100%), linear-gradient(180deg, #1a1410 0%, #2d1f0f 100%)'
+      background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.10) 50%, rgba(34,197,94,0.06) 100%), linear-gradient(180deg, #0a1f14 0%, #0f2d1f 100%)'
     }}>
-      {/* Efeitos de fundo Ouro Luxuoso */}
+      {/* Efeitos de fundo Verde Esmeralda */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Partículas de ouro flutuantes */}
+        {/* Partículas verdes flutuantes */}
         <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-plasma-pulse" style={{
-          background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, rgba(218,165,32,0.25) 50%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, rgba(5,150,105,0.25) 50%, transparent 70%)'
         }} />
         <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-plasma-pulse-delayed" style={{
-          background: 'radial-gradient(circle, rgba(218,165,32,0.4) 0%, rgba(255,193,7,0.25) 50%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(5,150,105,0.4) 0%, rgba(34,197,94,0.25) 50%, transparent 70%)'
         }} />
         
-        {/* Cristal dourado canto superior esquerdo */}
+        {/* Cristal esmeralda canto superior esquerdo */}
         <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 md:w-32 lg:w-40 sm:h-24 md:h-32 lg:h-40 opacity-30 animate-electric-bolt">
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,215,0,0.6), rgba(218,165,32,0.5))',
+            background: 'linear-gradient(135deg, rgba(16,185,129,0.6), rgba(5,150,105,0.5))',
             clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-            boxShadow: '0 0 40px rgba(255,215,0,0.7), inset 0 0 20px rgba(218,165,32,0.4)',
+            boxShadow: '0 0 40px rgba(16,185,129,0.7), inset 0 0 20px rgba(5,150,105,0.4)',
             filter: 'brightness(1.3)'
           }} />
         </div>
         
-        {/* Esfera dourada canto superior direito */}
+        {/* Esfera verde canto superior direito */}
         <div className="absolute top-0 right-0 w-14 h-14 sm:w-20 md:w-28 lg:w-32 sm:h-20 md:h-28 lg:h-32 opacity-35 animate-plasma-sphere" style={{animationDelay: '1.2s'}}>
           <div className="w-full h-full rounded-full" style={{
-            background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.7), rgba(218,165,32,0.5), rgba(255,193,7,0.3))',
-            boxShadow: '0 0 35px rgba(255,215,0,0.7), inset 0 0 20px rgba(218,165,32,0.5)'
+            background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.7), rgba(5,150,105,0.5), rgba(34,197,94,0.3))',
+            boxShadow: '0 0 35px rgba(16,185,129,0.7), inset 0 0 20px rgba(5,150,105,0.5)'
           }} />
         </div>
         
-        {/* Barra de ouro canto inferior esquerdo */}
+        {/* Folha verde canto inferior esquerdo */}
         <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 md:w-30 lg:w-36 sm:h-24 md:h-30 lg:h-36 opacity-32 animate-energy-arc" style={{animationDelay: '2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(90deg, rgba(255,193,7,0.6), rgba(218,165,32,0.5))',
+            background: 'linear-gradient(90deg, rgba(34,197,94,0.6), rgba(5,150,105,0.5))',
             clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)',
-            boxShadow: '0 0 35px rgba(255,193,7,0.7), inset 0 0 18px rgba(218,165,32,0.4)'
+            boxShadow: '0 0 35px rgba(34,197,94,0.7), inset 0 0 18px rgba(5,150,105,0.4)'
           }} />
         </div>
         
-        {/* Diamante dourado canto inferior direito */}
+        {/* Diamante esmeralda canto inferior direito */}
         <div className="absolute bottom-0 right-0 w-20 h-20 sm:w-28 md:w-36 lg:w-44 sm:h-28 md:h-36 lg:h-44 opacity-30 animate-charged-particle" style={{animationDelay: '2.8s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,215,0,0.7), rgba(218,165,32,0.6))',
+            background: 'linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.6))',
             clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-            boxShadow: '0 0 40px rgba(255,215,0,0.8), inset 0 0 20px rgba(218,165,32,0.5)'
+            boxShadow: '0 0 40px rgba(16,185,129,0.8), inset 0 0 20px rgba(5,150,105,0.5)'
           }} />
         </div>
       </div>
@@ -615,142 +615,142 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Tela Inicial */}
           {step === 'initial' && (
             <div className="relative overflow-hidden" style={{
-              background: 'rgba(26, 20, 16, 0.7)',
+              background: 'rgba(10, 31, 20, 0.7)',
               backdropFilter: 'blur(25px)',
               borderRadius: '28px',
-              border: '1px solid rgba(255, 215, 0, 0.4)',
-              boxShadow: '0 0 60px rgba(255, 215, 0, 0.4), 0 0 30px rgba(218, 165, 32, 0.3), inset 0 0 40px rgba(255, 193, 7, 0.12)'
+              border: '1px solid rgba(16, 185, 129, 0.4)',
+              boxShadow: '0 0 60px rgba(16, 185, 129, 0.4), 0 0 30px rgba(5, 150, 105, 0.3), inset 0 0 40px rgba(34, 197, 94, 0.12)'
             }}>
-              {/* Header Ouro Luxuoso */}
+              {/* Header Verde Esmeralda */}
               <div className="relative h-20 sm:h-22 md:h-24 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(255,215,0,0.25), rgba(218,165,32,0.2))',
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.2))',
                 backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(255,215,0,0.4)',
-                boxShadow: '0 4px 30px rgba(255,215,0,0.35), 0 2px 15px rgba(218,165,32,0.25)'
+                borderBottom: '1px solid rgba(16,185,129,0.4)',
+                boxShadow: '0 4px 30px rgba(16,185,129,0.35), 0 2px 15px rgba(5,150,105,0.25)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(255,215,0,0.08) to-transparent" />
-                {/* Partículas douradas no header */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(16,185,129,0.08) to-transparent" />
+                {/* Partículas verdes no header */}
                 <div className="absolute top-1 left-2 sm:top-2 sm:left-3 w-2 h-2 sm:w-3 sm:h-3 animate-plasma-sphere" style={{
-                  background: 'radial-gradient(circle, rgba(255,215,0,0.9), rgba(218,165,32,0.7))',
-                  boxShadow: '0 0 15px rgba(255,215,0,0.9)',
+                  background: 'radial-gradient(circle, rgba(16,185,129,0.9), rgba(5,150,105,0.7))',
+                  boxShadow: '0 0 15px rgba(16,185,129,0.9)',
                   clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)'
                 }} />
                 <div className="absolute top-1 right-2 sm:top-2 sm:right-3 w-2 h-2 sm:w-3 sm:h-3 animate-electric-bolt" style={{
-                  background: 'radial-gradient(circle, rgba(218,165,32,0.9), rgba(255,193,7,0.7))',
-                  boxShadow: '0 0 15px rgba(218,165,32,0.9)',
+                  background: 'radial-gradient(circle, rgba(5,150,105,0.9), rgba(34,197,94,0.7))',
+                  boxShadow: '0 0 15px rgba(5,150,105,0.9)',
                   clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
                   animationDelay: '0.5s'
                 }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(255,215,0,0.2) to-transparent" style={{animation: 'electric-flow 5s ease-in-out infinite'}}></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(16,185,129,0.2) to-transparent" style={{animation: 'electric-flow 5s ease-in-out infinite'}}></div>
                 </div>
                 <h1 className="relative text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 sm:gap-3 px-2">
                   <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8" style={{
-                    background: 'linear-gradient(135deg, rgba(255,215,0,0.9), rgba(218,165,32,0.7))',
+                    background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.7))',
                     clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                    boxShadow: '0 0 20px rgba(255,215,0,0.9)',
+                    boxShadow: '0 0 20px rgba(16,185,129,0.9)',
                     filter: 'brightness(1.4)'
                   }} />
                   <span>Bem-vindo!</span>
                   <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.9), rgba(218,165,32,0.7), rgba(255,193,7,0.4))',
-                    boxShadow: '0 0 20px rgba(255,215,0,0.9)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
+                    boxShadow: '0 0 20px rgba(16,185,129,0.9)'
                   }} />
                 </h1>
               </div>
 
-              {/* Conteúdo luxuoso */}
+              {/* Conteúdo verde */}
               <div className="p-6 sm:p-7 md:p-8 text-center">
-                {/* Ícone Ouro com camadas */}
+                {/* Ícone Verde com camadas */}
                 <div className="relative w-20 h-20 sm:w-24 md:w-28 sm:h-24 md:h-28 mx-auto mb-5 sm:mb-6 md:mb-7">
-                  {/* Camada externa - ouro */}
+                  {/* Camada externa - esmeralda */}
                   <div className="absolute inset-0 rounded-full animate-plasma-pulse" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.5), rgba(218,165,32,0.3))',
+                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.5), rgba(5,150,105,0.3))',
                     backdropFilter: 'blur(15px)',
-                    border: '2px solid rgba(255,215,0,0.4)',
-                    boxShadow: '0 10px 45px 0 rgba(255,215,0,0.5), 0 5px 25px rgba(218,165,32,0.35)'
+                    border: '2px solid rgba(16,185,129,0.4)',
+                    boxShadow: '0 10px 45px 0 rgba(16,185,129,0.5), 0 5px 25px rgba(5,150,105,0.35)'
                   }} />
-                  {/* Camada interna - dourado */}
+                  {/* Camada interna - verde */}
                   <div className="absolute inset-3 rounded-full animate-plasma-pulse-delayed" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(218,165,32,0.6), rgba(255,193,7,0.4))',
+                    background: 'radial-gradient(circle at 35% 35%, rgba(5,150,105,0.6), rgba(34,197,94,0.4))',
                     backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(218,165,32,0.5)'
+                    border: '1px solid rgba(5,150,105,0.5)'
                   }} />
                   {/* Símbolo central - diamante */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-6 h-6 sm:w-8 md:w-10 sm:h-8 md:h-10 animate-electric-bolt" style={{
-                      background: 'linear-gradient(135deg, rgba(255,215,0,0.95), rgba(218,165,32,0.8))',
+                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 25px rgba(255,215,0,0.9)',
+                      boxShadow: '0 0 25px rgba(16,185,129,0.9)',
                       filter: 'brightness(1.5)'
                     }} />
                   </div>
                 </div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 mb-4 sm:mb-5">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-green-400 to-emerald-500 mb-4 sm:mb-5">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-yellow-100/90 mb-5 sm:mb-6 md:mb-7 leading-relaxed text-sm sm:text-base md:text-lg">
+                <p className="text-emerald-100/90 mb-5 sm:mb-6 md:mb-7 leading-relaxed text-sm sm:text-base md:text-lg">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
                 <div className="relative p-4 sm:p-5 md:p-6 mb-5 sm:mb-6 md:mb-7 overflow-hidden" style={{
-                  background: 'rgba(255, 215, 0, 0.08)',
+                  background: 'rgba(16, 185, 129, 0.08)',
                   backdropFilter: 'blur(22px)',
                   borderRadius: '26px',
-                  border: '1px solid rgba(255, 215, 0, 0.35)',
-                  boxShadow: '0 8px 30px 0 rgba(255, 215, 0, 0.35), 0 4px 15px rgba(218, 165, 32, 0.25)'
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  boxShadow: '0 8px 30px 0 rgba(16, 185, 129, 0.35), 0 4px 15px rgba(5, 150, 105, 0.25)'
                 }}>
-                  {/* Partículas douradas decorativas */}
+                  {/* Partículas verdes decorativas */}
                   <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full opacity-50 animate-plasma-sphere" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.9), rgba(218,165,32,0.7), rgba(255,193,7,0.4))',
-                    boxShadow: '0 0 18px rgba(255,215,0,0.8)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
+                    boxShadow: '0 0 18px rgba(16,185,129,0.8)'
                   }} />
                   <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 opacity-50 animate-electric-bolt" style={{
-                    background: 'linear-gradient(135deg, rgba(255,215,0,0.9), rgba(218,165,32,0.8))',
+                    background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.8))',
                     clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                    boxShadow: '0 0 18px rgba(255,215,0,0.8)',
+                    boxShadow: '0 0 18px rgba(16,185,129,0.8)',
                     filter: 'brightness(1.4)'
                   }} />
-                  <p className="text-yellow-100 font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3 relative z-10">
+                  <p className="text-emerald-100 font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3 relative z-10">
                     <div className="w-5 h-5 sm:w-6 sm:h-6" style={{
-                      background: 'linear-gradient(135deg, rgba(255,215,0,0.95), rgba(218,165,32,0.8))',
+                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 15px rgba(255,215,0,0.9)',
+                      boxShadow: '0 0 15px rgba(16,185,129,0.9)',
                       filter: 'brightness(1.4)'
                     }} />
                     <span>Benefício Exclusivo</span>
                     <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full" style={{
-                      background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.9), rgba(218,165,32,0.7), rgba(255,193,7,0.4))',
-                      boxShadow: '0 0 15px rgba(255,215,0,0.9)'
+                      background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
+                      boxShadow: '0 0 15px rgba(16,185,129,0.9)'
                     }} />
                   </p>
-                  <p className="text-yellow-100/90 text-sm sm:text-base md:text-lg leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-amber-300 text-base sm:text-lg md:text-xl">70% de desconto</span> na sua recarga!
+                  <p className="text-emerald-100/90 text-sm sm:text-base md:text-lg leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-green-300 text-base sm:text-lg md:text-xl">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
                 <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 md:mb-7">
-                  <div className="flex items-center gap-3 sm:gap-4 text-yellow-200 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-emerald-200 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(255,215,0,0.95), rgba(218,165,32,0.8))',
+                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
                       clipPath: 'polygon(50% 0%, 70% 30%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0% 50%, 30% 30%)',
-                      boxShadow: '0 0 12px rgba(255,215,0,0.9)',
+                      boxShadow: '0 0 12px rgba(16,185,129,0.9)',
                       filter: 'brightness(1.4)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Validação rápida e segura</span>
                   </div>
-                  <div className="flex items-center gap-3 sm:gap-4 text-amber-200 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-green-200 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full" style={{
-                      background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.9), rgba(218,165,32,0.7), rgba(255,193,7,0.4))',
-                      boxShadow: '0 0 12px rgba(255,215,0,0.9)'
+                      background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
+                      boxShadow: '0 0 12px rgba(16,185,129,0.9)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Descontos de até 70%</span>
                   </div>
-                  <div className="flex items-center gap-3 sm:gap-4 text-yellow-100 relative z-10">
+                  <div className="flex items-center gap-3 sm:gap-4 text-emerald-100 relative z-10">
                     <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(255,215,0,0.95), rgba(218,165,32,0.8))',
+                      background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
                       clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                      boxShadow: '0 0 12px rgba(255,215,0,0.9)'
+                      boxShadow: '0 0 12px rgba(16,185,129,0.9)'
                     }} />
                     <span className="font-semibold text-sm sm:text-base">Diamantes extras grátis</span>
                   </div>
@@ -760,41 +760,41 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   onClick={() => { playClickSound(); setStep('terms'); }}
                   className="w-full font-bold text-base sm:text-lg md:text-xl py-4 sm:py-5 md:py-6 px-6 sm:px-8 md:px-10 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.03]"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255,215,0,0.4), rgba(218,165,32,0.35))',
+                    background: 'linear-gradient(135deg, rgba(16,185,129,0.4), rgba(5,150,105,0.35))',
                     backdropFilter: 'blur(20px)',
                     borderRadius: '24px',
-                    border: '1px solid rgba(255,215,0,0.5)',
-                    boxShadow: '0 0 40px rgba(255,215,0,0.5), 0 0 20px rgba(218,165,32,0.35)'
+                    border: '1px solid rgba(16,185,129,0.5)',
+                    boxShadow: '0 0 40px rgba(16,185,129,0.5), 0 0 20px rgba(5,150,105,0.35)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4" style={{
-                    background: 'linear-gradient(135deg, rgba(255,215,0,0.95), rgba(218,165,32,0.8))',
+                    background: 'linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.8))',
                     clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                    boxShadow: '0 0 18px rgba(255,215,0,0.9)',
+                    boxShadow: '0 0 18px rgba(16,185,129,0.9)',
                     filter: 'brightness(1.5)'
                   }} />
                   <span className="relative z-10">Iniciar Verificação</span>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 ml-3 sm:ml-4 rounded-full" style={{
-                    background: 'radial-gradient(circle at 35% 35%, rgba(255,215,0,0.9), rgba(218,165,32,0.7), rgba(255,193,7,0.4))',
-                    boxShadow: '0 0 18px rgba(255,215,0,0.9)'
+                    background: 'radial-gradient(circle at 35% 35%, rgba(16,185,129,0.9), rgba(5,150,105,0.7), rgba(34,197,94,0.4))',
+                    boxShadow: '0 0 18px rgba(16,185,129,0.9)'
                   }} />
                 </button>
 
                 {/* Links de Termos e Políticas */}
                 <div className="mt-5 sm:mt-6 md:mt-7 text-center text-xs sm:text-sm">
-                  <p className="mb-2 text-yellow-200/85">Ao continuar, você concorda com nossos</p>
+                  <p className="mb-2 text-emerald-200/85">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-yellow-300 hover:text-amber-300 underline transition-colors font-semibold"
+                      className="text-emerald-300 hover:text-green-300 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-yellow-300">•</span>
+                    <span className="text-emerald-300">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-amber-300 hover:text-yellow-300 underline transition-colors font-semibold"
+                      className="text-green-300 hover:text-emerald-300 underline transition-colors font-semibold"
                     >
                       Política de Privacidade
                     </button>
