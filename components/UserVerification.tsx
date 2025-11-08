@@ -254,10 +254,12 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
       document.cookie = `quiz_completed=true; ${cookieOptions}`
       document.cookie = `referer_verified=true; ${cookieOptions}`
+      document.cookie = `user_verified=true; ${cookieOptions}`
       
       console.log('🍪 [VERIFICAÇÃO] Cookies definidos')
       console.log('   - quiz_completed=true')
       console.log('   - referer_verified=true')
+      console.log('   - user_verified=true')
       
       setStep('loading')
       
