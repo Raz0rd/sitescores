@@ -318,7 +318,7 @@ export async function POST(request: NextRequest) {
             platform: "GMePortsFF",
             paymentMethod: "pix",
             status: "paid", // Status UTMify para paid
-            createdAt: storedOrder.createdAt || getBrazilTimestamp(),
+            createdAt: storedOrder.createdAt ? getBrazilTimestamp(new Date(storedOrder.createdAt)) : getBrazilTimestamp(),
             approvedDate: transactionData.paidAt ? getBrazilTimestamp(new Date(transactionData.paidAt)) : getBrazilTimestamp(new Date()),
             refundedAt: null,
             customer: {
