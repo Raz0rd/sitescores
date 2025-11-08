@@ -447,115 +447,141 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(255,107,53,0.18) 0%, rgba(211,47,47,0.15) 50%, rgba(255,193,7,0.12) 100%), linear-gradient(180deg, #1A1A1A 0%, #2d1810 100%)'
+      background: 'linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(236,72,153,0.10) 50%, rgba(99,102,241,0.08) 100%), linear-gradient(180deg, #0F0F23 0%, #1a0f2e 100%)'
     }}>
-      {/* Efeitos de fundo Magma Vulcânico */}
+      {/* Efeitos de fundo Plasma Elétrico */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Bolhas de magma flutuantes */}
-        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-25 animate-magma-pulse" style={{
-          background: 'radial-gradient(circle, rgba(255,107,53,0.6) 0%, rgba(211,47,47,0.4) 50%, transparent 70%)'
+        {/* Partículas de plasma flutuantes */}
+        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-25 animate-plasma-pulse" style={{
+          background: 'radial-gradient(circle, rgba(139,92,246,0.5) 0%, rgba(236,72,153,0.3) 50%, transparent 70%)'
         }} />
-        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-25 animate-magma-pulse-delayed" style={{
-          background: 'radial-gradient(circle, rgba(211,47,47,0.6) 0%, rgba(255,193,7,0.4) 50%, transparent 70%)'
+        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-25 animate-plasma-pulse-delayed" style={{
+          background: 'radial-gradient(circle, rgba(236,72,153,0.5) 0%, rgba(99,102,241,0.3) 50%, transparent 70%)'
         }} />
         
-        {/* Gota de lava canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 md:w-32 lg:w-40 sm:h-24 md:h-32 lg:h-40 opacity-35 animate-lava-drip">
+        {/* Raio elétrico canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 md:w-32 lg:w-40 sm:h-24 md:h-32 lg:h-40 opacity-35 animate-electric-bolt">
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
-            clipPath: 'ellipse(50% 60% at 50% 40%)',
-            boxShadow: '0 0 40px rgba(255,107,53,0.7), inset 0 0 20px rgba(255,193,7,0.3)',
-            filter: 'blur(1px)'
+            background: 'linear-gradient(135deg, rgba(139,92,246,0.6), rgba(236,72,153,0.4))',
+            clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+            boxShadow: '0 0 40px rgba(139,92,246,0.8), inset 0 0 20px rgba(236,72,153,0.4)',
+            filter: 'brightness(1.2)'
           }} />
         </div>
         
-        {/* Cristal de obsidiana canto superior direito */}
-        <div className="absolute top-0 right-0 w-14 h-14 sm:w-20 md:w-28 lg:w-32 sm:h-20 md:h-28 lg:h-32 opacity-40 animate-obsidian-rotate" style={{animationDelay: '1.2s'}}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(211,47,47,0.5), rgba(26,26,26,0.6))',
-            clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-            boxShadow: '0 0 30px rgba(211,47,47,0.7), inset 0 0 15px rgba(255,107,53,0.3)'
+        {/* Esfera de plasma canto superior direito */}
+        <div className="absolute top-0 right-0 w-14 h-14 sm:w-20 md:w-28 lg:w-32 sm:h-20 md:h-28 lg:h-32 opacity-40 animate-plasma-sphere" style={{animationDelay: '1.2s'}}>
+          <div className="w-full h-full rounded-full" style={{
+            background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.7), rgba(139,92,246,0.4), rgba(99,102,241,0.2))',
+            boxShadow: '0 0 35px rgba(236,72,153,0.7), inset 0 0 20px rgba(139,92,246,0.5)'
           }} />
         </div>
         
-        {/* Fissura de magma canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 md:w-30 lg:w-36 sm:h-24 md:h-30 lg:h-36 opacity-38 animate-lava-drip" style={{animationDelay: '2s'}}>
+        {/* Arco de energia canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 md:w-30 lg:w-36 sm:h-24 md:h-30 lg:h-36 opacity-38 animate-energy-arc" style={{animationDelay: '2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(180deg, rgba(255,193,7,0.5), rgba(255,107,53,0.4))',
-            clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
-            boxShadow: '0 0 35px rgba(255,193,7,0.6), inset 0 0 18px rgba(255,107,53,0.3)'
+            background: 'linear-gradient(90deg, rgba(99,102,241,0.6), rgba(139,92,246,0.4))',
+            clipPath: 'ellipse(80% 40% at 50% 100%)',
+            boxShadow: '0 0 35px rgba(99,102,241,0.7), inset 0 0 18px rgba(139,92,246,0.4)'
           }} />
         </div>
         
-        {/* Rocha vulcânica canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-20 h-20 sm:w-28 md:w-36 lg:w-44 sm:h-28 md:h-36 lg:h-44 opacity-32 animate-obsidian-rotate" style={{animationDelay: '2.8s'}}>
+        {/* Partícula carregada canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-20 h-20 sm:w-28 md:w-36 lg:w-44 sm:h-28 md:h-36 lg:h-44 opacity-35 animate-charged-particle" style={{animationDelay: '2.8s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
-            clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',
-            boxShadow: '0 0 38px rgba(255,107,53,0.7), inset 0 0 20px rgba(255,193,7,0.3)'
+            background: 'linear-gradient(135deg, rgba(139,92,246,0.6), rgba(236,72,153,0.5))',
+            clipPath: 'polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%)',
+            boxShadow: '0 0 40px rgba(139,92,246,0.8), inset 0 0 20px rgba(236,72,153,0.4)'
           }} />
         </div>
       </div>
 
       <style>{`
-        @keyframes magma-pulse {
+        @keyframes plasma-pulse {
           0%, 100% { 
             transform: translate(0, 0) scale(1); 
             opacity: 0.25; 
           }
           33% { 
-            transform: translate(30px, -30px) scale(1.15); 
+            transform: translate(25px, -35px) scale(1.12); 
             opacity: 0.35; 
           }
           66% { 
-            transform: translate(-25px, 25px) scale(0.9); 
+            transform: translate(-28px, 22px) scale(0.92); 
             opacity: 0.28; 
           }
         }
-        @keyframes magma-pulse-delayed {
+        @keyframes plasma-pulse-delayed {
           0%, 100% { 
             transform: translate(0, 0) scale(1); 
             opacity: 0.25; 
           }
           50% { 
-            transform: translate(-30px, 30px) scale(1.2); 
+            transform: translate(-30px, 30px) scale(1.18); 
             opacity: 0.32; 
           }
         }
-        @keyframes lava-drip {
+        @keyframes electric-bolt {
           0%, 100% { 
-            transform: translateY(0) scaleY(1); 
+            transform: rotate(0deg) scale(1); 
             opacity: 0.35; 
+            filter: brightness(1.2) drop-shadow(0 0 10px rgba(139,92,246,0.6));
+          }
+          25% { 
+            transform: rotate(-5deg) scale(1.05); 
+            opacity: 0.5; 
+            filter: brightness(1.5) drop-shadow(0 0 20px rgba(139,92,246,0.9));
+          }
+          75% { 
+            transform: rotate(5deg) scale(0.98); 
+            opacity: 0.4; 
+            filter: brightness(1.1) drop-shadow(0 0 15px rgba(236,72,153,0.7));
+          }
+        }
+        @keyframes plasma-sphere {
+          0%, 100% { 
+            transform: scale(1); 
+            opacity: 0.4; 
           }
           50% { 
-            transform: translateY(10px) scaleY(1.1); 
+            transform: scale(1.15); 
+            opacity: 0.55; 
+          }
+        }
+        @keyframes energy-arc {
+          0%, 100% { 
+            transform: scaleX(1) translateY(0); 
+            opacity: 0.38; 
+          }
+          50% { 
+            transform: scaleX(1.1) translateY(-5px); 
             opacity: 0.5; 
           }
         }
-        @keyframes obsidian-rotate {
+        @keyframes charged-particle {
           0% { 
             transform: rotate(0deg) scale(1); 
-            opacity: 0.4; 
+            opacity: 0.35; 
           }
           50% { 
-            transform: rotate(180deg) scale(1.08); 
-            opacity: 0.55; 
+            transform: rotate(180deg) scale(1.1); 
+            opacity: 0.5; 
           }
           100% { 
             transform: rotate(360deg) scale(1); 
-            opacity: 0.4; 
+            opacity: 0.35; 
           }
         }
-        @keyframes magma-glow {
+        @keyframes electric-flow {
           0%, 100% { 
-            transform: translateX(-100%); 
+            transform: translateX(-100%) skewX(-15deg); 
             opacity: 0; 
           }
           50% { 
-            opacity: 0.7; 
+            opacity: 0.6; 
           }
           100% { 
-            transform: translateX(200%); 
+            transform: translateX(200%) skewX(-15deg); 
             opacity: 0; 
           }
         }
@@ -563,17 +589,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-magma-pulse {
-          animation: magma-pulse 20s ease-in-out infinite;
+        .animate-plasma-pulse {
+          animation: plasma-pulse 18s ease-in-out infinite;
         }
-        .animate-magma-pulse-delayed {
-          animation: magma-pulse-delayed 18s ease-in-out infinite;
+        .animate-plasma-pulse-delayed {
+          animation: plasma-pulse-delayed 16s ease-in-out infinite;
         }
-        .animate-lava-drip {
-          animation: lava-drip 6s ease-in-out infinite;
+        .animate-electric-bolt {
+          animation: electric-bolt 4s ease-in-out infinite;
         }
-        .animate-obsidian-rotate {
-          animation: obsidian-rotate 15s linear infinite;
+        .animate-plasma-sphere {
+          animation: plasma-sphere 8s ease-in-out infinite;
+        }
+        .animate-energy-arc {
+          animation: energy-arc 6s ease-in-out infinite;
+        }
+        .animate-charged-particle {
+          animation: charged-particle 12s linear infinite;
         }
       `}</style>
 
@@ -583,185 +615,183 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           {/* Tela Inicial */}
           {step === 'initial' && (
             <div className="relative overflow-hidden" style={{
-              background: 'rgba(26, 26, 26, 0.5)',
+              background: 'rgba(15, 15, 35, 0.6)',
               backdropFilter: 'blur(25px)',
-              borderRadius: '24px',
-              border: '1px solid rgba(255, 107, 53, 0.3)',
-              boxShadow: '0 0 50px rgba(255, 107, 53, 0.4), inset 0 0 30px rgba(211, 47, 47, 0.2)'
+              borderRadius: '28px',
+              border: '1px solid rgba(139, 92, 246, 0.4)',
+              boxShadow: '0 0 60px rgba(139, 92, 246, 0.5), 0 0 30px rgba(236, 72, 153, 0.3), inset 0 0 40px rgba(99, 102, 241, 0.15)'
             }}>
-              {/* Header Magma Vulcânico */}
-              <div className="relative h-16 sm:h-20 md:h-24 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(255,107,53,0.25), rgba(211,47,47,0.22))',
+              {/* Header Plasma Elétrico */}
+              <div className="relative h-20 sm:h-22 md:h-24 flex items-center justify-center overflow-hidden" style={{
+                background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.25))',
                 backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(255,107,53,0.4)',
-                boxShadow: '0 4px 25px rgba(255,107,53,0.3)'
+                borderBottom: '1px solid rgba(139,92,246,0.4)',
+                boxShadow: '0 4px 30px rgba(139,92,246,0.4), 0 2px 15px rgba(236,72,153,0.3)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(255,193,7,0.1) to-transparent" />
-                {/* Partículas de lava no header */}
-                <div className="absolute top-1 left-1 sm:top-2 sm:left-2 w-2 h-2 sm:w-3 sm:h-3 animate-lava-drip" style={{
-                  background: 'radial-gradient(circle, rgba(255,193,7,0.9), rgba(255,107,53,0.4))',
-                  boxShadow: '0 0 15px rgba(255,193,7,0.9)',
-                  clipPath: 'ellipse(50% 60% at 50% 40%)',
-                  filter: 'blur(0.5px)'
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(236,72,153,0.1) to-transparent" />
+                {/* Partículas elétricas no header */}
+                <div className="absolute top-1 left-2 sm:top-2 sm:left-3 w-2 h-2 sm:w-3 sm:h-3 animate-plasma-sphere" style={{
+                  background: 'radial-gradient(circle, rgba(139,92,246,0.9), rgba(236,72,153,0.6))',
+                  boxShadow: '0 0 15px rgba(139,92,246,0.9)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
                 }} />
-                <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-2 h-2 sm:w-3 sm:h-3 animate-obsidian-rotate" style={{
-                  background: 'radial-gradient(circle, rgba(211,47,47,0.9), rgba(255,107,53,0.4))',
-                  boxShadow: '0 0 15px rgba(211,47,47,0.9)',
-                  clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
+                <div className="absolute top-1 right-2 sm:top-2 sm:right-3 w-2 h-2 sm:w-3 sm:h-3 animate-electric-bolt" style={{
+                  background: 'radial-gradient(circle, rgba(236,72,153,0.9), rgba(99,102,241,0.6))',
+                  boxShadow: '0 0 15px rgba(236,72,153,0.9)',
+                  clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                  animationDelay: '0.5s'
                 }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(255,193,7,0.2) to-transparent" style={{animation: 'magma-glow 5s ease-in-out infinite'}}></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(139,92,246,0.25) to-transparent" style={{animation: 'electric-flow 5s ease-in-out infinite'}}></div>
                 </div>
-                <h1 className="relative text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-1 sm:gap-2 px-2">
-                  <div className="w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7" style={{
-                    background: 'linear-gradient(135deg, rgba(255,193,7,0.7), rgba(255,107,53,0.5))',
-                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-                    boxShadow: '0 0 18px rgba(255,193,7,0.8)'
+                <h1 className="relative text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 sm:gap-3 px-2">
+                  <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8" style={{
+                    background: 'linear-gradient(135deg, rgba(139,92,246,0.8), rgba(236,72,153,0.6))',
+                    clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                    boxShadow: '0 0 20px rgba(139,92,246,0.9)',
+                    filter: 'brightness(1.3)'
                   }} />
                   <span>Bem-vindo!</span>
-                  <div className="w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7" style={{
-                    background: 'linear-gradient(135deg, rgba(211,47,47,0.7), rgba(255,107,53,0.5))',
-                    clipPath: 'ellipse(50% 60% at 50% 40%)',
-                    boxShadow: '0 0 18px rgba(211,47,47,0.8)',
-                    filter: 'blur(0.5px)'
+                  <div className="w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full" style={{
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.9), rgba(139,92,246,0.6), rgba(99,102,241,0.3))',
+                    boxShadow: '0 0 20px rgba(236,72,153,0.9)'
                   }} />
                 </h1>
               </div>
 
-              {/* Conteúdo responsivo */}
-              <div className="p-4 sm:p-6 md:p-8 text-center">
-                {/* Ícone Magma com camadas */}
-                <div className="relative w-16 h-16 sm:w-20 md:w-24 sm:h-20 md:h-24 mx-auto mb-4 sm:mb-5 md:mb-6">
-                  {/* Camada externa - lava */}
-                  <div className="absolute inset-0 rounded-full animate-magma-pulse" style={{
-                    background: 'linear-gradient(135deg, rgba(255,107,53,0.4), rgba(211,47,47,0.3))',
+              {/* Conteúdo vibrante */}
+              <div className="p-6 sm:p-7 md:p-8 text-center">
+                {/* Ícone Plasma com camadas */}
+                <div className="relative w-20 h-20 sm:w-24 md:w-28 sm:h-24 md:h-28 mx-auto mb-5 sm:mb-6 md:mb-7">
+                  {/* Camada externa - plasma */}
+                  <div className="absolute inset-0 rounded-full animate-plasma-pulse" style={{
+                    background: 'radial-gradient(circle at 35% 35%, rgba(139,92,246,0.5), rgba(236,72,153,0.3))',
+                    backdropFilter: 'blur(15px)',
+                    border: '2px solid rgba(139,92,246,0.4)',
+                    boxShadow: '0 10px 45px 0 rgba(139,92,246,0.6), 0 5px 25px rgba(236,72,153,0.4)'
+                  }} />
+                  {/* Camada interna - energia */}
+                  <div className="absolute inset-3 rounded-full animate-plasma-pulse-delayed" style={{
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.6), rgba(99,102,241,0.4))',
                     backdropFilter: 'blur(12px)',
-                    border: '2px solid rgba(255,193,7,0.3)',
-                    boxShadow: '0 10px 40px 0 rgba(255,107,53,0.5)'
+                    border: '1px solid rgba(236,72,153,0.5)'
                   }} />
-                  {/* Camada interna - magma */}
-                  <div className="absolute inset-3 rounded-full animate-magma-pulse-delayed" style={{
-                    background: 'linear-gradient(135deg, rgba(255,193,7,0.5), rgba(255,107,53,0.4))',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(211,47,47,0.4)'
-                  }} />
-                  {/* Símbolo central - cristal vulcânico */}
+                  {/* Símbolo central - raio */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-5 h-5 sm:w-6 md:w-8 sm:h-6 md:h-8 animate-obsidian-rotate" style={{
-                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(211,47,47,0.6))',
-                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-                      boxShadow: '0 0 20px rgba(255,193,7,0.9)'
+                    <div className="w-6 h-6 sm:w-8 md:w-10 sm:h-8 md:h-10 animate-electric-bolt" style={{
+                      background: 'linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.7))',
+                      clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                      boxShadow: '0 0 25px rgba(139,92,246,0.9)',
+                      filter: 'brightness(1.4)'
                     }} />
                   </div>
                 </div>
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-red-300 to-yellow-300 mb-3 sm:mb-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 mb-4 sm:mb-5">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-orange-100/90 mb-4 sm:mb-5 md:mb-6 leading-relaxed text-xs sm:text-sm md:text-base">
+                <p className="text-purple-100/90 mb-5 sm:mb-6 md:mb-7 leading-relaxed text-sm sm:text-base md:text-lg">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
-                <div className="relative p-3 sm:p-4 md:p-5 mb-4 sm:mb-5 md:mb-6 overflow-hidden" style={{
-                  background: 'rgba(255, 107, 53, 0.12)',
-                  backdropFilter: 'blur(18px)',
-                  borderRadius: '24px',
-                  border: '1px solid rgba(255, 193, 7, 0.25)',
-                  boxShadow: '0 6px 20px 0 rgba(255, 107, 53, 0.3)'
+                <div className="relative p-4 sm:p-5 md:p-6 mb-5 sm:mb-6 md:mb-7 overflow-hidden" style={{
+                  background: 'rgba(139, 92, 246, 0.12)',
+                  backdropFilter: 'blur(22px)',
+                  borderRadius: '26px',
+                  border: '1px solid rgba(139, 92, 246, 0.35)',
+                  boxShadow: '0 8px 30px 0 rgba(139, 92, 246, 0.4), 0 4px 15px rgba(236, 72, 153, 0.3)'
                 }}>
-                  {/* Partículas de lava decorativas */}
-                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7 opacity-50 animate-lava-drip" style={{
-                    background: 'radial-gradient(circle, rgba(255,193,7,0.7), transparent)',
-                    clipPath: 'ellipse(50% 60% at 50% 40%)',
-                    filter: 'blur(1px)'
+                  {/* Partículas elétricas decorativas */}
+                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 rounded-full opacity-55 animate-plasma-sphere" style={{
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.9), rgba(139,92,246,0.6), rgba(99,102,241,0.3))',
+                    boxShadow: '0 0 18px rgba(236,72,153,0.8)'
                   }} />
-                  <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 w-5 h-5 sm:w-6 md:w-7 sm:h-6 md:h-7 opacity-50 animate-obsidian-rotate" style={{
-                    background: 'radial-gradient(circle, rgba(211,47,47,0.7), transparent)',
-                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
+                  <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-6 h-6 sm:w-7 md:w-8 sm:h-7 md:h-8 opacity-55 animate-electric-bolt" style={{
+                    background: 'linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.7))',
+                    clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                    boxShadow: '0 0 18px rgba(139,92,246,0.8)',
+                    filter: 'brightness(1.3)'
                   }} />
-                  <p className="text-orange-100 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3 flex items-center justify-center gap-1 sm:gap-2 relative z-10">
-                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
-                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-                      boxShadow: '0 0 12px rgba(255,193,7,0.8)'
+                  <p className="text-purple-100 font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3 relative z-10">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6" style={{
+                      background: 'linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.7))',
+                      clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                      boxShadow: '0 0 15px rgba(139,92,246,0.9)',
+                      filter: 'brightness(1.3)'
                     }} />
                     <span>Benefício Exclusivo</span>
-                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
-                      background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
-                      clipPath: 'ellipse(50% 60% at 50% 40%)',
-                      boxShadow: '0 0 12px rgba(211,47,47,0.8)',
-                      filter: 'blur(0.5px)'
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full" style={{
+                      background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.9), rgba(139,92,246,0.7), rgba(99,102,241,0.4))',
+                      boxShadow: '0 0 15px rgba(236,72,153,0.9)'
                     }} />
                   </p>
-                  <p className="text-orange-100/90 text-xs sm:text-sm md:text-base leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-yellow-300 text-sm sm:text-base md:text-lg">70% de desconto</span> na sua recarga!
+                  <p className="text-purple-100/90 text-sm sm:text-base md:text-lg leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-pink-300 text-base sm:text-lg md:text-xl">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
-                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5 md:mb-6">
-                  <div className="flex items-center gap-2 sm:gap-3 text-orange-200 relative z-10">
-                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
-                      background: 'linear-gradient(135deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
-                      clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-                      boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 md:mb-7">
+                  <div className="flex items-center gap-3 sm:gap-4 text-purple-200 relative z-10">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
+                      background: 'linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.7))',
+                      clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                      boxShadow: '0 0 12px rgba(139,92,246,0.9)',
+                      filter: 'brightness(1.3)'
                     }} />
-                    <span className="font-semibold text-xs sm:text-sm">Validação rápida e segura</span>
+                    <span className="font-semibold text-sm sm:text-base">Validação rápida e segura</span>
                   </div>
-                  <div className="flex items-center gap-2 sm:gap-3 text-red-200 relative z-10">
-                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
-                      background: 'linear-gradient(135deg, rgba(211,47,47,0.8), rgba(255,107,53,0.6))',
-                      clipPath: 'ellipse(50% 60% at 50% 40%)',
-                      boxShadow: '0 0 10px rgba(211,47,47,0.7)',
-                      filter: 'blur(0.5px)'
+                  <div className="flex items-center gap-3 sm:gap-4 text-pink-200 relative z-10">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full" style={{
+                      background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.9), rgba(139,92,246,0.7), rgba(99,102,241,0.4))',
+                      boxShadow: '0 0 12px rgba(236,72,153,0.9)'
                     }} />
-                    <span className="font-semibold text-xs sm:text-sm">Descontos de até 70%</span>
+                    <span className="font-semibold text-sm sm:text-base">Descontos de até 70%</span>
                   </div>
-                  <div className="flex items-center gap-2 sm:gap-3 text-yellow-200 relative z-10">
-                    <div className="w-3 h-3 sm:w-4 sm:h-4" style={{
-                      background: 'linear-gradient(180deg, rgba(255,193,7,0.8), rgba(255,107,53,0.6))',
-                      clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
-                      boxShadow: '0 0 10px rgba(255,193,7,0.7)'
+                  <div className="flex items-center gap-3 sm:gap-4 text-indigo-200 relative z-10">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5" style={{
+                      background: 'linear-gradient(90deg, rgba(99,102,241,0.9), rgba(139,92,246,0.7))',
+                      clipPath: 'ellipse(80% 40% at 50% 100%)',
+                      boxShadow: '0 0 12px rgba(99,102,241,0.9)'
                     }} />
-                    <span className="font-semibold text-xs sm:text-sm">Diamantes extras grátis</span>
+                    <span className="font-semibold text-sm sm:text-base">Diamantes extras grátis</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => { playClickSound(); setStep('terms'); }}
-                  className="w-full font-bold text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 px-4 sm:px-6 md:px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.05]"
+                  className="w-full font-bold text-base sm:text-lg md:text-xl py-4 sm:py-5 md:py-6 px-6 sm:px-8 md:px-10 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.03]"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255,107,53,0.5), rgba(211,47,47,0.4))',
+                    background: 'linear-gradient(135deg, rgba(139,92,246,0.5), rgba(236,72,153,0.4))',
                     backdropFilter: 'blur(20px)',
-                    borderRadius: '20px',
-                    border: '1px solid rgba(255,193,7,0.4)',
-                    boxShadow: '0 0 30px rgba(255,107,53,0.5)'
+                    borderRadius: '24px',
+                    border: '1px solid rgba(139,92,246,0.5)',
+                    boxShadow: '0 0 40px rgba(139,92,246,0.6), 0 0 20px rgba(236,72,153,0.4)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" style={{
-                    background: 'linear-gradient(135deg, rgba(255,193,7,0.9), rgba(255,107,53,0.7))',
-                    clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)',
-                    boxShadow: '0 0 15px rgba(255,193,7,0.9)'
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 mr-3 sm:mr-4" style={{
+                    background: 'linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.7))',
+                    clipPath: 'polygon(50% 0%, 60% 40%, 100% 35%, 55% 60%, 65% 100%, 40% 65%, 0% 70%, 45% 45%)',
+                    boxShadow: '0 0 18px rgba(139,92,246,0.9)',
+                    filter: 'brightness(1.4)'
                   }} />
                   <span className="relative z-10">Iniciar Verificação</span>
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" style={{
-                    background: 'linear-gradient(135deg, rgba(211,47,47,0.9), rgba(255,107,53,0.7))',
-                    clipPath: 'ellipse(50% 60% at 50% 40%)',
-                    boxShadow: '0 0 15px rgba(211,47,47,0.9)',
-                    filter: 'blur(0.5px)'
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 ml-3 sm:ml-4 rounded-full" style={{
+                    background: 'radial-gradient(circle at 35% 35%, rgba(236,72,153,0.9), rgba(139,92,246,0.7), rgba(99,102,241,0.4))',
+                    boxShadow: '0 0 18px rgba(236,72,153,0.9)'
                   }} />
                 </button>
 
                 {/* Links de Termos e Políticas */}
-                <div className="mt-4 sm:mt-5 md:mt-6 text-center text-xs">
-                  <p className="mb-2 text-orange-200/80">Ao continuar, você concorda com nossos</p>
+                <div className="mt-5 sm:mt-6 md:mt-7 text-center text-xs sm:text-sm">
+                  <p className="mb-2 text-purple-200/85">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-orange-300 hover:text-yellow-300 underline transition-colors font-semibold"
+                      className="text-purple-300 hover:text-pink-300 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-orange-300">•</span>
+                    <span className="text-purple-300">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
                       className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
