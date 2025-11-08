@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Central de Recarga Jogo',
-  description: 'Central de Recarga Jogo',
+  title: 'Recarga Jogo Free Fire',
+  description: 'Recarga Jogo Free Fire',
 }
 
 export default function RootLayout({

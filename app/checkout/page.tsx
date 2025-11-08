@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Toast from "../../components/toast"
 import PendingPaymentModal from "../../components/pending-payment-modal"
+import UserVerificationWithTest from "../../components/UserVerificationWithTest"
 import { useUtmParams } from "@/hooks/useUtmParams"
 import QRCode from "qrcode"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
@@ -81,7 +82,7 @@ export default function CheckoutPage() {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
   const [toastType, setToastType] = useState<"success" | "error" | "info">("success")
-  const [pixData, setPixData] = useState<{code: string, qrCode: string, transactionId: string, createdAt?: string, updatedAt?: string} | null>(null)
+  const [pixData, setPixData] = useState<{code: string, qrCode: string, transactionId: string} | null>(null)
   const [showPixInline, setShowPixInline] = useState(false)
   const [pixError, setPixError] = useState("")
   const [isCopied, setIsCopied] = useState(false)
@@ -93,6 +94,21 @@ export default function CheckoutPage() {
   const [selectedPromos, setSelectedPromos] = useState<string[]>([])
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação ao carregar (PROTEÇÃO)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
+      cookie.trim().startsWith('user_verified=')
+    )
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+    // Se não tiver cookie, isVerified fica false e renderiza UserVerificationWithTest
+  }, [])
 
   // Get URL parameters
   const itemType = searchParams.get("type") || searchParams.get("itemType") || "recharge"
@@ -362,11 +378,11 @@ export default function CheckoutPage() {
   }
 
   const promoItems = [
-    { id: 'sombra-roxa', name: 'Sombra Roxa', image: '/images/sombraRoxa.png', oldPrice: 99.75, price: 9.99 },
+    { id: 'jimg-violento', name: 'Jimg Violento', image: '/images/jimg_violento.png', oldPrice: 149.29, price: 54.19 },
     { id: 'barba-velho', name: 'Barba do Velho', image: '/images/Barba do Velho.png', oldPrice: 89.99, price: 10.99 },
-    { id: 'pacote-coelhao', name: 'Pacote Coelhão', image: '/images/Pacote Coelhão.png', oldPrice: 49.29, price: 9.99 },
+    { id: 'jimg-ambicioso', name: 'Jimg Ambicioso', image: '/images/jimg_ambicioso.png', oldPrice: 149.29, price: 54.39 },
     { id: 'calca-angelical', name: 'Calça Angelical Azul', image: '/images/Calça Angelical Azul.png', oldPrice: 129.90, price: 39.80 },
-    { id: 'dunk-master', name: 'Dunk Master', image: '/images/Dunk Master.png', oldPrice: 75.90, price: 9.99 }
+    { id: 'jimg-pisico', name: 'Jimg Piscoco', image: '/images/jimg_pisico.png', oldPrice: 149.29, price: 54.29 },
   ]
 
   const togglePromoItem = (itemId: string) => {
@@ -485,9 +501,7 @@ export default function CheckoutPage() {
         setPixData({
           code: data.pixCode,
           qrCode: data.qrCode,
-          transactionId: data.transactionId,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt
+          transactionId: data.transactionId
         })
         
         setQrCodeImage(qrCodeImageData)
@@ -665,7 +679,6 @@ export default function CheckoutPage() {
               if (encodedOrigin) {
                 try {
                   originDomainFromCookie = atob(encodedOrigin) // Decodificar base64
-                  console.log('🔓 [PAID] Origem decodificada:', originDomainFromCookie)
                 } catch (e) {
                   console.error('❌ [PAID] Erro ao decodificar origem:', e)
                 }
@@ -684,7 +697,7 @@ export default function CheckoutPage() {
               console.log('🎯 [PAID] Redirecionando conversão para:', whitePageBaseUrl)
               console.log('📍 [PAID] Origem:', originDomainFromCookie ? 'Cookie (referer detectado)' : 'Fallback (.env)')
               
-              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso/index.html`)
+              const whitePageUrl = new URL(`${whitePageBaseUrl}/sucesso`)
               
               // Dados da compra
               whitePageUrl.searchParams.set('transactionId', pixData.transactionId)
@@ -739,8 +752,38 @@ export default function CheckoutPage() {
               console.log(whitePageUrl.toString())
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               
-              // Redirecionar para whitepage SEM enviar referer
-              window.location.replace(whitePageUrl.toString())
+              // Disparar conversão do Google Ads ANTES de redirecionar
+              console.log('🎯 [GOOGLE ADS] Disparando conversão...')
+              if (typeof window !== 'undefined' && (window as any).gtag) {
+                const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID
+                const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL
+                
+                if (awId && conversionLabel) {
+                  (window as any).gtag('event', 'conversion', {
+                    'send_to': `${awId}/${conversionLabel}`,
+                    'value': totalValue,
+                    'currency': 'BRL',
+                    'transaction_id': pixData.transactionId
+                  })
+                  console.log('✅ [GOOGLE ADS] Conversão disparada!')
+                  console.log('   - AW ID:', awId)
+                  console.log('   - Label:', conversionLabel)
+                  console.log('   - Transaction ID:', pixData.transactionId)
+                  console.log('   - Valor:', totalValue)
+                } else {
+                  console.warn('⚠️ [GOOGLE ADS] Variáveis não configuradas')
+                }
+              } else {
+                console.warn('⚠️ [GOOGLE ADS] gtag não encontrado')
+              }
+              
+              // Aguardar 3 segundos para garantir que a conversão foi enviada
+              console.log('⏳ Aguardando 3s para enviar conversão...')
+              setTimeout(() => {
+                console.log('✅ Redirecionando para whitepage...')
+                // Redirecionar para whitepage SEM enviar referer
+                window.location.replace(whitePageUrl.toString())
+              }, 3000)
               
               // Enviar para UTMify com status PAID (não-bloqueante)
               // NOTA: O webhook já envia PAID para UTMify, mas mantemos este envio como fallback
@@ -823,17 +866,25 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
-    // Usar a data que vem do gateway (já no formato correto)
-    // Se não tiver, usar a data atual do servidor em UTC no formato YYYY-MM-DD HH:mm:ss
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
     const now = new Date()
-    const defaultDate = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')} ${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}:${String(now.getUTCSeconds()).padStart(2, '0')}`
+    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
     
     const utmifyData = {
         orderId: transactionData.transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "waiting_payment",
-        createdAt: transactionData.createdAt || defaultDate,
+        createdAt: formatDate(brazilTime),
         approvedDate: null,
         refundedAt: null,
         customer: {
@@ -922,18 +973,26 @@ export default function CheckoutPage() {
     ]
     
     // Criar dados no formato do UTMify
-    // Usar a data que vem do gateway (já no formato correto)
-    // Se não tiver, usar a data atual do servidor em UTC no formato YYYY-MM-DD HH:mm:ss
-    const now2 = new Date()
-    const defaultDate2 = `${now2.getUTCFullYear()}-${String(now2.getUTCMonth() + 1).padStart(2, '0')}-${String(now2.getUTCDate()).padStart(2, '0')} ${String(now2.getUTCHours()).padStart(2, '0')}:${String(now2.getUTCMinutes()).padStart(2, '0')}:${String(now2.getUTCSeconds()).padStart(2, '0')}`
+    // Converter UTC para horário do Brasil (GMT-3) e formatar como "YYYY-MM-DD HH:mm:ss"
+    const now = new Date()
+    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000))
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear()
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      const day = String(date.getUTCDate()).padStart(2, '0')
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }
     
     const utmifyData = {
         orderId: transactionId,
         platform: "PromoFFGames",
         paymentMethod: "pix",
         status: "paid",
-        createdAt: pixData?.createdAt || defaultDate2,
-        approvedDate: pixData?.updatedAt || defaultDate2,
+        createdAt: formatDate(brazilTime),
+        approvedDate: formatDate(brazilTime),
         refundedAt: null,
         customer: {
           name: fullName,
@@ -1015,6 +1074,17 @@ export default function CheckoutPage() {
     
     // Redirecionar
     window.location.href = successUrl.toString()
+  }
+
+  // Renderizar tela de verificação se não estiver verificado
+  if (!isVerified) {
+    return (
+      <UserVerificationWithTest 
+        onVerificationComplete={() => {
+          setIsVerified(true)
+        }} 
+      />
+    )
   }
 
   return (
@@ -1438,12 +1508,18 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between p-2 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3 pointer-events-none">
-                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 relative">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Tag HOT para os 3 Jimg */}
+                      {item.name.includes('Jimg') && (
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl">
+                          HOT
+                        </div>
+                      )}
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{item.name}</p>

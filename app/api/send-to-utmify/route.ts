@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     // Preparar dados para UTMify no formato correto da documentação
     const utmifyPayload = {
       orderId: orderData.orderId,
-      platform: "RecarGames", // Nome da nossa plataforma
+      platform: "Fforrs", // Nome da nossa plataforma
       paymentMethod: "pix",
       status: orderData.status === "pending" ? "waiting_payment" : "paid",
       createdAt: getBrazilTimestamp(),
@@ -79,15 +79,17 @@ export async function POST(request: Request) {
       },
       commission: {
         totalPriceInCents: amountInCents,
-        gatewayFeeInCents: amountInCents,
-        userCommissionInCents: amountInCents
+        gatewayFeeInCents: Math.round((amountInCents * 0.0549) + 149), // 5.49% + R$ 1,49
+        userCommissionInCents: Math.round(amountInCents - ((amountInCents * 0.0549) + 149)) // Total - taxa
       },
       isTest: process.env.UTMIFY_TEST_MODE === 'true'
     }
 
     console.log("🎯 [UTMify API] Enviando dados para UTMify...")
     console.log("📊 [UTMify API] Status:", utmifyPayload.status)
-    console.log("💰 [UTMify API] Valor em centavos:", utmifyPayload.commission.totalPriceInCents)
+    console.log("💰 [UTMify API] Valor total:", utmifyPayload.commission.totalPriceInCents, "centavos")
+    console.log("💳 [UTMify API] Taxa gateway:", utmifyPayload.commission.gatewayFeeInCents, "centavos (5.49% + R$ 1,49)")
+    console.log("💵 [UTMify API] Comissão usuário:", utmifyPayload.commission.userCommissionInCents, "centavos")
 
     // Verificar se o token existe
     if (!process.env.UTMIFY_API_TOKEN) {

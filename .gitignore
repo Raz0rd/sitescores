@@ -54,7 +54,7 @@ vercel.json
 /*.png
 /*.webp
 /*.jpeg
-
+/*.md
 # Arquivos HTML temporários
 /*.html
 

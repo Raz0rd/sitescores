@@ -33,19 +33,16 @@ const orderStorage = global.orderStorageMap || new Map<string, OrderData>()
 // Salvar referência no global para persistir
 if (!global.orderStorageMap) {
   global.orderStorageMap = orderStorage
-  console.log('🔥 [ORDER-STORAGE] Inicializado com persistência global')
 }
 
 export const orderStorageService = {
   // Salvar pedido
   saveOrder: (orderData: OrderData) => {
-    console.log(`📦 [ORDER-STORAGE] Salvando pedido: ${orderData.orderId}`)
     orderStorage.set(orderData.orderId, orderData)
     
     // Se tiver transactionId, também indexar por ele
     if (orderData.transactionId) {
       orderStorage.set(orderData.transactionId, orderData)
-      console.log(`📦 [ORDER-STORAGE] Indexado também por transactionId: ${orderData.transactionId}`)
     }
     
     console.log(`📦 [ORDER-STORAGE] Total de pedidos no storage: ${orderStorage.size}`)
@@ -61,17 +58,12 @@ export const orderStorageService = {
 
   // Buscar pedido por orderId ou transactionId
   getOrder: (id: string): OrderData | null => {
-    console.log(`🔍 [ORDER-STORAGE] Buscando pedido: ${id}`)
-    console.log(`🔍 [ORDER-STORAGE] Total no storage: ${orderStorage.size}`)
     
     const order = orderStorage.get(id)
     if (order) {
-      console.log(`✅ [ORDER-STORAGE] Pedido encontrado: ${order.orderId}`)
       return order
     }
     
-    console.log(`❌ [ORDER-STORAGE] Pedido NÃO encontrado: ${id}`)
-    console.log(`📋 [ORDER-STORAGE] IDs disponíveis:`, Array.from(orderStorage.keys()))
     return null
   },
 
