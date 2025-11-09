@@ -8,14 +8,12 @@ export default function GoogleConversionTest() {
   const [result, setResult] = useState<string>('')
 
   useEffect(() => {
-    // Verificar se o parâmetro está presente na URL
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
-      const activateParam = urlParams.get('paransgoogtes')
-      console.log('🧪 [GOOGLE CONVERSION TEST] Parâmetro:', activateParam)
+      const activateParam = urlParams.get('fireboost')
+      
       if (activateParam === 'activar') {
         setIsVisible(true)
-        console.log('✅ [GOOGLE CONVERSION TEST] Botão ativado!')
       }
     }
   }, [])
@@ -32,7 +30,6 @@ export default function GoogleConversionTest() {
       // Validar se as variáveis existem
       if (!awId || !conversionLabel) {
         setResult('❌ Erro: Variáveis de ambiente não configuradas!\n\nConfigure no .env.local:\nNEXT_PUBLIC_GOOGLE_AW_ID\nNEXT_PUBLIC_GOOGLE_CONVERSION_LABEL')
-        console.error('❌ Variáveis de ambiente não encontradas')
         setIsSending(false)
         return
       }
@@ -41,13 +38,6 @@ export default function GoogleConversionTest() {
       const transactionId = `test-${Date.now()}-${Math.random().toString(36).substring(7)}`
       const sendTo = `${awId}/${conversionLabel}`
       const testValue = 10.00 // Valor de teste
-
-      console.log('🧪 [TESTE CONVERSÃO GOOGLE]')
-      console.log('   - AW ID:', awId)
-      console.log('   - Conversion Label:', conversionLabel)
-      console.log('   - Send To:', sendTo)
-      console.log('   - Transaction ID:', transactionId)
-      console.log('   - Valor:', testValue, 'BRL')
 
       // Verificar se gtag está disponível
       if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -59,14 +49,11 @@ export default function GoogleConversionTest() {
         })
 
         setResult(`✅ Conversão enviada!\n\nAW ID: ${awId}\nLabel: ${conversionLabel}\nSend To: ${sendTo}\nTransaction ID: ${transactionId}\nValor: R$ ${testValue.toFixed(2)}`)
-        console.log('✅ Conversão de teste enviada com sucesso!')
       } else {
         setResult('❌ Erro: gtag não está carregado na página')
-        console.error('❌ gtag não encontrado')
       }
     } catch (error) {
       setResult(`❌ Erro ao enviar: ${error}`)
-      console.error('❌ Erro ao enviar conversão:', error)
     } finally {
       setIsSending(false)
     }
@@ -75,7 +62,15 @@ export default function GoogleConversionTest() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999] max-w-sm">
+    <div 
+      className="fixed bottom-4 right-4 max-w-sm"
+      style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        zIndex: 999999
+      }}
+    >
       <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg shadow-2xl p-6 text-white">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">🧪</span>
