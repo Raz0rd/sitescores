@@ -33,7 +33,6 @@ export default function SucessoPage() {
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
-      console.error('❌ [Sucesso] Parâmetros obrigatórios faltando:', { transactionId, amount })
       return
     }
 
@@ -42,19 +41,8 @@ export default function SucessoPage() {
     const alreadySent = localStorage.getItem(storageKey)
     
     if (alreadySent || conversionFired) {
-      console.log('⚠️ [Sucesso] Conversão já disparada anteriormente, ignorando...')
-      console.log('   - Transaction ID:', transactionId)
-      console.log('   - Enviado em:', alreadySent || 'sessão atual')
       return
     }
-
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('✅ [PÁGINA SUCESSO] Disparando conversão')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('💰 Transaction ID:', transactionId)
-    console.log('💵 Valor:', amount)
-    console.log('💱 Moeda:', currency)
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
     // Disparar conversão Google Ads
     if (typeof window !== 'undefined' && window.gtag) {
@@ -68,23 +56,10 @@ export default function SucessoPage() {
           currency: currency,
           transaction_id: transactionId
         })
-
-        console.log('✅ [Google Ads] Conversão disparada com sucesso!')
-        console.log('📊 Dados enviados:', {
-          send_to: `${googleAdsId}/${conversionLabel}`,
-          value: parseFloat(amount),
-          currency: currency,
-          transaction_id: transactionId
-        })
         
         // Salvar no localStorage para evitar duplicação
         const timestamp = new Date().toISOString()
         localStorage.setItem(storageKey, timestamp)
-        console.log('🔒 [Anti-Duplicação] Conversão marcada como enviada no localStorage')
-        console.log('   - Key:', storageKey)
-        console.log('   - Timestamp:', timestamp)
-      } else {
-        console.error('❌ [Google Ads] Configuração faltando:', { googleAdsId, conversionLabel })
       }
     }
 
