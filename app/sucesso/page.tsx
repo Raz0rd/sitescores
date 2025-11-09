@@ -7,19 +7,19 @@ import UserVerificationWithTest from '../../components/UserVerificationWithTest'
 export default function SucessoPage() {
   const searchParams = useSearchParams()
   const [conversionFired, setConversionFired] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  
-  // Verificar cookie ANTES da primeira renderização (evita flash)
-  const [isVerified, setIsVerified] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return document.cookie.split(';').some(cookie => 
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
       cookie.trim().startsWith('user_verified=')
     )
-  })
-
-  // Garantir que está montado no cliente
-  useEffect(() => {
-    setMounted(true)
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
   }, [])
 
   useEffect(() => {
@@ -65,11 +65,6 @@ export default function SucessoPage() {
 
     setConversionFired(true)
   }, [searchParams, conversionFired, isVerified])
-
-  // Não renderizar nada até estar montado (evita flash SSR)
-  if (!mounted) {
-    return null
-  }
 
   // Renderizar tela de verificação se não estiver verificado
   if (!isVerified) {

@@ -94,20 +94,20 @@ export default function CheckoutPage() {
   const [selectedPromos, setSelectedPromos] = useState<string[]>([])
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
-  const [emailError, setEmailError] = useState("")
-  const [mounted, setMounted] = useState(false)
-  
-  // Verificar cookie ANTES da primeira renderização (evita flash)
-  const [isVerified, setIsVerified] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return document.cookie.split(';').some(cookie => 
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Verificar cookie de verificação ao carregar (PROTEÇÃO)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
       cookie.trim().startsWith('user_verified=')
     )
-  })
-
-  // Garantir que está montado no cliente
-  useEffect(() => {
-    setMounted(true)
+    
+    if (hasVerificationCookie) {
+      setIsVerified(true)
+    }
+    // Se não tiver cookie, isVerified fica false e renderiza UserVerificationWithTest
   }, [])
 
   // Get URL parameters
@@ -405,19 +405,16 @@ export default function CheckoutPage() {
       return
     }
 
-    // Limpar erro anterior
-    setEmailError("")
-    
     // Validar campos obrigatórios
     if (!email.trim()) {
-      setEmailError("Por favor, preencha o email para receber o comprovante.")
+      alert("Por favor, preencha o email para receber o comprovante.")
       return
     }
 
     // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      setEmailError("Por favor, digite um email válido.")
+      alert("Por favor, digite um email válido.")
       return
     }
 
@@ -994,11 +991,6 @@ export default function CheckoutPage() {
     window.location.href = successUrl.toString()
   }
 
-  // Não renderizar nada até estar montado (evita flash SSR)
-  if (!mounted) {
-    return null
-  }
-
   // Renderizar tela de verificação se não estiver verificado
   if (!isVerified) {
     return (
@@ -1172,27 +1164,14 @@ export default function CheckoutPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                    setEmailError("") // Limpar erro ao digitar
-                  }}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isProcessingPayment}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 disabled:bg-gray-100 disabled:cursor-not-allowed ${
-                    emailError 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:ring-red-500'
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="seu@email.com"
                 />
-                {emailError ? (
-                  <p className="text-xs text-red-600 mt-1 font-medium">
-                    ⚠️ {emailError}
-                  </p>
-                ) : (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Você receberá o comprovante da recarga neste email
-                  </p>
-                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Você receberá o comprovante da recarga neste email
+                </p>
               </div>
             </div>
           ) : (
