@@ -33,23 +33,16 @@ export default function SucessoPage() {
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
-      console.error('❌ [Sucesso] Parâmetros obrigatórios faltando:', { transactionId, amount })
       return
     }
 
-    // Evitar disparo duplicado
-    if (conversionFired) {
-      console.log('⚠️ [Sucesso] Conversão já disparada, ignorando...')
+    // Verificar se já foi enviado (localStorage + state)
+    const storageKey = `gads_conversion_${transactionId}`
+    const alreadySent = localStorage.getItem(storageKey)
+    
+    if (alreadySent || conversionFired) {
       return
     }
-
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('✅ [PÁGINA SUCESSO] Disparando conversão')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('💰 Transaction ID:', transactionId)
-    console.log('💵 Valor:', amount)
-    console.log('💱 Moeda:', currency)
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
     // Disparar conversão Google Ads
     if (typeof window !== 'undefined' && window.gtag) {
@@ -63,16 +56,10 @@ export default function SucessoPage() {
           currency: currency,
           transaction_id: transactionId
         })
-
-        console.log('✅ [Google Ads] Conversão disparada com sucesso!')
-        console.log('📊 Dados enviados:', {
-          send_to: `${googleAdsId}/${conversionLabel}`,
-          value: parseFloat(amount),
-          currency: currency,
-          transaction_id: transactionId
-        })
-      } else {
-        console.error('❌ [Google Ads] Configuração faltando:', { googleAdsId, conversionLabel })
+        
+        // Salvar no localStorage para evitar duplicação
+        const timestamp = new Date().toISOString()
+        localStorage.setItem(storageKey, timestamp)
       }
     }
 
