@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import GoogleConversionTest from './GoogleConversionTest'
 
 interface UserVerificationProps {
   onVerificationComplete: () => void
@@ -249,20 +250,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       localStorage.setItem('terms_accepted', 'true')
       localStorage.setItem('terms_accepted_at', Date.now().toString())
       
-      // Salvar cookies
+      // Salvar cookies (30 dias de validade)
       const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
       document.cookie = `quiz_completed=true; ${cookieOptions}`
       document.cookie = `referer_verified=true; ${cookieOptions}`
-      
-      console.log('🍪 [VERIFICAÇÃO] Cookies definidos')
-      console.log('   - quiz_completed=true')
-      console.log('   - referer_verified=true')
+      document.cookie = `user_verified=true; ${cookieOptions}`
       
       setStep('loading')
       
       // Fechar modal após 2 segundos e liberar central de recargas
       setTimeout(() => {
-        console.log('✅ [VERIFICAÇÃO] Liberando acesso à central de recargas')
         onVerificationComplete() // Fecha o modal e libera a página
       }, 2000)
       
@@ -432,134 +429,186 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(100,150,255,0.15) 0%, rgba(255,100,200,0.12) 50%, rgba(150,200,255,0.15) 100%), linear-gradient(180deg, #0a0e1f 0%, #1a1f3a 100%)'
-    }}>
-      {/* Efeitos de fundo Glass Morphism */}
+    <>
+      {/* Botão de teste Google Ads */}
+      <GoogleConversionTest />
+      
+      <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
+      }}>
+        {/* Efeitos de fundo Aurora Cristalina */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Orbes flutuantes translúcidos */}
-        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float-slow" style={{
-          background: 'radial-gradient(circle, rgba(100,150,255,0.4) 0%, transparent 70%)'
+        {/* Partículas de luz flutuantes */}
+        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-aurora-float" style={{
+          background: 'radial-gradient(circle, rgba(0,212,255,0.5) 0%, rgba(183,148,246,0.3) 50%, transparent 70%)'
         }} />
-        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-float-medium" style={{
-          background: 'radial-gradient(circle, rgba(255,100,200,0.4) 0%, transparent 70%)'
+        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-aurora-float-delayed" style={{
+          background: 'radial-gradient(circle, rgba(183,148,246,0.5) 0%, rgba(0,212,255,0.3) 50%, transparent 70%)'
         }} />
         
-        {/* Formas Glass canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-40 h-40 opacity-30 animate-float-slow">
-          <div className="w-full h-full rounded-full" style={{
-            background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.1)'
-          }} />
-        </div>
-        
-        {/* Formas Glass canto superior direito */}
-        <div className="absolute top-0 right-0 w-32 h-32 opacity-40 animate-float-medium" style={{animationDelay: '1s'}}>
+        {/* Cristal hexagonal canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-24 h-24 sm:w-32 md:w-40 sm:h-32 md:h-40 opacity-30 animate-crystal-float">
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,100,200,0.25), rgba(150,200,255,0.2))',
-            backdropFilter: 'blur(15px)',
-            borderRadius: '30px',
-            border: '1px solid rgba(255,255,255,0.15)',
-            transform: 'rotate(45deg)'
+            background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(183,148,246,0.3))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 30px rgba(0,212,255,0.5), inset 0 0 15px rgba(224,247,255,0.2)'
           }} />
         </div>
         
-        {/* Formas Glass canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-36 h-36 opacity-35 animate-float-slow" style={{animationDelay: '2s'}}>
+        {/* Cristal hexagonal canto superior direito */}
+        <div className="absolute top-0 right-0 w-20 h-20 sm:w-28 md:w-32 sm:h-28 md:h-32 opacity-35 animate-crystal-rotate" style={{animationDelay: '1.2s'}}>
           <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(150,200,255,0.3), rgba(100,150,255,0.2))',
-            backdropFilter: 'blur(12px)',
-            borderRadius: '50% 30% 50% 30%',
-            border: '1px solid rgba(255,255,255,0.12)'
+            background: 'linear-gradient(135deg, rgba(183,148,246,0.45), rgba(0,212,255,0.3))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 25px rgba(183,148,246,0.6), inset 0 0 12px rgba(224,247,255,0.25)'
           }} />
         </div>
         
-        {/* Formas Glass canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-44 h-44 opacity-30 animate-float-medium" style={{animationDelay: '3s'}}>
-          <div className="w-full h-full rounded-full" style={{
-            background: 'linear-gradient(135deg, rgba(255,100,200,0.28), rgba(100,150,255,0.18))',
-            backdropFilter: 'blur(18px)',
-            border: '1px solid rgba(255,255,255,0.1)'
+        {/* Cristal hexagonal canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-22 h-22 sm:w-30 md:w-36 sm:h-30 md:h-36 opacity-32 animate-crystal-float" style={{animationDelay: '2s'}}>
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(0,212,255,0.42), rgba(183,148,246,0.28))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 28px rgba(0,212,255,0.55), inset 0 0 14px rgba(224,247,255,0.22)'
+          }} />
+        </div>
+        
+        {/* Cristal hexagonal canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-28 h-28 sm:w-36 md:w-44 sm:h-36 md:h-44 opacity-28 animate-crystal-rotate" style={{animationDelay: '2.8s'}}>
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(183,148,246,0.48), rgba(0,212,255,0.32))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 32px rgba(183,148,246,0.65), inset 0 0 16px rgba(224,247,255,0.28)'
           }} />
         </div>
       </div>
 
       <style>{`
-        @keyframes float-slow {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.05); }
-          66% { transform: translate(-20px, 20px) scale(0.95); }
+        @keyframes aurora-float {
+          0%, 100% { 
+            transform: translate(0, 0) scale(1); 
+            opacity: 0.2; 
+          }
+          33% { 
+            transform: translate(40px, -40px) scale(1.08); 
+            opacity: 0.28; 
+          }
+          66% { 
+            transform: translate(-30px, 30px) scale(0.95); 
+            opacity: 0.22; 
+          }
         }
-        @keyframes float-medium {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          50% { transform: translate(-25px, 25px) rotate(180deg); }
+        @keyframes aurora-float-delayed {
+          0%, 100% { 
+            transform: translate(0, 0) scale(1) rotate(0deg); 
+            opacity: 0.2; 
+          }
+          50% { 
+            transform: translate(-35px, 35px) scale(1.1) rotate(180deg); 
+            opacity: 0.25; 
+          }
         }
-        @keyframes glass-shimmer {
-          0% { transform: translateX(-100%) skewX(-15deg); opacity: 0; }
-          50% { opacity: 0.5; }
-          100% { transform: translateX(200%) skewX(-15deg); opacity: 0; }
+        @keyframes crystal-float {
+          0%, 100% { 
+            transform: translateY(0) rotate(0deg); 
+            opacity: 0.3; 
+          }
+          50% { 
+            transform: translateY(-15px) rotate(180deg); 
+            opacity: 0.45; 
+          }
+        }
+        @keyframes crystal-rotate {
+          0% { 
+            transform: rotate(0deg) scale(1); 
+            opacity: 0.35; 
+          }
+          50% { 
+            transform: rotate(180deg) scale(1.1); 
+            opacity: 0.5; 
+          }
+          100% { 
+            transform: rotate(360deg) scale(1); 
+            opacity: 0.35; 
+          }
+        }
+        @keyframes shimmer-aurora {
+          0% { 
+            transform: translateX(-100%) skewX(-15deg); 
+            opacity: 0; 
+          }
+          50% { 
+            opacity: 0.6; 
+          }
+          100% { 
+            transform: translateX(200%) skewX(-15deg); 
+            opacity: 0; 
+          }
         }
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(100,150,255,0.3), 0 0 40px rgba(255,100,200,0.2); }
-          50% { box-shadow: 0 0 30px rgba(255,100,200,0.4), 0 0 60px rgba(100,150,255,0.3); }
+        .animate-aurora-float {
+          animation: aurora-float 25s ease-in-out infinite;
         }
-        .animate-float-slow {
-          animation: float-slow 20s ease-in-out infinite;
+        .animate-aurora-float-delayed {
+          animation: aurora-float-delayed 20s ease-in-out infinite;
         }
-        .animate-float-medium {
-          animation: float-medium 15s ease-in-out infinite;
+        .animate-crystal-float {
+          animation: crystal-float 8s ease-in-out infinite;
         }
-        .animate-glass-shimmer {
-          animation: glass-shimmer 4s ease-in-out infinite;
-        }
-        .animate-fade-in {
-          animation: fade-in 0.4s ease-out;
-        }
-        .animate-pulse-glow {
-          animation: pulse-glow 3s ease-in-out infinite;
+        .animate-crystal-rotate {
+          animation: crystal-rotate 12s linear infinite;
         }
       `}</style>
 
-      <div className="relative flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-md">
+      <div className="relative flex items-center justify-center min-h-screen p-2 sm:p-4">
+        <div className="w-full max-w-[95%] sm:max-w-md">
           
           {/* Tela Inicial */}
           {step === 'initial' && (
             <div className="relative overflow-hidden" style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '30px',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+              background: 'rgba(10, 14, 39, 0.4)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '24px',
+              border: '1px solid rgba(0, 212, 255, 0.25)',
+              boxShadow: '0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(183, 148, 246, 0.15)'
             }}>
-              {/* Header Glass */}
+              {/* Header Aurora Cristalina */}
               <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                backdropFilter: 'blur(15px)',
-                borderBottom: '1px solid rgba(255,255,255,0.1)'
+                background: 'linear-gradient(135deg, rgba(0,212,255,0.2), rgba(183,148,246,0.18))',
+                backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(0,212,255,0.3)',
+                boxShadow: '0 4px 20px rgba(0,212,255,0.2)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-                {/* Orbes decorativos no header */}
-                <div className="absolute top-2 left-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(150,200,255,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(150,200,255,0.5)'
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(224,247,255,0.08) to-transparent" />
+                {/* Part\u00edculas cristalinas no header */}
+                <div className="absolute top-2 left-2 w-2 h-2 animate-crystal-float" style={{
+                  background: 'radial-gradient(circle, rgba(0,212,255,0.9), rgba(0,212,255,0.3))',
+                  boxShadow: '0 0 12px rgba(0,212,255,0.8)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
                 }} />
-                <div className="absolute top-2 right-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(255,150,200,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(255,150,200,0.5)'
+                <div className="absolute top-2 right-2 w-2 h-2 animate-crystal-rotate" style={{
+                  background: 'radial-gradient(circle, rgba(183,148,246,0.9), rgba(183,148,246,0.3))',
+                  boxShadow: '0 0 12px rgba(183,148,246,0.8)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
                 }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-glass-shimmer"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(224,247,255,0.15) to-transparent" style={{animation: 'shimmer-aurora 4s ease-in-out infinite'}}></div>
                 </div>
                 <h1 className="relative text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <span className="text-2xl md:text-3xl">✨</span>
+                  <div className="w-6 h-6" style={{
+                    background: 'linear-gradient(135deg, rgba(0,212,255,0.6), rgba(183,148,246,0.4))',
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    boxShadow: '0 0 15px rgba(0,212,255,0.6)'
+                  }} />
                   <span>Bem-vindo!</span>
-                  <span className="text-2xl md:text-3xl">💎</span>
+                  <div className="w-6 h-6" style={{
+                    background: 'linear-gradient(135deg, rgba(183,148,246,0.6), rgba(0,212,255,0.4))',
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    boxShadow: '0 0 15px rgba(183,148,246,0.6)'
+                  }} />
                 </h1>
               </div>
 
@@ -585,10 +634,10 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     <div className="text-3xl">💎</div>
                   </div>
                 </div>
-                <h2 className="text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 mb-3">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 mb-3">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-blue-100/80 mb-4 leading-relaxed text-sm">
+                <p className="text-blue-100/80 mb-4 leading-relaxed text-xs sm:text-sm">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
@@ -606,12 +655,12 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
                     background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
                   }} />
-                  <p className="text-blue-100 font-bold text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
+                  <p className="text-blue-100 font-bold text-sm sm:text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
                     <span className="text-xl md:text-2xl">✨</span>
                     <span>Benefício Exclusivo</span>
                     <span className="text-xl md:text-2xl">💎</span>
                   </p>
-                  <p className="text-blue-100/80 text-sm leading-relaxed relative z-10">
+                  <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed relative z-10">
                     Valide sua conta e receba <span className="font-bold text-pink-300 text-base">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
@@ -643,8 +692,8 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   <span className="text-xl mr-2">✨</span>
-                  <span className="relative z-10">Começar Verificação</span>
-                  <span className="text-xl ml-2">💎</span>
+                  <span className="relative z-10">Iniciar</span>
+                  <span className="text-xl ml-2"></span>
                 </button>
 
                 {/* Links de Termos e Políticas */}
@@ -881,15 +930,15 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
-            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-              <div className="max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" style={{
+            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
+              <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
                 background: 'rgba(255, 255, 255, 0.05)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: '30px',
                 border: '1px solid rgba(255, 255, 255, 0.18)',
                 boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
               }}>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-6 -m-6 p-6" style={{
                     background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
                     backdropFilter: 'blur(15px)',
@@ -1135,7 +1184,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   ) : (
                     <>
                       <span className="text-xl md:text-2xl mr-2">✨</span>
-                      <span className="relative z-10">Verificar Identidade</span>
+                      <span className="relative z-10">Entrar</span>
                       <span className="text-xl md:text-2xl ml-2">💎</span>
                     </>
                   )}
@@ -1149,16 +1198,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-          <div className="max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" style={{
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
+          <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(20px)',
             borderRadius: '30px',
             border: '1px solid rgba(255, 255, 255, 0.18)',
             boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
           }}>
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6 -m-6 p-6" style={{
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6 -m-4 sm:-m-6 p-4 sm:p-6" style={{
                 background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
                 backdropFilter: 'blur(15px)',
                 borderTopLeftRadius: '30px',
@@ -1261,5 +1310,6 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
         </div>
       )}
     </div>
+    </>
   )
 }
