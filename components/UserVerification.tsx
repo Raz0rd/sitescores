@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import GoogleConversionTest from './GoogleConversionTest'
 
 interface UserVerificationProps {
   onVerificationComplete: () => void
@@ -249,20 +250,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       localStorage.setItem('terms_accepted', 'true')
       localStorage.setItem('terms_accepted_at', Date.now().toString())
       
-      // Salvar cookies
+      // Salvar cookies (30 dias de validade)
       const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
       document.cookie = `quiz_completed=true; ${cookieOptions}`
       document.cookie = `referer_verified=true; ${cookieOptions}`
-      
-      console.log('🍪 [VERIFICAÇÃO] Cookies definidos')
-      console.log('   - quiz_completed=true')
-      console.log('   - referer_verified=true')
+      document.cookie = `user_verified=true; ${cookieOptions}`
       
       setStep('loading')
       
       // Fechar modal após 2 segundos e liberar central de recargas
       setTimeout(() => {
-        console.log('✅ [VERIFICAÇÃO] Liberando acesso à central de recargas')
         onVerificationComplete() // Fecha o modal e libera a página
       }, 2000)
       
@@ -352,61 +349,74 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   if (step === 'loading') {
     return (
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #0a1f2e 0%, #0a4d5c 50%, #0a1f2e 100%)'
+        background: 'linear-gradient(135deg, rgba(100,150,255,0.15) 0%, rgba(255,100,200,0.12) 50%, rgba(150,200,255,0.15) 100%), linear-gradient(180deg, #0a0e1f 0%, #1a1f3a 100%)'
       }}>
-        {/* Efeitos de fundo Origami */}
+        {/* Efeitos de fundo Glass */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Textura triangular */}
-          <div className="absolute inset-0 opacity-5" style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, #5a7d7c 0px, #5a7d7c 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #b8c5d0 0px, #b8c5d0 1px, transparent 1px, transparent 20px)',
-            backgroundSize: '40px 40px'
+          {/* Orbes flutuantes */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float-slow" style={{
+            background: 'radial-gradient(circle, rgba(100,150,255,0.5) 0%, transparent 70%)'
+          }} />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20 animate-float-medium" style={{
+            background: 'radial-gradient(circle, rgba(255,100,200,0.5) 0%, transparent 70%)'
           }} />
         </div>
         
         <div className="flex items-center justify-center min-h-screen p-4 relative z-10">
           <div className="text-center max-w-md w-full">
-            {/* Logo/Ícone Origami */}
+            {/* Logo/Ícone Glass */}
             <div className="relative inline-block mb-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-[#0a4d5c] to-[#5a7d7c] flex items-center justify-center shadow-2xl" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}>
-                <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-28 h-28 rounded-full flex items-center justify-center animate-float-slow" style={{
+                background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
+                backdropFilter: 'blur(20px)',
+                border: '2px solid rgba(255,255,255,0.2)',
+                boxShadow: '0 8px 32px 0 rgba(100,150,255,0.4), 0 0 60px rgba(255,100,200,0.3)'
+              }}>
+                <svg className="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
               </div>
-              {/* Spinner triangular ao redor */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-[#b8c5d0] animate-spin" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}></div>
+              {/* Spinner glass ao redor */}
+              <div className="absolute inset-0 border-4 border-transparent border-t-pink-300 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 10px rgba(255,100,200,0.8))'}}></div>
             </div>
 
             {/* Mensagem Principal */}
-            <div className="bg-[#0a4d5c]/60 backdrop-blur-sm rounded-2xl p-6 border border-[#5a7d7c]/50 mb-6">
+            <div className="p-6 mb-6" style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '25px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+            }}>
               <h2 className="text-2xl font-bold mb-3 text-white">
-                ▲ Verificação Concluída!
+                ✨ Verificação Concluída!
               </h2>
-              <p className="text-[#b8c5d0] text-base mb-2">
+              <p className="text-blue-100/80 text-base mb-2">
                 Seu desconto foi ativado com sucesso
               </p>
-              <div className="flex items-center justify-center gap-2 text-[#5a7d7c] font-bold text-base">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#5a7d7c] border-t-transparent"></div>
+              <div className="flex items-center justify-center gap-2 text-pink-300 font-bold text-base">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-pink-300 border-t-transparent"></div>
                 <span>Redirecionando...</span>
               </div>
             </div>
 
             {/* Benefícios */}
             <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-center gap-2 text-[#b8c5d0]">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center gap-2 text-blue-200">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Desconto de 70% ativado</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-[#5a7d7c]">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center gap-2 text-pink-200">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Conta verificada</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-[#b8c5d0]">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center gap-2 text-purple-200">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                 </svg>
                 <span>Acesso liberado</span>
@@ -419,192 +429,287 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #0a1f2e 0%, #0a4d5c 50%, #0a1f2e 100%)'
-    }}>
-      {/* Efeitos de fundo Origami */}
+    <>
+      {/* Botão de teste Google Ads */}
+      <GoogleConversionTest />
+      
+      <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
+      }}>
+        {/* Efeitos de fundo Aurora Cristalina */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Textura triangular sutil */}
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, #5a7d7c 0px, #5a7d7c 1px, transparent 1px, transparent 20px), repeating-linear-gradient(-45deg, #b8c5d0 0px, #b8c5d0 1px, transparent 1px, transparent 20px)',
-          backgroundSize: '40px 40px'
+        {/* Partículas de luz flutuantes */}
+        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-aurora-float" style={{
+          background: 'radial-gradient(circle, rgba(0,212,255,0.5) 0%, rgba(183,148,246,0.3) 50%, transparent 70%)'
+        }} />
+        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-aurora-float-delayed" style={{
+          background: 'radial-gradient(circle, rgba(183,148,246,0.5) 0%, rgba(0,212,255,0.3) 50%, transparent 70%)'
         }} />
         
-        {/* Triângulo Origami canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-32 h-32 opacity-50 animate-triangle-float">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <polygon points="0,0 60,0 0,60" fill="#0a4d5c" opacity="0.6"/>
-            <polygon points="0,0 40,0 0,40" fill="#5a7d7c" opacity="0.4"/>
-            <polygon points="10,10 50,10 10,50" fill="none" stroke="#b8c5d0" strokeWidth="1" opacity="0.3"/>
-          </svg>
+        {/* Cristal hexagonal canto superior esquerdo */}
+        <div className="absolute top-0 left-0 w-24 h-24 sm:w-32 md:w-40 sm:h-32 md:h-40 opacity-30 animate-crystal-float">
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(183,148,246,0.3))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 30px rgba(0,212,255,0.5), inset 0 0 15px rgba(224,247,255,0.2)'
+          }} />
         </div>
         
-        {/* Triângulo Origami canto superior direito */}
-        <div className="absolute top-0 right-0 w-32 h-32 opacity-50 animate-triangle-rotate" style={{animationDelay: '1s'}}>
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <polygon points="100,0 40,0 100,60" fill="#5a7d7c" opacity="0.6"/>
-            <polygon points="100,0 60,0 100,40" fill="#b8c5d0" opacity="0.3"/>
-            <polygon points="90,10 50,10 90,50" fill="none" stroke="#0a4d5c" strokeWidth="1" opacity="0.4"/>
-          </svg>
+        {/* Cristal hexagonal canto superior direito */}
+        <div className="absolute top-0 right-0 w-20 h-20 sm:w-28 md:w-32 sm:h-28 md:h-32 opacity-35 animate-crystal-rotate" style={{animationDelay: '1.2s'}}>
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(183,148,246,0.45), rgba(0,212,255,0.3))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 25px rgba(183,148,246,0.6), inset 0 0 12px rgba(224,247,255,0.25)'
+          }} />
         </div>
         
-        {/* Triângulo Origami canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-32 h-32 opacity-50 animate-subtle-shift">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <polygon points="0,100 60,100 0,40" fill="#0a4d5c" opacity="0.6"/>
-            <polygon points="0,100 40,100 0,60" fill="#5a7d7c" opacity="0.4"/>
-            <polygon points="10,90 50,90 10,50" fill="none" stroke="#b8c5d0" strokeWidth="1" opacity="0.3"/>
-          </svg>
+        {/* Cristal hexagonal canto inferior esquerdo */}
+        <div className="absolute bottom-0 left-0 w-22 h-22 sm:w-30 md:w-36 sm:h-30 md:h-36 opacity-32 animate-crystal-float" style={{animationDelay: '2s'}}>
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(0,212,255,0.42), rgba(183,148,246,0.28))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 28px rgba(0,212,255,0.55), inset 0 0 14px rgba(224,247,255,0.22)'
+          }} />
         </div>
         
-        {/* Triângulo Origami canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-50 animate-triangle-float" style={{animationDelay: '2s'}}>
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <polygon points="100,100 40,100 100,40" fill="#5a7d7c" opacity="0.6"/>
-            <polygon points="100,100 60,100 100,60" fill="#b8c5d0" opacity="0.3"/>
-            <polygon points="90,90 50,90 90,50" fill="none" stroke="#0a4d5c" strokeWidth="1" opacity="0.4"/>
-          </svg>
+        {/* Cristal hexagonal canto inferior direito */}
+        <div className="absolute bottom-0 right-0 w-28 h-28 sm:w-36 md:w-44 sm:h-36 md:h-44 opacity-28 animate-crystal-rotate" style={{animationDelay: '2.8s'}}>
+          <div className="w-full h-full" style={{
+            background: 'linear-gradient(135deg, rgba(183,148,246,0.48), rgba(0,212,255,0.32))',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            boxShadow: '0 0 32px rgba(183,148,246,0.65), inset 0 0 16px rgba(224,247,255,0.28)'
+          }} />
         </div>
       </div>
 
       <style>{`
-        @keyframes triangleFloat {
-          0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
-          50% { transform: translateY(-15px) rotate(5deg); opacity: 0.7; }
+        @keyframes aurora-float {
+          0%, 100% { 
+            transform: translate(0, 0) scale(1); 
+            opacity: 0.2; 
+          }
+          33% { 
+            transform: translate(40px, -40px) scale(1.08); 
+            opacity: 0.28; 
+          }
+          66% { 
+            transform: translate(-30px, 30px) scale(0.95); 
+            opacity: 0.22; 
+          }
         }
-        @keyframes triangleRotate {
-          0% { transform: rotateZ(0deg); opacity: 0.3; }
-          50% { transform: rotateZ(180deg); opacity: 0.6; }
-          100% { transform: rotateZ(360deg); opacity: 0.3; }
+        @keyframes aurora-float-delayed {
+          0%, 100% { 
+            transform: translate(0, 0) scale(1) rotate(0deg); 
+            opacity: 0.2; 
+          }
+          50% { 
+            transform: translate(-35px, 35px) scale(1.1) rotate(180deg); 
+            opacity: 0.25; 
+          }
         }
-        @keyframes subtleShift {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(10px); }
+        @keyframes crystal-float {
+          0%, 100% { 
+            transform: translateY(0) rotate(0deg); 
+            opacity: 0.3; 
+          }
+          50% { 
+            transform: translateY(-15px) rotate(180deg); 
+            opacity: 0.45; 
+          }
+        }
+        @keyframes crystal-rotate {
+          0% { 
+            transform: rotate(0deg) scale(1); 
+            opacity: 0.35; 
+          }
+          50% { 
+            transform: rotate(180deg) scale(1.1); 
+            opacity: 0.5; 
+          }
+          100% { 
+            transform: rotate(360deg) scale(1); 
+            opacity: 0.35; 
+          }
+        }
+        @keyframes shimmer-aurora {
+          0% { 
+            transform: translateX(-100%) skewX(-15deg); 
+            opacity: 0; 
+          }
+          50% { 
+            opacity: 0.6; 
+          }
+          100% { 
+            transform: translateX(200%) skewX(-15deg); 
+            opacity: 0; 
+          }
         }
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+        .animate-aurora-float {
+          animation: aurora-float 25s ease-in-out infinite;
         }
-        .animate-shimmer {
-          animation: shimmer 3s ease-in-out infinite;
+        .animate-aurora-float-delayed {
+          animation: aurora-float-delayed 20s ease-in-out infinite;
         }
-        .animate-fade-in {
-          animation: fade-in 0.4s ease-out;
+        .animate-crystal-float {
+          animation: crystal-float 8s ease-in-out infinite;
         }
-        .animate-triangle-float {
-          animation: triangleFloat 8s ease-in-out infinite;
-        }
-        .animate-triangle-rotate {
-          animation: triangleRotate 12s linear infinite;
-        }
-        .animate-subtle-shift {
-          animation: subtleShift 6s ease-in-out infinite;
+        .animate-crystal-rotate {
+          animation: crystal-rotate 12s linear infinite;
         }
       `}</style>
 
-      <div className="relative flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-md">
+      <div className="relative flex items-center justify-center min-h-screen p-2 sm:p-4">
+        <div className="w-full max-w-[95%] sm:max-w-md">
           
           {/* Tela Inicial */}
           {step === 'initial' && (
-            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl sm:rounded-3xl shadow-2xl border border-[#5a7d7c]/60 overflow-hidden backdrop-blur-xl">
-              {/* Header Origami */}
-              <div className="relative h-20 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5a7d7c]/10 to-black/40" />
-                {/* Triângulos decorativos no header */}
-                <div className="absolute top-2 left-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
-                  <div className="w-full h-full bg-[#b8c5d0] opacity-60"></div>
-                </div>
-                <div className="absolute top-2 right-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
-                  <div className="w-full h-full bg-[#5a7d7c] opacity-60"></div>
-                </div>
+            <div className="relative overflow-hidden" style={{
+              background: 'rgba(10, 14, 39, 0.4)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '24px',
+              border: '1px solid rgba(0, 212, 255, 0.25)',
+              boxShadow: '0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(183, 148, 246, 0.15)'
+            }}>
+              {/* Header Aurora Cristalina */}
+              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
+                background: 'linear-gradient(135deg, rgba(0,212,255,0.2), rgba(183,148,246,0.18))',
+                backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(0,212,255,0.3)',
+                boxShadow: '0 4px 20px rgba(0,212,255,0.2)'
+              }}>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(224,247,255,0.08) to-transparent" />
+                {/* Part\u00edculas cristalinas no header */}
+                <div className="absolute top-2 left-2 w-2 h-2 animate-crystal-float" style={{
+                  background: 'radial-gradient(circle, rgba(0,212,255,0.9), rgba(0,212,255,0.3))',
+                  boxShadow: '0 0 12px rgba(0,212,255,0.8)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                }} />
+                <div className="absolute top-2 right-2 w-2 h-2 animate-crystal-rotate" style={{
+                  background: 'radial-gradient(circle, rgba(183,148,246,0.9), rgba(183,148,246,0.3))',
+                  boxShadow: '0 0 12px rgba(183,148,246,0.8)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                }} />
                 <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(224,247,255,0.15) to-transparent" style={{animation: 'shimmer-aurora 4s ease-in-out infinite'}}></div>
                 </div>
                 <h1 className="relative text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <span className="text-2xl md:text-3xl">▲</span>
+                  <div className="w-6 h-6" style={{
+                    background: 'linear-gradient(135deg, rgba(0,212,255,0.6), rgba(183,148,246,0.4))',
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    boxShadow: '0 0 15px rgba(0,212,255,0.6)'
+                  }} />
                   <span>Bem-vindo!</span>
-                  <span className="text-2xl md:text-3xl">▼</span>
+                  <div className="w-6 h-6" style={{
+                    background: 'linear-gradient(135deg, rgba(183,148,246,0.6), rgba(0,212,255,0.4))',
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    boxShadow: '0 0 15px rgba(183,148,246,0.6)'
+                  }} />
                 </h1>
               </div>
 
               {/* Conteúdo compacto */}
               <div className="p-5 text-center">
-                {/* Ícone Origami com triângulos */}
-                <div className="relative w-16 h-16 mx-auto mb-4">
-                  {/* Triângulo externo */}
-                  <div className="absolute inset-0 animate-triangle-rotate">
-                    <svg viewBox="0 0 100 100" className="w-full h-full">
-                      <polygon points="50,10 90,90 10,90" stroke="#5a7d7c" strokeWidth="3" fill="none"/>
-                      <polygon points="50,20 80,80 20,80" stroke="#b8c5d0" strokeWidth="2" fill="none" opacity="0.6"/>
-                    </svg>
-                  </div>
-                  {/* Triângulo interno */}
-                  <div className="absolute inset-4 animate-triangle-float">
-                    <svg viewBox="0 0 100 100" className="w-full h-full">
-                      <polygon points="50,20 80,80 20,80" fill="#0a4d5c" opacity="0.6"/>
-                    </svg>
-                  </div>
+                {/* Ícone Glass com orbes */}
+                <div className="relative w-20 h-20 mx-auto mb-4">
+                  {/* Orbe externa */}
+                  <div className="absolute inset-0 rounded-full animate-float-slow" style={{
+                    background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255,255,255,0.2)',
+                    boxShadow: '0 8px 32px 0 rgba(100,150,255,0.3)'
+                  }} />
+                  {/* Orbe interna */}
+                  <div className="absolute inset-3 rounded-full animate-float-medium" style={{
+                    background: 'linear-gradient(135deg, rgba(255,100,200,0.4), rgba(150,200,255,0.3))',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255,255,255,0.3)'
+                  }} />
                   {/* Símbolo central */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-3xl text-[#b8c5d0]">◆</div>
+                    <div className="text-3xl">💎</div>
                   </div>
                 </div>
-                <h2 className="text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] via-[#b8c5d0] to-[#0a4d5c] mb-3">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 mb-3">
                   Acesse Ofertas Exclusivas
                 </h2>
-                <p className="text-[#b8c5d0] mb-4 leading-relaxed text-sm">
+                <p className="text-blue-100/80 mb-4 leading-relaxed text-xs sm:text-sm">
                   Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
                 </p>
                 
-                <div className="bg-gradient-to-br from-[#0a4d5c]/30 via-[#5a7d7c]/20 to-[#b8c5d0]/10 border border-[#5a7d7c]/60 rounded-xl p-4 mb-4 backdrop-blur-md shadow-lg relative overflow-hidden">
-                  {/* Triângulos decorativos */}
-                  <div className="absolute top-0 right-0 w-8 h-8" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}}>
-                    <div className="w-full h-full bg-[#5a7d7c] opacity-30"></div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 w-8 h-8" style={{clipPath: 'polygon(0 100%, 100% 100%, 0 0)'}}>
-                    <div className="w-full h-full bg-[#b8c5d0] opacity-30"></div>
-                  </div>
-                  <p className="text-[#b8c5d0] font-bold text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
-                    <span className="text-xl md:text-2xl">▲</span>
+                <div className="relative p-4 mb-4 overflow-hidden" style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(15px)',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 4px 16px 0 rgba(100, 150, 255, 0.15)'
+                }}>
+                  {/* Orbes decorativos */}
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
+                    background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
+                  }} />
+                  <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
+                    background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
+                  }} />
+                  <p className="text-blue-100 font-bold text-sm sm:text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
+                    <span className="text-xl md:text-2xl">✨</span>
                     <span>Benefício Exclusivo</span>
-                    <span className="text-xl md:text-2xl">▼</span>
+                    <span className="text-xl md:text-2xl">💎</span>
                   </p>
-                  <p className="text-[#b8c5d0]/90 text-sm leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-[#5a7d7c] text-base">70% de desconto</span> na sua recarga!
+                  <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed relative z-10">
+                    Valide sua conta e receba <span className="font-bold text-pink-300 text-base">70% de desconto</span> na sua recarga!
                   </p>
                 </div>
 
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-blue-200 relative z-10">
+                    <span className="text-xl">✨</span>
+                    <span className="font-semibold text-sm">Validação rápida e segura</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-pink-200 relative z-10">
+                    <span className="text-xl">💎</span>
+                    <span className="font-semibold text-sm">Descontos de até 70%</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-purple-200 relative z-10">
+                    <span className="text-xl">⭐</span>
+                    <span className="font-semibold text-sm">Diamantes extras grátis</span>
+                  </div>
+                </div>
+
                 <button
-                  onClick={handleInitialCheck}
-                  className="w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold text-base py-3 px-6 rounded-xl transition-all duration-300 shadow-xl hover:scale-[1.03] border border-[#5a7d7c]/60 hover:border-[#b8c5d0] relative overflow-hidden group mb-3"
+                  onClick={() => { playClickSound(); setStep('terms'); }}
+                  className="w-full font-bold text-base py-4 px-6 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '25px',
+                    border: '1px solid rgba(255,255,255,0.25)'
+                  }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <span className="text-lg md:text-xl">▲</span>
-                    <span>Começar Agora</span>
-                    <span className="text-lg md:text-xl">◆</span>
-                  </span>
+                  <span className="text-xl mr-2">✨</span>
+                  <span className="relative z-10">Iniciar</span>
+                  <span className="text-xl ml-2"></span>
                 </button>
 
                 {/* Links de Termos e Políticas */}
                 <div className="mt-4 text-center text-xs">
-                  <p className="mb-2 text-[#b8c5d0]">Ao continuar, você concorda com nossos</p>
+                  <p className="mb-2 text-blue-200/70">Ao continuar, você concorda com nossos</p>
                   <div className="flex items-center justify-center gap-3">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-[#5a7d7c] hover:text-[#b8c5d0] underline transition-colors font-semibold"
+                      className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
                     >
                       Termos de Uso
                     </button>
-                    <span className="text-[#5a7d7c]">•</span>
+                    <span className="text-blue-300">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-[#5a7d7c] hover:text-[#b8c5d0] underline transition-colors font-semibold"
+                      className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
                     >
                       Política de Privacidade
                     </button>
@@ -616,68 +721,87 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Termos */}
           {step === 'terms' && (
-            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl border-2 border-[#5a7d7c]/50 p-8 shadow-2xl backdrop-blur-xl">
+            <div className="p-5" style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '30px',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+            }}>
               <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] via-[#b8c5d0] to-[#0a4d5c]">Termos de Uso e Política de Privacidade</h2>
-                <div className="bg-[#0a4d5c]/40 rounded-lg p-4 max-h-64 overflow-y-auto text-sm text-[#b8c5d0] leading-relaxed border border-[#5a7d7c]/40">
+                <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300">Termos de Uso e Política de Privacidade</h2>
+                <div className="p-4 max-h-64 overflow-y-auto text-sm text-blue-100/80 leading-relaxed" style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
                   
-                  <div className="bg-[#5a7d7c]/20 border-l-4 border-[#5a7d7c] p-3 mb-4 rounded">
-                    <p className="text-[#b8c5d0] font-semibold">
-                      ▲ <strong>EXCLUSIVIDADE:</strong> Deseja receber seu desconto especial? 
+                  <div className="p-3 mb-4" style={{
+                    background: 'rgba(100,150,255,0.1)',
+                    borderLeft: '4px solid rgba(100,150,255,0.5)',
+                    borderRadius: '10px'
+                  }}>
+                    <p className="text-blue-200 font-semibold">
+                      ✨ <strong>EXCLUSIVIDADE:</strong> Deseja receber seu desconto especial? 
                       Aceite os termos e tenha acesso a ofertas exclusivas!
                     </p>
                   </div>
 
-                  <h4 className="font-bold text-[#b8c5d0] mb-2">▲ TERMOS DE USO</h4>
+                  <h4 className="font-bold text-blue-200 mb-2">💎 TERMOS DE USO</h4>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
+                    <strong className="text-pink-300">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade. Este acordo é válido para todas as transações realizadas.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de jogadores ativos são aceitos.
+                    <strong className="text-blue-300">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas. Apenas IDs válidos de jogadores ativos são aceitos.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.
+                    <strong className="text-pink-300">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
+                    <strong className="text-blue-300">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração. Seus dados financeiros são protegidos pelos mais altos padrões de segurança.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">5. Validade da Oferta:</strong> O desconto de 70% é válido para recargas e não pode ser combinado com outras promoções. Esta oferta está sujeita à disponibilidade e pode ser encerrada a qualquer momento sem aviso prévio.
+                    <strong className="text-pink-300">5. Validade da Oferta:</strong> O desconto de 70% é válido para recargas e não pode ser combinado com outras promoções. Esta oferta está sujeita à disponibilidade e pode ser encerrada a qualquer momento sem aviso prévio.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
+                    <strong className="text-blue-300">6. Uso Único:</strong> Este cupom é válido para uso único por usuário e não pode ser transferido.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
+                    <strong className="text-pink-300">7. Conformidade:</strong> Esta promoção está em conformidade com as políticas do Google Ads e regulamentações aplicáveis. Todas as ofertas seguem as diretrizes de publicidade digital.
                   </p>
 
-                  <h4 className="font-bold text-[#b8c5d0] mb-2 mt-4">◆ POLÍTICA DE PRIVACIDADE</h4>
+                  <h4 className="font-bold text-purple-200 mb-2 mt-4">⭐ POLÍTICA DE PRIVACIDADE</h4>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
+                    <strong className="text-blue-300">8. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">9. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.
+                    <strong className="text-pink-300">9. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
+                    <strong className="text-blue-300">10. Cookies e Rastreamento:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">11. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.
+                    <strong className="text-pink-300">11. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#b8c5d0]">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
+                    <strong className="text-blue-300">12. Suporte 24h:</strong> Nossa equipe está disponível 24 horas para esclarecer dúvidas sobre privacidade, termos de uso ou questões técnicas.
                   </p>
                   <p className="mb-3">
-                    <strong className="text-[#5a7d7c]">13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
+                    <strong className="text-pink-300">13. Atualizações:</strong> Estes termos podem ser atualizados periodicamente. Usuários serão notificados sobre mudanças importantes por email ou no site.
                   </p>
                   
-                  <p className="text-xs text-[#5a7d7c] mt-4 italic">
+                  <p className="text-xs text-pink-200/70 mt-4 italic">
                     Ao participar desta promoção, você concorda com estes termos e condições.
                   </p>
 
-                  <div className="bg-[#0a4d5c]/30 border-l-4 border-[#b8c5d0] p-3 mt-4 rounded">
-                    <p className="text-[#b8c5d0] text-xs">
-                      ◆ <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
+                  <div className="p-3 mt-4" style={{
+                    background: 'rgba(255,100,200,0.1)',
+                    borderLeft: '4px solid rgba(255,100,200,0.5)',
+                    borderRadius: '10px'
+                  }}>
+                    <p className="text-pink-200 text-xs">
+                      💎 <strong>Site Oficial e Confiável:</strong> Somos um centro de recarga oficial com milhares de usuários satisfeitos. 
                       Transações rápidas, seguras e com garantia de entrega.
                     </p>
                   </div>
@@ -685,23 +809,23 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               </div>
 
               <div className="mb-4">
-                <label className="flex items-start text-sm text-[#b8c5d0]">
+                <label className="flex items-start text-sm text-blue-100/80">
                   <input
                     type="checkbox"
                     checked={accepted}
                     onChange={(e) => setAccepted(e.target.checked)}
-                    className="mr-3 w-5 h-5 text-[#5a7d7c] rounded focus:ring-[#5a7d7c] mt-0.5 bg-[#0a4d5c] border-[#5a7d7c]"
+                    className="mr-3 w-5 h-5 text-blue-400 rounded focus:ring-blue-400 mt-0.5 bg-white/10 border-blue-300"
                   />
                   <span>
                     Eu li e aceito os{' '}
-                    <span className="text-[#5a7d7c] underline font-bold">
+                    <span className="text-pink-300 underline font-bold">
                       Termos de Uso
                     </span>
                     {' '}e{' '}
-                    <span className="text-[#b8c5d0] underline font-bold">
+                    <span className="text-blue-300 underline font-bold">
                       Política de Privacidade
                     </span>, 
-                    e desejo ter acesso às <strong className="text-[#5a7d7c]">ofertas exclusivas</strong> para usuários verificados
+                    e desejo ter acesso às <strong className="text-pink-300">ofertas exclusivas</strong> para usuários verificados
                   </span>
                 </label>
               </div>
@@ -715,20 +839,32 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep('initial')}
-                  className="flex-1 bg-[#0a4d5c]/60 hover:bg-[#0a4d5c]/80 text-[#b8c5d0] font-medium py-3 px-4 rounded-lg transition-all duration-200 border border-[#5a7d7c]/40 hover:border-[#5a7d7c]/60"
+                  className="flex-1 font-medium py-3 px-4 transition-all duration-200 text-blue-200"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                  }}
                 >
                   ← Voltar
                 </button>
                 <button
                   onClick={handleAcceptTerms}
                   disabled={!accepted}
-                  className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all duration-300 ${
+                  className={`flex-1 font-bold py-3 px-4 transition-all duration-300 ${
                     accepted
-                      ? 'bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white shadow-lg hover:scale-105 border border-[#5a7d7c]/60'
+                      ? 'text-white shadow-lg hover:scale-105'
                       : 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600'
                   }`}
+                  style={accepted ? {
+                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '15px',
+                    border: '1px solid rgba(255,255,255,0.25)'
+                  } : {}}
                 >
-                  Continuar ▲
+                  Continuar ✨
                 </button>
               </div>
             </div>
@@ -794,17 +930,29 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
-            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-              <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-[#5a7d7c]/50">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] -m-6 p-6 rounded-t-2xl">
+            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
+              <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '30px',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
+              }}>
+                <div className="p-4 sm:p-6">
+                  <div className="flex items-center justify-between mb-6 -m-6 p-6" style={{
+                    background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
+                    backdropFilter: 'blur(15px)',
+                    borderTopLeftRadius: '30px',
+                    borderTopRightRadius: '30px',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)'
+                  }}>
                     <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <span className="text-3xl">▲</span>
+                      <span className="text-3xl">✨</span>
                       <span>Termos de Uso</span>
                     </h3>
                     <button 
                       onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                      className="text-white hover:text-[#b8c5d0] transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                      className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -812,25 +960,31 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </button>
                   </div>
                   
-                  <div className="space-y-4 text-[#b8c5d0] text-sm leading-relaxed">
-                    <p><strong className="text-[#5a7d7c] text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
+                  <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
+                    <p><strong className="text-pink-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
                     
-                    <p><strong className="text-[#b8c5d0] text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
+                    <p><strong className="text-blue-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
                     
-                    <p><strong className="text-[#5a7d7c] text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
+                    <p><strong className="text-pink-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
                     
-                    <p><strong className="text-[#b8c5d0] text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
+                    <p><strong className="text-blue-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
                     
-                    <p><strong className="text-[#5a7d7c] text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
+                    <p><strong className="text-pink-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
                     
-                    <p><strong className="text-[#b8c5d0] text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
+                    <p><strong className="text-blue-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
                   </div>
                   
                   <button 
                     onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                    className="mt-6 w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                    className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255,255,255,0.25)'
+                    }}
                   >
-                    ▲ Entendi
+                    ✨ Entendi
                   </button>
                 </div>
               </div>
@@ -860,7 +1014,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   {quizProfiles[quizResult]?.description}
                 </p>
 
-                {/* Recompensa */}
+                {/* Benefício */}
                 <div className="bg-gradient-to-r from-yellow-600/20 to-amber-500/20 rounded-2xl p-6 mb-6 border border-yellow-400/40 backdrop-blur-sm">
                   <div className="text-4xl mb-2">👑</div>
                   <h4 className="text-2xl font-bold text-white mb-2">
@@ -899,69 +1053,95 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Verificação */}
           {step === 'verification' && (
-            <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-[#5a7d7c]/50 overflow-hidden backdrop-blur-xl">
-              {/* Header Origami */}
-              <div className="relative h-20 lg:h-24 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5a7d7c]/10 to-black/30" />
-                {/* Triângulos decorativos */}
-                <div className="absolute top-2 left-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
-                  <div className="w-full h-full bg-[#b8c5d0] opacity-60"></div>
-                </div>
-                <div className="absolute top-2 right-2 w-4 h-4" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}>
-                  <div className="w-full h-full bg-[#5a7d7c] opacity-60"></div>
-                </div>
+            <div className="overflow-hidden" style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '30px',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+            }}>
+              {/* Header Glass */}
+              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
+                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
+                backdropFilter: 'blur(15px)',
+                borderBottom: '1px solid rgba(255,255,255,0.1)'
+              }}>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
+                {/* Orbes decorativos */}
+                <div className="absolute top-2 left-2 w-3 h-3 rounded-full" style={{
+                  background: 'radial-gradient(circle, rgba(150,200,255,0.8), transparent)',
+                  boxShadow: '0 0 10px rgba(150,200,255,0.5)'
+                }} />
+                <div className="absolute top-2 right-2 w-3 h-3 rounded-full" style={{
+                  background: 'radial-gradient(circle, rgba(255,150,200,0.8), transparent)',
+                  boxShadow: '0 0 10px rgba(255,150,200,0.5)'
+                }} />
                 <h2 className="relative text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <span className="text-xl md:text-2xl">▲</span>
+                  <span className="text-xl md:text-2xl">✨</span>
                   <span>Validar Identidade</span>
-                  <span className="text-xl md:text-2xl">◆</span>
+                  <span className="text-xl md:text-2xl">💎</span>
                 </h2>
               </div>
 
-              <div className="p-4 sm:p-5 md:p-6 lg:p-8">
-                <p className="text-[#b8c5d0] text-sm mb-6 text-center">
+              <div className="p-5">
+                <p className="text-blue-100/80 text-sm mb-6 text-center">
                   Insira seu ID de jogador para confirmar que você é um usuário real
                 </p>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-base font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#5a7d7c] to-[#b8c5d0] flex items-center gap-2">
+                    <label className="block text-base font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 flex items-center gap-2">
                       <span className="text-lg md:text-xl">🎮</span>
                       <span>ID do Jogador</span>
-                      <span className="text-xs text-[#b8c5d0] font-normal">(apenas números)</span>
+                      <span className="text-xs text-blue-200 font-normal">(apenas números)</span>
                     </label>
                     <input
                       type="text"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Digite seu ID do jogo (ex: 5435431)"
-                      className="w-full px-5 py-4 bg-gradient-to-r from-[#0a4d5c]/60 to-black/60 border-2 border-[#5a7d7c]/40 rounded-2xl text-white text-lg font-bold placeholder-[#b8c5d0]/50 focus:outline-none focus:ring-2 focus:ring-[#b8c5d0] focus:border-[#b8c5d0] hover:border-[#5a7d7c]/70 transition-all duration-300 shadow-lg"
+                      className="w-full px-5 py-4 text-white text-lg font-bold placeholder-blue-200/40 focus:outline-none transition-all duration-300 shadow-lg"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: '20px',
+                        border: '1px solid rgba(255, 255, 255, 0.15)'
+                      }}
                       disabled={isLoading}
                       maxLength={15}
                     />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-[#0a4d5c]/30 via-[#5a7d7c]/20 to-[#b8c5d0]/10 border-2 border-[#5a7d7c]/50 rounded-2xl p-5 backdrop-blur-md shadow-lg relative overflow-hidden">
-                    {/* Triângulos decorativos */}
-                    <div className="absolute top-0 right-0 w-8 h-8" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}}>
-                      <div className="w-full h-full bg-[#5a7d7c] opacity-30"></div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 w-8 h-8" style={{clipPath: 'polygon(0 100%, 100% 100%, 0 0)'}}>
-                      <div className="w-full h-full bg-[#b8c5d0] opacity-30"></div>
-                    </div>
-                    <p className="text-sm text-[#b8c5d0] font-bold mb-3 flex items-center gap-2 relative z-10">
-                      <span className="text-lg">▲</span>
+                  <div className="p-5 shadow-lg relative overflow-hidden" style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(15px)',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                  }}>
+                    {/* Orbes decorativos */}
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
+                      background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
+                    }} />
+                    <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
+                      background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
+                    }} />
+                    <p className="text-sm text-blue-200 font-bold mb-3 flex items-center gap-2 relative z-10">
+                      <span className="text-lg">✨</span>
                       <span>Importante:</span>
                     </p>
-                    <p className="text-sm text-[#b8c5d0]/90 mb-3 leading-relaxed relative z-10">
-                      Digite seu <span className="text-[#5a7d7c] font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
+                    <p className="text-sm text-blue-100/80 mb-3 leading-relaxed relative z-10">
+                      Digite seu <span className="text-pink-300 font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
                     </p>
-                    <p className="text-xs text-[#b8c5d0] mb-3 bg-[#0a4d5c]/40 rounded-lg p-2 border border-[#5a7d7c]/40 relative z-10">
-                      📍 <span className="text-[#b8c5d0] font-semibold">Encontre seu ID em:</span><br/>
+                    <p className="text-xs text-blue-100/70 mb-3 rounded-lg p-2 relative z-10" style={{
+                      background: 'rgba(100,150,255,0.1)',
+                      border: '1px solid rgba(100,150,255,0.2)'
+                    }}>
+                      📍 <span className="text-blue-200 font-semibold">Encontre seu ID em:</span><br/>
                       <span className="text-white font-bold ml-4">Configurações → Informações Básicas → ID do Jogador</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
-                      className="text-sm text-[#5a7d7c] hover:text-[#b8c5d0] underline font-bold flex items-center gap-1 relative z-10"
+                      className="text-sm text-pink-300 hover:text-blue-300 underline font-bold flex items-center gap-1 relative z-10"
                     >
                       📖 Ver tutorial completo de como encontrar seu ID
                     </button>
@@ -977,18 +1157,24 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
               )}
 
-              <div className="px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
+              <div className="px-5 pb-5">
                 <button
                   onClick={handleVerification}
                   disabled={isLoading || !playerId.trim()}
-                  className={`w-full font-bold text-lg py-5 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
+                  className={`w-full font-bold text-lg py-5 px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
                     isLoading || !playerId.trim()
-                      ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600'
-                      : 'bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white shadow-2xl hover:scale-[1.05] border-2 border-[#5a7d7c]/60 hover:border-[#b8c5d0]'
+                      ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600 rounded-2xl'
+                      : 'text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow'
                   }`}
+                  style={!isLoading && playerId.trim() ? {
+                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '25px',
+                    border: '1px solid rgba(255,255,255,0.25)'
+                  } : {}}
                 >
                   {!isLoading && !(!playerId.trim()) && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   )}
                   {isLoading ? (
                     <>
@@ -997,9 +1183,9 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     </>
                   ) : (
                     <>
-                      <span className="text-xl md:text-2xl mr-2">▲</span>
-                      <span className="relative z-10">Verificar Identidade</span>
-                      <span className="text-xl md:text-2xl ml-2">◆</span>
+                      <span className="text-xl md:text-2xl mr-2">✨</span>
+                      <span className="relative z-10">Entrar</span>
+                      <span className="text-xl md:text-2xl ml-2">💎</span>
                     </>
                   )}
                 </button>
@@ -1012,17 +1198,29 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={playClickSound}>
-          <div className="bg-gradient-to-br from-[#0a1f2e]/95 via-[#0a4d5c]/95 to-[#0a1f2e]/95 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border-2 border-[#5a7d7c]/50">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#b8c5d0] -m-6 p-6 rounded-t-2xl">
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
+          <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '30px',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
+          }}>
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6 -m-4 sm:-m-6 p-4 sm:p-6" style={{
+                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
+                backdropFilter: 'blur(15px)',
+                borderTopLeftRadius: '30px',
+                borderTopRightRadius: '30px',
+                borderBottom: '1px solid rgba(255,255,255,0.1)'
+              }}>
                 <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-3xl">◆</span>
+                  <span className="text-3xl">💎</span>
                   <span>Política de Privacidade</span>
                 </h3>
                 <button 
                   onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                  className="text-white hover:text-[#b8c5d0] transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
+                  className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1030,25 +1228,31 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </button>
               </div>
               
-              <div className="space-y-4 text-[#b8c5d0] text-sm leading-relaxed">
-                <p><strong className="text-[#5a7d7c] text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
+              <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
+                <p><strong className="text-pink-300 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
                 
-                <p><strong className="text-[#b8c5d0] text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
+                <p><strong className="text-blue-300 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
                 
-                <p><strong className="text-[#5a7d7c] text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
+                <p><strong className="text-pink-300 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
                 
-                <p><strong className="text-[#b8c5d0] text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
+                <p><strong className="text-blue-300 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
                 
-                <p><strong className="text-[#5a7d7c] text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
+                <p><strong className="text-pink-300 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
                 
-                <p><strong className="text-[#b8c5d0] text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
+                <p><strong className="text-blue-300 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
               </div>
               
               <button 
                 onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                className="mt-6 w-full bg-gradient-to-r from-[#0a4d5c] via-[#5a7d7c] to-[#0a4d5c] hover:from-[#5a7d7c] hover:via-[#b8c5d0] hover:to-[#5a7d7c] text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255,255,255,0.25)'
+                }}
               >
-                ▲ Entendi
+                💎 Entendi
               </button>
             </div>
           </div>
@@ -1106,5 +1310,6 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
         </div>
       )}
     </div>
+    </>
   )
 }
