@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import GoogleConversionTest from './GoogleConversionTest'
 
 interface UserVerificationProps {
   onVerificationComplete: () => void
@@ -249,20 +250,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       localStorage.setItem('terms_accepted', 'true')
       localStorage.setItem('terms_accepted_at', Date.now().toString())
       
-      // Salvar cookies
+      // Salvar cookies (30 dias de validade)
       const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
       document.cookie = `quiz_completed=true; ${cookieOptions}`
       document.cookie = `referer_verified=true; ${cookieOptions}`
-      
-      console.log('🍪 [VERIFICAÇÃO] Cookies definidos')
-      console.log('   - quiz_completed=true')
-      console.log('   - referer_verified=true')
+      document.cookie = `user_verified=true; ${cookieOptions}`
       
       setStep('loading')
       
       // Fechar modal após 2 segundos e liberar central de recargas
       setTimeout(() => {
-        console.log('✅ [VERIFICAÇÃO] Liberando acesso à central de recargas')
         onVerificationComplete() // Fecha o modal e libera a página
       }, 2000)
       
@@ -432,10 +429,14 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-      background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
-    }}>
-      {/* Efeitos de fundo Aurora Cristalina */}
+    <>
+      {/* Botão de teste Google Ads */}
+      <GoogleConversionTest />
+      
+      <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
+      }}>
+        {/* Efeitos de fundo Aurora Cristalina */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Partículas de luz flutuantes */}
         <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-aurora-float" style={{
@@ -1309,5 +1310,6 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
         </div>
       )}
     </div>
+    </>
   )
 }
