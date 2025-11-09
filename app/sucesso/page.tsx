@@ -37,9 +37,14 @@ export default function SucessoPage() {
       return
     }
 
-    // Evitar disparo duplicado
-    if (conversionFired) {
-      console.log('⚠️ [Sucesso] Conversão já disparada, ignorando...')
+    // Verificar se já foi enviado (localStorage + state)
+    const storageKey = `gads_conversion_${transactionId}`
+    const alreadySent = localStorage.getItem(storageKey)
+    
+    if (alreadySent || conversionFired) {
+      console.log('⚠️ [Sucesso] Conversão já disparada anteriormente, ignorando...')
+      console.log('   - Transaction ID:', transactionId)
+      console.log('   - Enviado em:', alreadySent || 'sessão atual')
       return
     }
 
@@ -71,6 +76,13 @@ export default function SucessoPage() {
           currency: currency,
           transaction_id: transactionId
         })
+        
+        // Salvar no localStorage para evitar duplicação
+        const timestamp = new Date().toISOString()
+        localStorage.setItem(storageKey, timestamp)
+        console.log('🔒 [Anti-Duplicação] Conversão marcada como enviada no localStorage')
+        console.log('   - Key:', storageKey)
+        console.log('   - Timestamp:', timestamp)
       } else {
         console.error('❌ [Google Ads] Configuração faltando:', { googleAdsId, conversionLabel })
       }
