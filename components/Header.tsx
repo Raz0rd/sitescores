@@ -24,7 +24,7 @@ export default function Header() {
               <div className="ms-1.5 h-5 border-e border-short-line md:ms-3 md:h-3.5" />
             </div>
             <div className="text-xs font-medium text-text-title max-md:max-w-24 md:text-base/5">
-              Canal Oficial de Recarga
+              Canal Promocional de Recarga
             </div>
           </Link>
 

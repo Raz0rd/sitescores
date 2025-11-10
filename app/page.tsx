@@ -167,7 +167,6 @@ export default function HomePage() {
       promotionalValues: ["2.180", "5.600", "15.600"],
       specialOffers: [
         { id: 'firepower', name: 'Poder do Fogo (3 unidades Restantes)', image: '/images/firepower.png', description: 'Personagem "Poder do Fogo" - (3 unidades Restantes)' },
-        { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Receba 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Receba 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
         { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Receba todos os privilégios e benefícios do Booyah Pass Premium + benefícios exclusivos + 50 níveis do Booyah Pass instantaneamente + 5.600 diamantes extras!' },
         { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie benefícios incríveis, incluindo skins exclusivas e diamantes.' }
@@ -572,8 +571,8 @@ export default function HomePage() {
       310: { price: 10.99, bonus: 62 },
       520: { price: 14.9, bonus: 104 },
       2180: { price: 36.95, bonus: 2180 },   // DOBRO
-      5600: { price: 46.77, bonus: 1680 },
-      15600: { price: 87.8, bonus: 5600 },
+      5600: { price: 46.77, bonus: 5600 },   // DOBRO
+      15600: { price: 87.8, bonus: 15600 },  // DOBRO
     }
 
     return priceMap[diamondCount] || { price: 0, bonus: 0 }
@@ -907,7 +906,7 @@ export default function HomePage() {
 
           {/* Footer */}
           <div className="pb-4">
-            <p className="text-center text-sm text-gray-600">© 2025 PromoFFGames. Todos os direitos reservados.</p>
+            <p className="text-center text-sm text-gray-600">© 2025 Central Promocional Games (Jogos Tiro). Todos os direitos reservados.</p>
           </div>
         </div>
       </div>
@@ -1111,7 +1110,7 @@ export default function HomePage() {
               <div className="flex items-center gap-2">
                 
                 <div className="w-px h-8 bg-gray-300"></div>
-                <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Canal Oficial de</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Recarga</p></div>
+                <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Canal</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-25 md:text-base/5">Promocional de Recarga</p></div>
               </div>
             </div>
             <div className="w-8 h-8 sm:w-10 sm:h-10">
@@ -1752,10 +1751,10 @@ export default function HomePage() {
                     </div>
                   )}
                   
-                  {/* Badge Hot - para 5.600 diamantes no Free Fire */}
-                  {value === '5.600' && selectedGame === 'freefire' && (
-                    <div className="absolute top-1 right-1 bg-primary-red text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded">
-                      Hot
+                  {/* Badge HOT DOUBLE - para todos os diamantes do Free Fire */}
+                  {selectedGame === 'freefire' && (
+                    <div className="absolute top-0.5 right-0.5 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[7px] sm:text-[8px] font-bold px-1 py-0.5 rounded shadow-sm">
+                      HOT DOUBLE
                     </div>
                   )}
                   
@@ -2558,7 +2557,7 @@ export default function HomePage() {
           <div className="container mx-auto max-w-5xl px-4">
             <div className="flex flex-col items-center gap-3 p-4 text-center text-xs md:items-start max-md:pb-5">
               <div className="flex flex-col items-center gap-3 leading-none md:w-full md:flex-row md:justify-between">
-                <div className="md:text-start">© 2025 PromoFFGames. Todos os direitos reservados.</div>
+                <div className="md:text-start">© 2025 Central Promocional Games (Jogos Tiro). Todos os direitos reservados.</div>
                 <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1">
                   <a href="#" className="transition-opacity hover:opacity-100 hover:text-white">FAQ</a>
                   <div className="h-3 w-px bg-white/30"></div>

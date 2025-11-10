@@ -796,7 +796,7 @@ export default function CheckoutPage() {
     
     const utmifyData = {
         orderId: transactionData.transactionId,
-        platform: "PromoFFGames",
+        platform: "Central Promocional Games (Jogos Tiro)",
         paymentMethod: "pix",
         status: "waiting_payment",
         createdAt: formatDate(brazilTime),
@@ -903,7 +903,7 @@ export default function CheckoutPage() {
     
     const utmifyData = {
         orderId: transactionId,
-        platform: "PromoFFGames",
+        platform: "Central Promocional Games (Jogos Tiro)",
         paymentMethod: "pix",
         status: "paid",
         createdAt: formatDate(brazilTime),
@@ -1012,8 +1012,8 @@ export default function CheckoutPage() {
               G
             </div>
             <div>
-              <h1 className="font-bold text-base sm:text-lg text-gray-800">Canal Oficial de</h1>
-              <p className="text-xs sm:text-sm text-gray-600">Recarga</p>
+              <h1 className="font-bold text-base sm:text-lg text-gray-800">Canal Promocional </h1>
+              <p className="text-xs sm:text-sm text-gray-600">de Recarga</p>
             </div>
           </div>
         </div>
@@ -1495,7 +1495,7 @@ export default function CheckoutPage() {
         <div className="container mx-auto max-w-5xl px-4">
           <div className="flex flex-col items-center gap-3 p-4 text-center text-xs md:items-start max-md:pb-5">
             <div className="flex flex-col items-center gap-3 leading-none md:w-full md:flex-row md:justify-between">
-              <div className="md:text-start">© 2025 PromoFFGames. Todos os direitos reservados.</div>
+              <div className="md:text-start">© 2025 Central Promocional Games (Jogos Tiro). Todos os direitos reservados.</div>
               <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1">
                 <a href="#" className="transition-opacity hover:opacity-100 hover:text-white">FAQ</a>
                 <div className="h-3 w-px bg-white/30"></div>

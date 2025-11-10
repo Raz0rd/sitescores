@@ -12,24 +12,13 @@ export function checkEnvironmentVariables() {
   console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ID: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
   console.log(`   NEXT_PUBLIC_GTAG_CONVERSION_COMPRA: ${process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
   console.log(`   NEXT_PUBLIC_GOOGLE_AW_ID: ${process.env.NEXT_PUBLIC_GOOGLE_AW_ID ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
-  console.log(`   NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL: ${process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  console.log(`   NEXT_PUBLIC_GOGLE_CONVERSION_LABEL: ${process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
-  // Variáveis do Mercado Pago
-  console.log('\n💳 Mercado Pago:')
-  console.log(`   NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY: ${process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
-  console.log(`   MERCADOPAGO_ACCESS_TOKEN: ${process.env.MERCADOPAGO_ACCESS_TOKEN ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
-  // Variáveis do Webhook
-  console.log('\n🔔 Webhook:')
-  console.log(`   WEBHOOK_SECRET: ${process.env.WEBHOOK_SECRET ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
   // Variáveis do UTMify
   console.log('\n📈 UTMify:')
   console.log(`   NEXT_PUBLIC_UTMIFY_TOKEN: ${process.env.NEXT_PUBLIC_UTMIFY_TOKEN ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
-
-  // Variáveis do Banco de Dados
-  console.log('\n🗄️ Database:')
-  console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
   // Variáveis de API Externa
   console.log('\n🎮 APIs Externas:')

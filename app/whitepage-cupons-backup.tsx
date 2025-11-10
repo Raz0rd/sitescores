@@ -1501,7 +1501,7 @@ export default function CuponsPage() {
           }}>
             <strong style={{color:'var(--accent)'}}>Aviso Legal:</strong> A EASY CUPONS é uma plataforma independente de divulgação de cupons e promoções. 
             Não somos afiliados, patrocinados, endossados ou de qualquer forma oficialmente conectados com as empresas desenvolvedoras dos jogos mencionados 
-            (incluindo mas não limitado a PromoFFGames, Riot Games, Epic Games, Activision, Tencent, miHoYo, Roblox Corporation, Mojang Studios, entre outras). 
+            (incluindo mas não limitado a Central Promocional Games (Jogos Tiro), Riot Games, Epic Games, Activision, Tencent, miHoYo, Roblox Corporation, Mojang Studios, entre outras). 
             Todos os nomes de produtos, logotipos e marcas são propriedade de seus respectivos donos. O uso de qualquer nome comercial ou marca registrada 
             é apenas para fins de identificação e referência, e não implica qualquer associação com o proprietário da marca. 
             Trabalhamos exclusivamente com <strong>parceiros autorizados de recarga</strong> e não processamos transações financeiras diretamente.
@@ -1770,10 +1770,10 @@ export default function CuponsPage() {
                 <p><strong>Última atualização:</strong> 26 de outubro de 2025</p>
                 
                 <h3>1. Aceitação dos Termos</h3>
-                <p>Ao acessar e usar o site PromoFFGames, você concorda com estes termos e condições.</p>
+                <p>Ao acessar e usar o site Central Promocional Games (Jogos Tiro), você concorda com estes termos e condições.</p>
 
                 <h3>2. Sobre o Serviço</h3>
-                <p>A PromoFFGames oferece cupons e informações sobre promoções de jogos eletrônicos através de parcerias com plataformas de recarga.</p>
+                <p>A Central Promocional Games (Jogos Tiro) oferece cupons e informações sobre promoções de jogos eletrônicos através de parcerias com plataformas de recarga.</p>
 
                 <h3>3. Uso dos Cupons</h3>
                 <ul>
@@ -1793,7 +1793,7 @@ export default function CuponsPage() {
                 </ul>
 
                 <h3>5. Limitação de Responsabilidade</h3>
-                <p>A PromoFFGames não se responsabiliza por:</p>
+                <p>A Central Promocional Games (Jogos Tiro) não se responsabiliza por:</p>
                 <ul>
                   <li>Problemas com cupons fornecidos por terceiros</li>
                   <li>Interrupções no serviço</li>
@@ -1807,8 +1807,8 @@ export default function CuponsPage() {
                 <p>Estes termos são regidos pelas leis brasileiras.</p>
 
                 <h3>8. Contato</h3>
-                <p><strong>PromoFFGames</strong></p>
-                <p><strong>Email:</strong> contato@{(process.env.NEXT_PUBLIC_BASE_URL || 'promoffgames.com').replace('https://', '').replace('www.', '')}</p>
+                <p><strong>Central Promocional Games (Jogos Tiro)</strong></p>
+                <p><strong>Email:</strong> contato@{(process.env.NEXT_PUBLIC_BASE_URL || 'Central Promocional Games (Jogos Tiro).com').replace('https://', '').replace('www.', '')}</p>
               </>
             )}
           </div>

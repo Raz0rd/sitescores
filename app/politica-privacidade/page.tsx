@@ -63,14 +63,14 @@ export default function PoliticaPrivacidadePage() {
 
       <div className="content">
         <div className="title">
-          <p style={{ textAlign: 'center' }}><strong>Política de Privacidade da PromoFFGames</strong></p>
+          <p style={{ textAlign: 'center' }}><strong>Política de Privacidade da Central Promocional Games (Jogos Tiro)</strong></p>
         </div>
 
         <div className="privacy-content" dangerouslySetInnerHTML={{ __html: `
           <p style="text-align:justify"><strong>1. INTRODUÇÃO </strong></p>
 
           <p style="text-align:justify"><br/>
-          1.1​​Bem-vindo aos Serviços da PromoFFGames,&nbsp; administrados pela <strong>PromoFFGames Online Private Limited </strong>e&nbsp; suas afiliadas e demais empresas do grupo (individual e coletivamente, "PromoFFGames", "nós", "nós" ou "nosso"). A PromoFFGames assume seriamente suas responsabilidades sob as leis e regulamentos de privacidade aplicáveis ​​("Leis de Privacidade") e está comprometido em respeitar os direitos e preocupações de privacidade de todos os Usuários dos Jogos da PromoFFGames ("Jogos"), website e aplicativos de celular ("Site")&nbsp; (nos referimos à Jogos, Site e aos outros serviços referidos em nossos Termos de Serviços coletivamente como os "Serviços"). Usuários se refere ao usuário que registra uma conta conosco ou quem de qualquer forma usa ou acessa os Serviços (individual ou coletivamente "usuários", você ou vocês, e seu ou seus"). Reconhecemos a importância dos dados pessoais que você nos confiou e acreditamos que é nossa responsabilidade gerenciar, proteger e processar adequadamente seus dados pessoais. Esta Política de Privacidade ("Política de Privacidade" ou "Política") foi criada para ajudá-lo a entender como coletamos, usamos, divulgamos, transferimos e / ou processamos os dados pessoais que você nos forneceu e/ou possuímos sobre você, agora ou no futuro, além de ajudá-lo a tomar uma decisão informada antes de nos fornecer seus dados pessoais. Os termos em Caixa Alta empregados nesta Política de Privacidade que não possuírem uma definição específica terão o significado dado aos mesmos nos Termos de Serviço da PromoFFGames.<br/>
+          1.1​​Bem-vindo aos Serviços da Central Promocional Games (Jogos Tiro),&nbsp; administrados pela <strong>Central Promocional Games (Jogos Tiro) Online Private Limited </strong>e&nbsp; suas afiliadas e demais empresas do grupo (individual e coletivamente, "Central Promocional Games (Jogos Tiro)", "nós", "nós" ou "nosso"). A Central Promocional Games (Jogos Tiro) assume seriamente suas responsabilidades sob as leis e regulamentos de privacidade aplicáveis ​​("Leis de Privacidade") e está comprometido em respeitar os direitos e preocupações de privacidade de todos os Usuários dos Jogos da Central Promocional Games (Jogos Tiro) ("Jogos"), website e aplicativos de celular ("Site")&nbsp; (nos referimos à Jogos, Site e aos outros serviços referidos em nossos Termos de Serviços coletivamente como os "Serviços"). Usuários se refere ao usuário que registra uma conta conosco ou quem de qualquer forma usa ou acessa os Serviços (individual ou coletivamente "usuários", você ou vocês, e seu ou seus"). Reconhecemos a importância dos dados pessoais que você nos confiou e acreditamos que é nossa responsabilidade gerenciar, proteger e processar adequadamente seus dados pessoais. Esta Política de Privacidade ("Política de Privacidade" ou "Política") foi criada para ajudá-lo a entender como coletamos, usamos, divulgamos, transferimos e / ou processamos os dados pessoais que você nos forneceu e/ou possuímos sobre você, agora ou no futuro, além de ajudá-lo a tomar uma decisão informada antes de nos fornecer seus dados pessoais. Os termos em Caixa Alta empregados nesta Política de Privacidade que não possuírem uma definição específica terão o significado dado aos mesmos nos Termos de Serviço da Central Promocional Games (Jogos Tiro).<br/>
           1.1.1 Para usuários que sejam da Coreia do Sul ou acessem os Jogos na Coreia do Sul, por favor, acessem a Política de Privacidade aplicável <a href="#"><strong>aqui</strong></a>.</p>
 
           <p style="text-align:justify"><br/><br/>
@@ -83,7 +83,7 @@ export default function PoliticaPrivacidadePage() {
 
           <p style="text-align:justify">&nbsp;</p>
 
-          <p style="text-align:justify"><strong>2. QUANDO A PromoFFGames RECOLHERÁ DADOS PESSOAIS?</strong></p>
+          <p style="text-align:justify"><strong>2. QUANDO A Central Promocional Games (Jogos Tiro) RECOLHERÁ DADOS PESSOAIS?</strong></p>
 
           <p style="text-align:justify"><br/>
           2.1&nbsp;Nós iremos / poderemos coletar dados pessoais sobre você:</p>
@@ -95,7 +95,7 @@ export default function PoliticaPrivacidadePage() {
             <li>quando você interage conosco, como em chamadas telefônicas (que podem ser gravadas), cartas, fax, reuniões presenciais, plataformas de mídia social e e-mails, incluindo quando você com nossos agentes de suporte ao usuário;</li>
             <li>quando você usa nossos serviços eletrônicos, ou interage conosco por meio de nosso aplicativo ou usa serviços em nossa Plataforma. Isso inclui, sem limitação, através de cookies que podemos implantar quando você interage com nosso aplicativo ou site;</li>
             <li>quando você concede permissões no seu dispositivo para compartilhar informações com o seu aplicativo de celular ou Site;</li>
-            <li>quando você vincula a sua conta PromoFFGames a sua rede social (definida abaixo) ou outra conta externa ou utiliza outras funcionalidades de sua rede social, em conformidades com as políticas dos respectivos fornecedores;</li>
+            <li>quando você vincula a sua conta Central Promocional Games (Jogos Tiro) a sua rede social (definida abaixo) ou outra conta externa ou utiliza outras funcionalidades de sua rede social, em conformidades com as políticas dos respectivos fornecedores;</li>
             <li>quando você realiza transações através de nossos Games ou Site (quando aplicável) ou com nossos parceiros de pagamentos autorizados;</li>
             <li>quando você nos fornecer feedback ou reclamações;</li>
             <li>quando você se inscreve em um concurso; ou</li>

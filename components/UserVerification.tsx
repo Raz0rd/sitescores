@@ -9,7 +9,7 @@ interface UserVerificationProps {
 }
 
 export default function UserVerification({ onVerificationComplete }: UserVerificationProps) {
-  const [step, setStep] = useState<'initial' | 'quiz' | 'result' | 'reward' | 'terms' | 'verification' | 'loading'>('initial')
+  const [step, setStep] = useState<'initial' | 'quiz' | 'result' | 'reward' | 'terms' | 'verification'>('initial')
   const [playerId, setPlayerId] = useState('')
   const [accepted, setAccepted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -256,12 +256,8 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       document.cookie = `referer_verified=true; ${cookieOptions}`
       document.cookie = `user_verified=true; ${cookieOptions}`
       
-      setStep('loading')
-      
-      // Fechar modal após 2 segundos e liberar central de recargas
-      setTimeout(() => {
-        onVerificationComplete() // Fecha o modal e libera a página
-      }, 2000)
+      // Fechar modal imediatamente e liberar central de recargas
+      onVerificationComplete() // Fecha o modal e libera a página
       
     } catch (err) {
       setError('Erro na verificação. Verifique sua conexão e tente novamente.')
@@ -346,202 +342,101 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
     }
   }
 
-  if (step === 'loading') {
-    return (
-      <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, rgba(100,150,255,0.15) 0%, rgba(255,100,200,0.12) 50%, rgba(150,200,255,0.15) 100%), linear-gradient(180deg, #0a0e1f 0%, #1a1f3a 100%)'
-      }}>
-        {/* Efeitos de fundo Glass */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Orbes flutuantes */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float-slow" style={{
-            background: 'radial-gradient(circle, rgba(100,150,255,0.5) 0%, transparent 70%)'
-          }} />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20 animate-float-medium" style={{
-            background: 'radial-gradient(circle, rgba(255,100,200,0.5) 0%, transparent 70%)'
-          }} />
-        </div>
-        
-        <div className="flex items-center justify-center min-h-screen p-4 relative z-10">
-          <div className="text-center max-w-md w-full">
-            {/* Logo/Ícone Glass */}
-            <div className="relative inline-block mb-8">
-              <div className="w-28 h-28 rounded-full flex items-center justify-center animate-float-slow" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
-                backdropFilter: 'blur(20px)',
-                border: '2px solid rgba(255,255,255,0.2)',
-                boxShadow: '0 8px 32px 0 rgba(100,150,255,0.4), 0 0 60px rgba(255,100,200,0.3)'
-              }}>
-                <svg className="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
-              </div>
-              {/* Spinner glass ao redor */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-pink-300 rounded-full animate-spin" style={{filter: 'drop-shadow(0 0 10px rgba(255,100,200,0.8))'}}></div>
-            </div>
-
-            {/* Mensagem Principal */}
-            <div className="p-6 mb-6" style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '25px',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
-            }}>
-              <h2 className="text-2xl font-bold mb-3 text-white">
-                ✨ Verificação Concluída!
-              </h2>
-              <p className="text-blue-100/80 text-base mb-2">
-                Seu desconto foi ativado com sucesso
-              </p>
-              <div className="flex items-center justify-center gap-2 text-pink-300 font-bold text-base">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-pink-300 border-t-transparent"></div>
-                <span>Redirecionando...</span>
-              </div>
-            </div>
-
-            {/* Benefícios */}
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-center gap-2 text-blue-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
-                <span>Desconto de 70% ativado</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-pink-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
-                <span>Conta verificada</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-purple-200">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
-                <span>Acesso liberado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <>
       {/* Botão de teste Google Ads */}
       <GoogleConversionTest />
       
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
-        background: 'linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(183,148,246,0.12) 50%, rgba(0,212,255,0.15) 100%), linear-gradient(180deg, #0A0E27 0%, #1a1f3a 100%)'
+        background: '#ffffff'
       }}>
-        {/* Efeitos de fundo Aurora Cristalina */}
+        {/* Efeitos de fundo Free Fire */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Partículas de luz flutuantes */}
-        <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-20 animate-aurora-float" style={{
-          background: 'radial-gradient(circle, rgba(0,212,255,0.5) 0%, rgba(183,148,246,0.3) 50%, transparent 70%)'
+        {/* Formas decorativas sutis */}
+        <div className="absolute top-10 right-10 w-32 h-32 opacity-5" style={{
+          background: 'linear-gradient(135deg, #ff4444, #ff6b00)',
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
         }} />
-        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-20 animate-aurora-float-delayed" style={{
-          background: 'radial-gradient(circle, rgba(183,148,246,0.5) 0%, rgba(0,212,255,0.3) 50%, transparent 70%)'
+        <div className="absolute bottom-10 left-10 w-40 h-40 opacity-5" style={{
+          background: 'linear-gradient(135deg, #ff6b00, #ff4444)',
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
         }} />
-        
-        {/* Cristal hexagonal canto superior esquerdo */}
-        <div className="absolute top-0 left-0 w-24 h-24 sm:w-32 md:w-40 sm:h-32 md:h-40 opacity-30 animate-crystal-float">
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(183,148,246,0.3))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 30px rgba(0,212,255,0.5), inset 0 0 15px rgba(224,247,255,0.2)'
-          }} />
-        </div>
-        
-        {/* Cristal hexagonal canto superior direito */}
-        <div className="absolute top-0 right-0 w-20 h-20 sm:w-28 md:w-32 sm:h-28 md:h-32 opacity-35 animate-crystal-rotate" style={{animationDelay: '1.2s'}}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(183,148,246,0.45), rgba(0,212,255,0.3))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 25px rgba(183,148,246,0.6), inset 0 0 12px rgba(224,247,255,0.25)'
-          }} />
-        </div>
-        
-        {/* Cristal hexagonal canto inferior esquerdo */}
-        <div className="absolute bottom-0 left-0 w-22 h-22 sm:w-30 md:w-36 sm:h-30 md:h-36 opacity-32 animate-crystal-float" style={{animationDelay: '2s'}}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.42), rgba(183,148,246,0.28))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 28px rgba(0,212,255,0.55), inset 0 0 14px rgba(224,247,255,0.22)'
-          }} />
-        </div>
-        
-        {/* Cristal hexagonal canto inferior direito */}
-        <div className="absolute bottom-0 right-0 w-28 h-28 sm:w-36 md:w-44 sm:h-36 md:h-44 opacity-28 animate-crystal-rotate" style={{animationDelay: '2.8s'}}>
-          <div className="w-full h-full" style={{
-            background: 'linear-gradient(135deg, rgba(183,148,246,0.48), rgba(0,212,255,0.32))',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            boxShadow: '0 0 32px rgba(183,148,246,0.65), inset 0 0 16px rgba(224,247,255,0.28)'
-          }} />
-        </div>
       </div>
 
       <style>{`
-        @keyframes aurora-float {
-          0%, 100% { 
-            transform: translate(0, 0) scale(1); 
-            opacity: 0.2; 
-          }
-          33% { 
-            transform: translate(40px, -40px) scale(1.08); 
-            opacity: 0.28; 
-          }
-          66% { 
-            transform: translate(-30px, 30px) scale(0.95); 
-            opacity: 0.22; 
-          }
-        }
-        @keyframes aurora-float-delayed {
+        @keyframes liquid-wave {
           0%, 100% { 
             transform: translate(0, 0) scale(1) rotate(0deg); 
-            opacity: 0.2; 
+            opacity: 0.15;
+            border-radius: 60% 40% 70% 30% / 60% 30% 70% 40%;
           }
-          50% { 
-            transform: translate(-35px, 35px) scale(1.1) rotate(180deg); 
-            opacity: 0.25; 
+          33% { 
+            transform: translate(50px, -30px) scale(1.15) rotate(120deg); 
+            opacity: 0.22;
+            border-radius: 40% 60% 50% 50% / 70% 30% 60% 40%;
+          }
+          66% { 
+            transform: translate(-40px, 40px) scale(0.9) rotate(240deg); 
+            opacity: 0.18;
+            border-radius: 70% 30% 40% 60% / 50% 60% 40% 50%;
           }
         }
-        @keyframes crystal-float {
+        @keyframes liquid-wave-reverse {
           0%, 100% { 
-            transform: translateY(0) rotate(0deg); 
-            opacity: 0.3; 
+            transform: translate(0, 0) scale(1) rotate(360deg); 
+            opacity: 0.18;
+            border-radius: 50% 50% 60% 40% / 40% 60% 50% 50%;
           }
           50% { 
-            transform: translateY(-15px) rotate(180deg); 
-            opacity: 0.45; 
+            transform: translate(-45px, 45px) scale(1.12) rotate(180deg); 
+            opacity: 0.25;
+            border-radius: 60% 40% 30% 70% / 60% 40% 70% 30%;
           }
         }
-        @keyframes crystal-rotate {
-          0% { 
-            transform: rotate(0deg) scale(1); 
-            opacity: 0.35; 
+        @keyframes liquid-drop {
+          0%, 100% { 
+            transform: translateY(0) scale(1);
+            opacity: 0.25;
+            border-radius: 60% 40% 70% 30% / 60% 30% 70% 40%;
           }
           50% { 
-            transform: rotate(180deg) scale(1.1); 
-            opacity: 0.5; 
+            transform: translateY(-20px) scale(1.08);
+            opacity: 0.38;
+            border-radius: 40% 60% 50% 50% / 30% 70% 60% 40%;
+          }
+        }
+        @keyframes liquid-morph {
+          0% { 
+            border-radius: 40% 60% 30% 70% / 40% 70% 30% 60%;
+            transform: rotate(0deg) scale(1);
+            opacity: 0.30;
+          }
+          33% { 
+            border-radius: 70% 30% 60% 40% / 60% 40% 70% 30%;
+            transform: rotate(120deg) scale(1.1);
+            opacity: 0.42;
+          }
+          66% { 
+            border-radius: 50% 50% 40% 60% / 50% 60% 40% 50%;
+            transform: rotate(240deg) scale(0.95);
+            opacity: 0.35;
           }
           100% { 
-            transform: rotate(360deg) scale(1); 
-            opacity: 0.35; 
+            border-radius: 40% 60% 30% 70% / 40% 70% 30% 60%;
+            transform: rotate(360deg) scale(1);
+            opacity: 0.30;
           }
         }
-        @keyframes shimmer-aurora {
+        @keyframes shimmer-liquid {
           0% { 
-            transform: translateX(-100%) skewX(-15deg); 
+            transform: translateX(-100%) skewX(-10deg); 
             opacity: 0; 
           }
           50% { 
-            opacity: 0.6; 
+            opacity: 0.5; 
           }
           100% { 
-            transform: translateX(200%) skewX(-15deg); 
+            transform: translateX(200%) skewX(-10deg); 
             opacity: 0; 
           }
         }
@@ -549,169 +444,84 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-aurora-float {
-          animation: aurora-float 25s ease-in-out infinite;
+        .animate-liquid-wave {
+          animation: liquid-wave 28s ease-in-out infinite;
         }
-        .animate-aurora-float-delayed {
-          animation: aurora-float-delayed 20s ease-in-out infinite;
+        .animate-liquid-wave-reverse {
+          animation: liquid-wave-reverse 24s ease-in-out infinite;
         }
-        .animate-crystal-float {
-          animation: crystal-float 8s ease-in-out infinite;
+        .animate-liquid-drop {
+          animation: liquid-drop 10s ease-in-out infinite;
         }
-        .animate-crystal-rotate {
-          animation: crystal-rotate 12s linear infinite;
+        .animate-liquid-morph {
+          animation: liquid-morph 14s linear infinite;
         }
       `}</style>
 
-      <div className="relative flex items-center justify-center min-h-screen p-2 sm:p-4">
-        <div className="w-full max-w-[95%] sm:max-w-md">
+      <div className="relative flex items-center justify-center min-h-screen p-3">
+        <div className="w-full max-w-[90%] sm:max-w-sm">
           
           {/* Tela Inicial */}
           {step === 'initial' && (
-            <div className="relative overflow-hidden" style={{
-              background: 'rgba(10, 14, 39, 0.4)',
-              backdropFilter: 'blur(25px)',
-              borderRadius: '24px',
-              border: '1px solid rgba(0, 212, 255, 0.25)',
-              boxShadow: '0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(183, 148, 246, 0.15)'
+            <div className="relative overflow-hidden bg-white shadow-2xl" style={{
+              borderRadius: '12px',
+              border: '2px solid #e5e5e5'
             }}>
-              {/* Header Aurora Cristalina */}
-              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(0,212,255,0.2), rgba(183,148,246,0.18))',
-                backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(0,212,255,0.3)',
-                boxShadow: '0 4px 20px rgba(0,212,255,0.2)'
+              {/* Header Free Fire */}
+              <div className="relative h-12 flex items-center justify-center" style={{
+                background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(224,247,255,0.08) to-transparent" />
-                {/* Part\u00edculas cristalinas no header */}
-                <div className="absolute top-2 left-2 w-2 h-2 animate-crystal-float" style={{
-                  background: 'radial-gradient(circle, rgba(0,212,255,0.9), rgba(0,212,255,0.3))',
-                  boxShadow: '0 0 12px rgba(0,212,255,0.8)',
-                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                }} />
-                <div className="absolute top-2 right-2 w-2 h-2 animate-crystal-rotate" style={{
-                  background: 'radial-gradient(circle, rgba(183,148,246,0.9), rgba(183,148,246,0.3))',
-                  boxShadow: '0 0 12px rgba(183,148,246,0.8)',
-                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                }} />
-                <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rgba(224,247,255,0.15) to-transparent" style={{animation: 'shimmer-aurora 4s ease-in-out infinite'}}></div>
-                </div>
-                <h1 className="relative text-xl md:text-2xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <div className="w-6 h-6" style={{
-                    background: 'linear-gradient(135deg, rgba(0,212,255,0.6), rgba(183,148,246,0.4))',
-                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                    boxShadow: '0 0 15px rgba(0,212,255,0.6)'
-                  }} />
-                  <span>Bem-vindo!</span>
-                  <div className="w-6 h-6" style={{
-                    background: 'linear-gradient(135deg, rgba(183,148,246,0.6), rgba(0,212,255,0.4))',
-                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                    boxShadow: '0 0 15px rgba(183,148,246,0.6)'
-                  }} />
+                <h1 className="text-base sm:text-lg font-bold text-white text-center">
+                  🔥 Bem-vindo!
                 </h1>
               </div>
 
-              {/* Conteúdo compacto */}
-              <div className="p-5 text-center">
-                {/* Ícone Glass com orbes */}
-                <div className="relative w-20 h-20 mx-auto mb-4">
-                  {/* Orbe externa */}
-                  <div className="absolute inset-0 rounded-full animate-float-slow" style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.3), rgba(255,100,200,0.2))',
-                    backdropFilter: 'blur(10px)',
-                    border: '2px solid rgba(255,255,255,0.2)',
-                    boxShadow: '0 8px 32px 0 rgba(100,150,255,0.3)'
-                  }} />
-                  {/* Orbe interna */}
-                  <div className="absolute inset-3 rounded-full animate-float-medium" style={{
-                    background: 'linear-gradient(135deg, rgba(255,100,200,0.4), rgba(150,200,255,0.3))',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.3)'
-                  }} />
-                  {/* Símbolo central */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-3xl">💎</div>
-                  </div>
-                </div>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 mb-3">
-                  Acesse Ofertas Exclusivas
+              {/* Conteúdo */}
+              <div className="p-4 text-center">
+                <div className="text-4xl mb-3">💎</div>
+                
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  Diamantes Free Fire
                 </h2>
-                <p className="text-blue-100/80 mb-4 leading-relaxed text-xs sm:text-sm">
-                  Valide sua identidade e tenha acesso a descontos especiais e diamantes extras!
+                <p className="text-gray-600 mb-4 text-xs sm:text-sm">
+                  Complete os passos e concorra a desconto!
                 </p>
                 
-                <div className="relative p-4 mb-4 overflow-hidden" style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(15px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 4px 16px 0 rgba(100, 150, 255, 0.15)'
-                }}>
-                  {/* Orbes decorativos */}
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
-                    background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
-                  }} />
-                  <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
-                    background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
-                  }} />
-                  <p className="text-blue-100 font-bold text-sm sm:text-base md:text-lg mb-2 flex items-center justify-center gap-2 relative z-10">
-                    <span className="text-xl md:text-2xl">✨</span>
-                    <span>Benefício Exclusivo</span>
-                    <span className="text-xl md:text-2xl">💎</span>
+                <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-4">
+                  <p className="text-red-900 font-bold text-sm mb-2">
+                    🎯 Desconto na Primeira Compra
                   </p>
-                  <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed relative z-10">
-                    Valide sua conta e receba <span className="font-bold text-pink-300 text-base">70% de desconto</span> na sua recarga!
+                  <p className="text-red-700 text-xs leading-relaxed">
+                    Complete a validação e concorra a desconto especial na sua primeira compra de diamantes para Free Fire
                   </p>
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-blue-200 relative z-10">
-                    <span className="text-xl">✨</span>
-                    <span className="font-semibold text-sm">Validação rápida e segura</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-pink-200 relative z-10">
-                    <span className="text-xl">💎</span>
-                    <span className="font-semibold text-sm">Descontos de até 70%</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-purple-200 relative z-10">
-                    <span className="text-xl">⭐</span>
-                    <span className="font-semibold text-sm">Diamantes extras grátis</span>
-                  </div>
                 </div>
 
                 <button
-                  onClick={() => { playClickSound(); setStep('terms'); }}
-                  className="w-full font-bold text-base py-4 px-6 transition-all duration-300 flex items-center justify-center relative overflow-hidden group text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow"
+                  onClick={() => setStep('verification')}
+                  className="w-full font-bold text-base py-3 px-4 rounded-lg text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
-                    backdropFilter: 'blur(20px)',
-                    borderRadius: '25px',
-                    border: '1px solid rgba(255,255,255,0.25)'
+                    background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  <span className="text-xl mr-2">✨</span>
-                  <span className="relative z-10">Iniciar</span>
-                  <span className="text-xl ml-2"></span>
+                  Começar Validação 🔥
                 </button>
 
                 {/* Links de Termos e Políticas */}
                 <div className="mt-4 text-center text-xs">
-                  <p className="mb-2 text-blue-200/70">Ao continuar, você concorda com nossos</p>
-                  <div className="flex items-center justify-center gap-3">
+                  <p className="mb-1 text-gray-500 text-xs">Ao continuar, você concorda</p>
+                  <div className="flex items-center justify-center gap-2 flex-wrap">
                     <button 
                       onClick={() => setShowTermsModal(true)}
-                      className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
+                      className="text-red-600 hover:text-red-700 underline transition-colors text-xs"
                     >
-                      Termos de Uso
+                      Termos
                     </button>
-                    <span className="text-blue-300">•</span>
+                    <span className="text-gray-400">•</span>
                     <button 
                       onClick={() => setShowPrivacyModal(true)}
-                      className="text-blue-300 hover:text-pink-300 underline transition-colors font-semibold"
+                      className="text-red-600 hover:text-red-700 underline transition-colors text-xs"
                     >
-                      Política de Privacidade
+                      Privacidade
                     </button>
                   </div>
                 </div>
@@ -930,61 +740,47 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
-            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
-              <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '30px',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
-              }}>
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-center justify-between mb-6 -m-6 p-6" style={{
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                    backdropFilter: 'blur(15px)',
-                    borderTopLeftRadius: '30px',
-                    borderTopRightRadius: '30px',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)'
-                  }}>
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <span className="text-3xl">✨</span>
-                      <span>Termos de Uso</span>
-                    </h3>
-                    <button 
-                      onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                      className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
-                    >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
-                    <p><strong className="text-pink-300 text-base">1. Aceitação dos Termos:</strong> Ao aceitar estes termos, você concorda com todas as condições de uso deste site oficial de recargas e nossa política de privacidade.</p>
-                    
-                    <p><strong className="text-blue-300 text-base">2. Usuários Verificados:</strong> Este site é exclusivo para jogadores reais e verificados. É terminantemente proibido o uso de bots, sistemas automatizados ou contas falsas.</p>
-                    
-                    <p><strong className="text-pink-300 text-base">3. Ofertas Exclusivas:</strong> Usuários verificados têm acesso a descontos especiais, pacotes exclusivos e diamantes extras. As ofertas são limitadas e sujeitas a disponibilidade.</p>
-                    
-                    <p><strong className="text-blue-300 text-base">4. Transações Seguras:</strong> Garantimos 100% de segurança em todas as transações através de sistemas criptografados de última geração.</p>
-                    
-                    <p><strong className="text-pink-300 text-base">5. Responsabilidade:</strong> O usuário é responsável por manter suas credenciais seguras e por todas as atividades realizadas em sua conta.</p>
-                    
-                    <p><strong className="text-blue-300 text-base">6. Modificações:</strong> Reservamos o direito de modificar estes termos a qualquer momento. Usuários serão notificados sobre mudanças importantes.</p>
-                  </div>
-                  
+            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={playClickSound}>
+              <div className="max-w-[90%] sm:max-w-lg w-full max-h-[85vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
+                <div className="sticky top-0 z-10 flex items-center justify-between p-4" style={{
+                  background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                }}>
+                  <h3 className="text-lg sm:text-xl font-bold text-white">
+                    📜 Termos de Uso
+                  </h3>
                   <button 
                     onClick={() => { playClickSound(); setShowTermsModal(false); }}
-                    className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                    className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+                
+                <div className="p-4 space-y-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
+                  <p><strong className="text-red-600">1. Natureza do Serviço:</strong> Este site é uma loja de venda de itens digitais para jogos (diamantes, créditos e moedas). Não somos um jogo de azar, cassino ou plataforma de apostas.</p>
+                  
+                  <p><strong className="text-red-600">2. Conformidade Google Ads:</strong> Este site está em total conformidade com as políticas do Google Ads. Vendemos produtos digitais legítimos para jogos mobile.</p>
+                  
+                  <p><strong className="text-red-600">3. Usuários:</strong> Exclusivo para jogadores reais. Proibido uso de bots ou contas falsas.</p>
+                  
+                  <p><strong className="text-red-600">4. Transações:</strong> Todas as compras são processadas de forma segura. Ofertas sujeitas a disponibilidade.</p>
+                  
+                  <p><strong className="text-red-600">5. Responsabilidade:</strong> Você é responsável pela segurança de suas credenciais de acesso aos jogos.</p>
+                  
+                  <p><strong className="text-red-600">6. Atualizações:</strong> Estes termos podem ser atualizados. Usuários serão notificados sobre mudanças importantes.</p>
+                </div>
+                
+                <div className="p-4">
+                  <button 
+                    onClick={() => { playClickSound(); setShowTermsModal(false); }}
+                    className="w-full text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
-                      backdropFilter: 'blur(20px)',
-                      borderRadius: '20px',
-                      border: '1px solid rgba(255,255,255,0.25)'
+                      background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
                     }}
                   >
-                    ✨ Entendi
+                    Entendi
                   </button>
                 </div>
               </div>
@@ -1053,97 +849,54 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Tela de Verificação */}
           {step === 'verification' && (
-            <div className="overflow-hidden" style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '30px',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.2)'
+            <div className="overflow-hidden bg-white shadow-2xl" style={{
+              borderRadius: '16px',
+              border: '2px solid #e5e5e5'
             }}>
-              {/* Header Glass */}
-              <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                backdropFilter: 'blur(15px)',
-                borderBottom: '1px solid rgba(255,255,255,0.1)'
+              {/* Header Free Fire */}
+              <div className="relative h-16 flex items-center justify-center" style={{
+                background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
               }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-                {/* Orbes decorativos */}
-                <div className="absolute top-2 left-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(150,200,255,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(150,200,255,0.5)'
-                }} />
-                <div className="absolute top-2 right-2 w-3 h-3 rounded-full" style={{
-                  background: 'radial-gradient(circle, rgba(255,150,200,0.8), transparent)',
-                  boxShadow: '0 0 10px rgba(255,150,200,0.5)'
-                }} />
-                <h2 className="relative text-lg md:text-xl font-bold text-white text-center drop-shadow-2xl flex items-center gap-2 px-2">
-                  <span className="text-xl md:text-2xl">✨</span>
-                  <span>Validar Identidade</span>
-                  <span className="text-xl md:text-2xl">💎</span>
+                <h2 className="text-xl md:text-2xl font-bold text-white text-center">
+                  🎮 Login com ID
                 </h2>
               </div>
 
-              <div className="p-5">
-                <p className="text-blue-100/80 text-sm mb-6 text-center">
-                  Insira seu ID de jogador para confirmar que você é um usuário real
+              <div className="p-6">
+                <p className="text-gray-600 text-sm mb-6 text-center">
+                  Digite seu ID do Free Fire para continuar
                 </p>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-base font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-pink-200 to-purple-300 flex items-center gap-2">
-                      <span className="text-lg md:text-xl">🎮</span>
-                      <span>ID do Jogador</span>
-                      <span className="text-xs text-blue-200 font-normal">(apenas números)</span>
+                    <label className="block text-base font-bold mb-2 text-gray-900">
+                      ID do Jogador
                     </label>
                     <input
                       type="text"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value.replace(/[^0-9]/g, ''))}
-                      placeholder="Digite seu ID do jogo (ex: 5435431)"
-                      className="w-full px-5 py-4 text-white text-lg font-bold placeholder-blue-200/40 focus:outline-none transition-all duration-300 shadow-lg"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: '20px',
-                        border: '1px solid rgba(255, 255, 255, 0.15)'
-                      }}
+                      placeholder="Ex: 5435431"
+                      className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-all"
+                      style={{ color: '#000000' }}
                       disabled={isLoading}
                       maxLength={15}
                     />
+                    <p className="text-xs text-gray-500 mt-1">Apenas números</p>
                   </div>
                   
-                  <div className="p-5 shadow-lg relative overflow-hidden" style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(15px)',
-                    borderRadius: '20px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)'
-                  }}>
-                    {/* Orbes decorativos */}
-                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full opacity-40" style={{
-                      background: 'radial-gradient(circle, rgba(255,100,200,0.6), transparent)'
-                    }} />
-                    <div className="absolute bottom-2 left-2 w-6 h-6 rounded-full opacity-40" style={{
-                      background: 'radial-gradient(circle, rgba(100,150,255,0.6), transparent)'
-                    }} />
-                    <p className="text-sm text-blue-200 font-bold mb-3 flex items-center gap-2 relative z-10">
-                      <span className="text-lg">✨</span>
-                      <span>Importante:</span>
+                  <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
+                    <p className="text-sm text-orange-900 font-bold mb-2">
+                      📍 Como encontrar seu ID:
                     </p>
-                    <p className="text-sm text-blue-100/80 mb-3 leading-relaxed relative z-10">
-                      Digite seu <span className="text-pink-300 font-bold">ID REAL</span> do jogo! IDs falsos ou inválidos não passarão na verificação.
-                    </p>
-                    <p className="text-xs text-blue-100/70 mb-3 rounded-lg p-2 relative z-10" style={{
-                      background: 'rgba(100,150,255,0.1)',
-                      border: '1px solid rgba(100,150,255,0.2)'
-                    }}>
-                      📍 <span className="text-blue-200 font-semibold">Encontre seu ID em:</span><br/>
-                      <span className="text-white font-bold ml-4">Configurações → Informações Básicas → ID do Jogador</span>
+                    <p className="text-xs text-orange-800 mb-2">
+                      Abra o Free Fire → <span className="font-bold">Configurações</span> → <span className="font-bold">Informações Básicas</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
-                      className="text-sm text-pink-300 hover:text-blue-300 underline font-bold flex items-center gap-1 relative z-10"
+                      className="text-xs text-red-600 hover:text-red-700 underline font-medium"
                     >
-                      📖 Ver tutorial completo de como encontrar seu ID
+                      Ver tutorial completo
                     </button>
                   </div>
                 </div>
@@ -1157,36 +910,26 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
               )}
 
-              <div className="px-5 pb-5">
+              <div className="px-6 pb-6">
                 <button
                   onClick={handleVerification}
                   disabled={isLoading || !playerId.trim()}
-                  className={`w-full font-bold text-lg py-5 px-8 transition-all duration-300 flex items-center justify-center relative overflow-hidden group ${
+                  className={`w-full font-bold text-lg py-4 px-6 rounded-lg transition-all duration-200 ${
                     isLoading || !playerId.trim()
-                      ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed border-2 border-neutral-600 rounded-2xl'
-                      : 'text-white shadow-2xl hover:scale-[1.05] animate-pulse-glow'
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95'
                   }`}
                   style={!isLoading && playerId.trim() ? {
-                    background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
-                    backdropFilter: 'blur(20px)',
-                    borderRadius: '25px',
-                    border: '1px solid rgba(255,255,255,0.25)'
+                    background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
                   } : {}}
                 >
-                  {!isLoading && !(!playerId.trim()) && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  )}
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-3 border-white border-t-transparent mr-3"></div>
-                      <span className="animate-pulse">Verificando...</span>
+                      <div className="inline-block animate-spin rounded-full h-5 w-5 border-3 border-white border-t-transparent mr-2"></div>
+                      Verificando...
                     </>
                   ) : (
-                    <>
-                      <span className="text-xl md:text-2xl mr-2">✨</span>
-                      <span className="relative z-10">Entrar</span>
-                      <span className="text-xl md:text-2xl ml-2">💎</span>
-                    </>
+                    'Entrar 🔥'
                   )}
                 </button>
               </div>
@@ -1198,61 +941,47 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" onClick={playClickSound}>
-          <div className="max-w-[95%] sm:max-w-xl md:max-w-2xl w-full mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto" style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '30px',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: '0 8px 32px 0 rgba(100, 150, 255, 0.3)'
-          }}>
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-4 sm:mb-6 -m-4 sm:-m-6 p-4 sm:p-6" style={{
-                background: 'linear-gradient(135deg, rgba(100,150,255,0.25), rgba(255,100,200,0.15))',
-                backdropFilter: 'blur(15px)',
-                borderTopLeftRadius: '30px',
-                borderTopRightRadius: '30px',
-                borderBottom: '1px solid rgba(255,255,255,0.1)'
-              }}>
-                <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-3xl">💎</span>
-                  <span>Política de Privacidade</span>
-                </h3>
-                <button 
-                  onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                  className="text-white hover:text-pink-300 transition-colors bg-white/10 hover:bg-white/20 rounded-lg p-2"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-              
-              <div className="space-y-4 text-blue-100/80 text-sm leading-relaxed">
-                <p><strong className="text-pink-300 text-base">1. Coleta de Dados:</strong> Coletamos apenas informações necessárias para processar suas recargas: ID do jogador, dados de pagamento e informações de contato. Não compartilhamos dados com terceiros.</p>
-                
-                <p><strong className="text-blue-300 text-base">2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para: processar recargas, enviar confirmações e oferecer suporte técnico.</p>
-                
-                <p><strong className="text-pink-300 text-base">3. Segurança:</strong> Utilizamos criptografia SSL/TLS e seguimos os mais altos padrões de segurança da indústria para proteger suas informações.</p>
-                
-                <p><strong className="text-blue-300 text-base">4. Cookies:</strong> Utilizamos cookies para melhorar sua experiência, lembrar preferências e analisar o tráfego do site de forma anônima.</p>
-                
-                <p><strong className="text-pink-300 text-base">5. Direitos do Usuário:</strong> Você pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento através do nosso suporte.</p>
-                
-                <p><strong className="text-blue-300 text-base">6. Conformidade LGPD:</strong> Estamos em conformidade com a Lei Geral de Proteção de Dados (LGPD) e respeitamos todos os seus direitos de privacidade.</p>
-              </div>
-              
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={playClickSound}>
+          <div className="max-w-[90%] sm:max-w-lg w-full max-h-[85vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between p-4" style={{
+              background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+            }}>
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                🔒 Privacidade
+              </h3>
               <button 
                 onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
-                className="mt-6 w-full text-white font-bold py-4 px-4 transition-all duration-300 shadow-lg hover:scale-[1.02]"
+                className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-4 space-y-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
+              <p><strong className="text-red-600">1. Não Coletamos Dados Pessoais:</strong> NÃO coletamos, armazenamos ou compartilhamos dados pessoais sensíveis. Apenas processamos informações necessárias para completar a compra (ID do jogo e pagamento via gateway seguro).</p>
+              
+              <p><strong className="text-red-600">2. Conformidade Google Ads:</strong> Este site está em conformidade com todas as políticas de privacidade do Google Ads e não coleta dados sensíveis de usuários.</p>
+              
+              <p><strong className="text-red-600">3. Processamento de Pagamento:</strong> Pagamentos processados por gateways certificados (PCI-DSS). Não armazenamos dados de cartão.</p>
+              
+              <p><strong className="text-red-600">4. Cookies Técnicos:</strong> Usamos apenas cookies essenciais para funcionamento do site (sessão e preferências). Sem rastreamento publicitário.</p>
+              
+              <p><strong className="text-red-600">5. Seus Direitos:</strong> Você tem direito de solicitar informações sobre qualquer dado processado.</p>
+              
+              <p><strong className="text-red-600">6. LGPD e Regulamentações:</strong> Total conformidade com LGPD (Brasil) e políticas internacionais de proteção de dados.</p>
+            </div>
+            
+            <div className="p-4">
+              <button 
+                onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
+                className="w-full text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(100,150,255,0.4), rgba(255,100,200,0.3))',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255,255,255,0.25)'
+                  background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
                 }}
               >
-                💎 Entendi
+                Entendi
               </button>
             </div>
           </div>
