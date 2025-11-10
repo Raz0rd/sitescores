@@ -155,6 +155,26 @@ async function generatePixEzzpag(body: any, baseUrl: string, presell?: string) {
   console.log("📤 [Ezzpag] REQUEST BODY:", JSON.stringify(body, null, 2))
   console.log("🌐 [Ezzpag] URL dinâmica detectada:", baseUrl)
 
+  // Extrair nome do produto a partir do host
+  const getProductTitle = (url: string): string => {
+    try {
+      const hostname = new URL(url).hostname // ex: www.siteteste.com
+      const parts = hostname.split('.') // ['www', 'siteteste', 'com']
+      
+      // Se o primeiro índice for 'www', usar o índice 1, senão usar o índice 0
+      const siteName = parts[0].toLowerCase() === 'www' ? parts[1] : parts[0]
+      
+      // Capitalizar primeira letra
+      return siteName.charAt(0).toUpperCase() + siteName.slice(1)
+    } catch (error) {
+      console.error("❌ [Ezzpag] Erro ao extrair nome do host:", error)
+      return "Gmeports" // fallback
+    }
+  }
+
+  const productTitle = getProductTitle(baseUrl)
+  console.log("🏷️ [Ezzpag] Nome do produto extraído:", productTitle)
+
   // Gerar email fake baseado no nome do usuário
   const generateFakeEmail = (name: string): string => {
     const cleanName = name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '')
@@ -230,7 +250,7 @@ async function generatePixEzzpag(body: any, baseUrl: string, presell?: string) {
     },
     items: [{
       tangible: false,
-      title: body.itemType === "recharge" ? "Gmeports Premium" : "Gmeports",
+      title: productTitle,
       unitPrice: body.amount,
       quantity: 1
     }],
