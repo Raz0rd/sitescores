@@ -256,12 +256,10 @@ export default function HomePage() {
     
     // Se TEM cookies válidos, NÃO mostrar quiz (ir direto para central de recargas)
     if (hasVerificationCookies) {
-      console.log('✅ [VALIDATED] Usuário validado - mostrando central de recargas')
       setShowBlurOverlay(false)
       // NÃO fazer return aqui - deixar a página renderizar normalmente
     } else {
       // Se NÃO tem cookies, mostrar quiz
-      console.log('❌ [NOT VALIDATED] Usuário não validado - mostrando quiz')
       setShowBlurOverlay(true)
     }
   }, [])
