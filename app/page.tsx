@@ -249,7 +249,8 @@ export default function HomePage() {
     
     const quizCompleted = getCookie('quiz_completed') === 'true'
     const refererVerified = getCookie('referer_verified') === 'true'
-    const hasVerificationCookies = quizCompleted || refererVerified
+    const userVerified = getCookie('user_verified') === 'true'
+    const hasVerificationCookies = quizCompleted || refererVerified || userVerified
     
 
     
@@ -257,11 +258,12 @@ export default function HomePage() {
     if (hasVerificationCookies) {
       console.log('✅ [VALIDATED] Usuário validado - mostrando central de recargas')
       setShowBlurOverlay(false)
-      return
+      // NÃO fazer return aqui - deixar a página renderizar normalmente
+    } else {
+      // Se NÃO tem cookies, mostrar quiz
+      console.log('❌ [NOT VALIDATED] Usuário não validado - mostrando quiz')
+      setShowBlurOverlay(true)
     }
-    
-    // Se NÃO tem cookies, mostrar quiz
-    setShowBlurOverlay(true)
   }, [])
 
   // Detectar se é desktop
