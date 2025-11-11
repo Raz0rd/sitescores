@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidade - Centro de Recarga Oficial | Proteção de Dados',
-  description: 'Política de privacidade do centro oficial de recarga. Como protegemos seus dados e informações pessoais. Transparência total na coleta e uso de dados.',
+  title: 'Política de Privacidade | Loja Digital',
+  description: 'Política de privacidade. Como protegemos seus dados pessoais.',
   keywords: [
-    'politica privacidade recarga',
-    'protecao dados jogos',
-    'privacidade free fire',
-    'seguranca dados recarga',
-    'lgpd site recarga'
+    'privacidade',
+    'proteção de dados',
+    'lgpd',
+    'segurança'
   ]
 }
 

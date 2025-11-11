@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Termos de Uso - Centro de Recarga Oficial | Free Fire, Delta Force, Haikyu',
-  description: 'Termos de uso do centro oficial de recarga de jogos. Pacotes exclusivos para usuários verificados. Transações seguras e confiáveis.',
+  title: 'Termos de Uso | Loja Digital',
+  description: 'Termos de uso da plataforma. Condições de uso e políticas.',
   keywords: [
-    'termos de uso recarga',
-    'politica site recarga',
-    'termos free fire',
-    'recarga oficial termos',
-    'pacotes exclusivos jogos'
+    'termos de uso',
+    'políticas',
+    'condições',
+    'loja online'
   ]
 }
 

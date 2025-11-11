@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Recarga Jogo Free Fire',
-  description: 'Recarga Jogo Free Fire',
+  title: 'Checkout | Loja Digital',
+  description: 'Finalizar compra',
 }
 
 export default function RootLayout({

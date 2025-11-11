@@ -10,74 +10,24 @@ import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
 
 export const metadata: Metadata = {
-  title: "Loja Oficial de Diamantes Free Fire | Comprar Créditos Delta Force e Moedas Haikyu",
-  description: "Loja oficial de itens para jogos mobile. Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Entrega instantânea, preços promocionais e suporte 24h. Plataforma confiável de venda de itens digitais para jogos. Não somos cassino ou jogo de azar. Em conformidade com políticas Google Ads.",
+  title: "Loja de Itens Digitais | Recarga para Jogos Mobile",
+  description: "Plataforma de recarga para jogos mobile. Entrega rápida e segura. Suporte 24h.",
   keywords: [
-    // Free Fire - Venda de Itens
-    "comprar diamantes free fire",
-    "loja diamantes free fire", 
-    "venda diamantes ff",
-    "loja oficial free fire",
-    "diamantes ff preço",
-    "diamantes free fire barato",
-    "comprar diamantes ff online",
-    "free fire diamantes loja",
-    "vender diamantes free fire",
-    "loja ff diamantes",
-    "comprar itens free fire",
-    "free fire loja oficial",
-    
-    // Delta Force - Venda de Itens
-    "comprar creditos delta force",
-    "loja delta force",
-    "venda creditos delta force",
-    "delta force loja oficial",
-    "comprar coins delta force",
-    "delta force coins preço",
-    "loja coins delta force",
-    "creditos delta force barato",
-    "comprar itens delta force",
-    
-    // Haikyu - Venda de Itens
-    "comprar moedas haikyu",
-    "loja haikyu",
-    "venda moedas haikyu",
-    "haikyu loja oficial",
-    "haikyu fly high loja",
-    "comprar diamantes estelares haikyu",
-    "loja moedas haikyu",
-    "moedas haikyu preço",
-    
-    // Long-tail (alta conversão)
-    "onde comprar diamantes free fire",
-    "melhor loja free fire",
-    "loja free fire confiavel",
-    "comprar diamantes free fire seguro",
-    "loja oficial diamantes free fire",
-    "melhor loja delta force",
-    "loja delta force confiavel",
-    "melhor loja haikyu",
-    
-    // Geral - Venda de Itens Digitais
-    "loja de itens para jogos",
-    "comprar itens jogos mobile",
-    "venda itens jogos",
-    "loja oficial jogos mobile",
-    "comprar creditos jogos online",
-    "loja itens digitais jogos",
-    "venda moedas jogos",
-    "comprar diamantes jogos",
-    "loja creditos jogos",
-    "plataforma venda itens jogos",
-    "e-commerce itens jogos",
-    "marketplace jogos mobile"
+    "recarga jogos",
+    "itens digitais",
+    "loja online",
+    "jogos mobile",
+    "recarga segura",
+    "plataforma digital",
+    "loja virtual",
+    "e-commerce"
   ],
-  authors: [{ name: "Loja Oficial de Itens para Jogos" }],
+  authors: [{ name: "Loja Digital" }],
   generator: "Next.js",
-  applicationName: "Loja de Diamantes e Créditos para Jogos",
+  applicationName: "Loja Digital",
   referrer: "origin-when-cross-origin",
-  creator: "Loja Oficial de Itens Digitais",
-  publisher: "Plataforma de Venda de Itens para Jogos Mobile",
+  creator: "Plataforma Digital",
+  publisher: "Loja Online",
   formatDetection: {
     email: false,
     address: false,
@@ -88,10 +38,10 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Loja de Diamantes Free Fire | Comprar Itens para Jogos",
-    description: "🔥 Loja oficial de itens para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Preços promocionais e entrega instantânea.",
+    title: "Loja Digital | Recarga para Jogos",
+    description: "Plataforma de recarga para jogos mobile. Entrega rápida e segura.",
     url: "/",
-    siteName: "Loja Oficial de Itens para Jogos Mobile",
+    siteName: "Loja Digital",
     locale: "pt_BR",
     type: "website",
     images: [

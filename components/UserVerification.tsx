@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import GoogleConversionTest from './GoogleConversionTest'
+import { getSiteFingerprint, getUniqueDataAttributes, injectUniqueCSSVariables, getUniqueDelay } from '@/lib/site-fingerprint'
 
 interface UserVerificationProps {
   onVerificationComplete: () => void
@@ -17,14 +18,19 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   const [showTutorial, setShowTutorial] = useState(false)
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
+  const [siteFingerprint, setSiteFingerprint] = useState<ReturnType<typeof getSiteFingerprint> | null>(null)
+  const [uniqueDelay, setUniqueDelay] = useState(1000)
 
-  // Função para tocar som ao clicar
-  const playClickSound = () => {
-    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGe77OeeSwwPUKXh8LdjHAU7k9jyz3ksBS1+zPLaizsKGGS56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHgU7k9jy0HksBSx+zPDajDsKF2O56+mjUBELTKXi8bllHg==')
-    audio.volume = 0.3
-    audio.play().catch(() => {})
-  }
-  
+  // Inicializar fingerprint único do site
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fingerprint = getSiteFingerprint()
+      setSiteFingerprint(fingerprint)
+      setUniqueDelay(getUniqueDelay(1000))
+      injectUniqueCSSVariables()
+    }
+  }, [])
+
   // Estados do Quiz Arena de Fogo
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [quizAnswers, setQuizAnswers] = useState<number[]>([])
@@ -354,11 +360,11 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Formas decorativas sutis */}
         <div className="absolute top-10 right-10 w-32 h-32 opacity-5" style={{
-          background: 'linear-gradient(135deg, #ff4444, #ff6b00)',
+          background: 'linear-gradient(135deg, #3498db, #2980b9)',
           clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
         }} />
         <div className="absolute bottom-10 left-10 w-40 h-40 opacity-5" style={{
-          background: 'linear-gradient(135deg, #ff6b00, #ff4444)',
+          background: 'linear-gradient(135deg, #2980b9, #3498db)',
           clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
         }} />
       </div>
@@ -469,19 +475,19 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
             }}>
               {/* Header Free Fire */}
               <div className="relative h-12 flex items-center justify-center" style={{
-                background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
               }}>
                 <h1 className="text-base sm:text-lg font-bold text-white text-center">
-                  🔥 Bem-vindo!
+                  🎉 Bem-vindo ao Evento!
                 </h1>
               </div>
 
               {/* Conteúdo */}
               <div className="p-4 text-center">
-                <div className="text-4xl mb-3">💎</div>
+                <div className="text-4xl mb-3">🎟️</div>
                 
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                  Diamantes Free Fire
+                  Participe do Nosso Evento Promocional
                 </h2>
                 <p className="text-gray-600 mb-4 text-xs sm:text-sm">
                   Complete os passos e concorra a desconto!
@@ -500,10 +506,10 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                   onClick={() => setStep('verification')}
                   className="w-full font-bold text-base py-3 px-4 rounded-lg text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
                   style={{
-                    background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                    background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
                   }}
                 >
-                  Começar Validação 🔥
+                  Participar do Evento 🎟️
                 </button>
 
                 {/* Links de Termos e Políticas */}
@@ -740,16 +746,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
           {/* Modal de Termos de Uso */}
           {showTermsModal && (
-            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={playClickSound}>
+            <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={() => {}}>
               <div className="max-w-[90%] sm:max-w-lg w-full max-h-[85vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
                 <div className="sticky top-0 z-10 flex items-center justify-between p-4" style={{
-                  background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                  background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
                 }}>
                   <h3 className="text-lg sm:text-xl font-bold text-white">
                     📜 Termos de Uso
                   </h3>
                   <button 
-                    onClick={() => { playClickSound(); setShowTermsModal(false); }}
+                    onClick={() => setShowTermsModal(false)}
                     className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -759,25 +765,25 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
                 
                 <div className="p-4 space-y-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
-                  <p><strong className="text-red-600">1. Natureza do Serviço:</strong> Este site é uma loja de venda de itens digitais para jogos (diamantes, créditos e moedas). Não somos um jogo de azar, cassino ou plataforma de apostas.</p>
+                  <p><strong className="text-blue-600">1. Natureza do Evento:</strong> Somos uma plataforma de eventos promocionais que oferece cupons de desconto para recargas em jogos como Free Fire, Delta Force e outros. NÃO somos jogo de azar, cassino ou plataforma de apostas.</p>
                   
-                  <p><strong className="text-red-600">2. Conformidade Google Ads:</strong> Este site está em total conformidade com as políticas do Google Ads. Vendemos produtos digitais legítimos para jogos mobile.</p>
+                  <p><strong className="text-blue-600">2. Conformidade Google Ads:</strong> Estamos em total conformidade com as políticas do Google Ads. Promovemos apenas eventos legítimos com cupons para plataformas de recarga de jogos mobile.</p>
                   
-                  <p><strong className="text-red-600">3. Usuários:</strong> Exclusivo para jogadores reais. Proibido uso de bots ou contas falsas.</p>
+                  <p><strong className="text-blue-600">3. Sem Vínculo com Desenvolvedoras:</strong> NÃO temos afiliação, parceria ou vínculo com Garena, Tencent ou qualquer desenvolvedora de jogos. Somos uma plataforma independente de eventos promocionais.</p>
                   
-                  <p><strong className="text-red-600">4. Transações:</strong> Todas as compras são processadas de forma segura. Ofertas sujeitas a disponibilidade.</p>
+                  <p><strong className="text-blue-600">4. Cupons e Promoções:</strong> Os cupons são válidos para primeira recarga. Sujeitos a disponibilidade e termos específicos de cada evento.</p>
                   
-                  <p><strong className="text-red-600">5. Responsabilidade:</strong> Você é responsável pela segurança de suas credenciais de acesso aos jogos.</p>
+                  <p><strong className="text-blue-600">5. Responsabilidade:</strong> Você é responsável pelo uso correto dos cupons e pela segurança de suas credenciais.</p>
                   
-                  <p><strong className="text-red-600">6. Atualizações:</strong> Estes termos podem ser atualizados. Usuários serão notificados sobre mudanças importantes.</p>
+                  <p><strong className="text-blue-600">6. Atualizações:</strong> Estes termos podem ser atualizados. Participantes serão notificados sobre mudanças importantes.</p>
                 </div>
                 
                 <div className="p-4">
                   <button 
-                    onClick={() => { playClickSound(); setShowTermsModal(false); }}
+                    onClick={() => setShowTermsModal(false)}
                     className="w-full text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                      background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
                     }}
                   >
                     Entendi
@@ -855,17 +861,27 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
             }}>
               {/* Header Free Fire */}
               <div className="relative h-16 flex items-center justify-center" style={{
-                background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
               }}>
                 <h2 className="text-xl md:text-2xl font-bold text-white text-center">
-                  🎮 Login com ID
+                  🎟️ Cadastro no Evento
                 </h2>
               </div>
 
               <div className="p-6">
-                <p className="text-gray-600 text-sm mb-6 text-center">
-                  Digite seu ID do Free Fire para continuar
+                <p className="text-gray-600 text-sm mb-4 text-center">
+                  Digite seu ID do jogo para participar do evento
                 </p>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                  <p className="text-blue-800 text-xs font-semibold mb-2">📋 Conformidade e Transparência:</p>
+                  <ul className="text-blue-700 text-[10px] space-y-1">
+                    <li>✅ Em conformidade com políticas do Google Ads</li>
+                    <li>✅ Conforme LGPD - Não coletamos dados pessoais</li>
+                    <li>✅ Evento promocional independente</li>
+                    <li>✅ Sem vínculo com desenvolvedoras de jogos</li>
+                  </ul>
+                </div>
                 
                 <div className="space-y-4">
                   <div>
@@ -920,7 +936,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                       : 'text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95'
                   }`}
                   style={!isLoading && playerId.trim() ? {
-                    background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                    background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
                   } : {}}
                 >
                   {isLoading ? (
@@ -941,16 +957,16 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
 
       {/* Modal de Política de Privacidade */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={playClickSound}>
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" onClick={() => {}}>
           <div className="max-w-[90%] sm:max-w-lg w-full max-h-[85vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between p-4" style={{
-              background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+              background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
             }}>
               <h3 className="text-lg sm:text-xl font-bold text-white">
                 🔒 Privacidade
               </h3>
               <button 
-                onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
+                onClick={() => setShowPrivacyModal(false)}
                 className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -960,25 +976,25 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
             </div>
             
             <div className="p-4 space-y-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
-              <p><strong className="text-red-600">1. Não Coletamos Dados Pessoais:</strong> NÃO coletamos, armazenamos ou compartilhamos dados pessoais sensíveis. Apenas processamos informações necessárias para completar a compra (ID do jogo e pagamento via gateway seguro).</p>
+              <p><strong className="text-blue-600">1. Não Coletamos Dados Pessoais:</strong> NÃO coletamos, armazenamos ou compartilhamos dados pessoais sensíveis. Apenas utilizamos o ID do jogo para validação de participação no evento. Nenhum dado pessoal é armazenado.</p>
               
-              <p><strong className="text-red-600">2. Conformidade Google Ads:</strong> Este site está em conformidade com todas as políticas de privacidade do Google Ads e não coleta dados sensíveis de usuários.</p>
+              <p><strong className="text-blue-600">2. LGPD - Lei 13.709/2018:</strong> Em TOTAL conformidade com a Lei Geral de Proteção de Dados (LGPD). Não processamos dados pessoais que exijam consentimento ou armazenamento.</p>
               
-              <p><strong className="text-red-600">3. Processamento de Pagamento:</strong> Pagamentos processados por gateways certificados (PCI-DSS). Não armazenamos dados de cartão.</p>
+              <p><strong className="text-blue-600">3. Processamento de Cupons:</strong> Os cupons são gerados automaticamente. Não solicitamos CPF, e-mail pessoal, telefone ou qualquer informação sensível para participação no evento.</p>
               
-              <p><strong className="text-red-600">4. Cookies Técnicos:</strong> Usamos apenas cookies essenciais para funcionamento do site (sessão e preferências). Sem rastreamento publicitário.</p>
+              <p><strong className="text-blue-600">4. Cookies Mínimos:</strong> Usamos apenas cookies técnicos essenciais para funcionamento do evento (sessão temporária). SEM rastreamento, SEM publicidade, SEM coleta de dados.</p>
               
-              <p><strong className="text-red-600">5. Seus Direitos:</strong> Você tem direito de solicitar informações sobre qualquer dado processado.</p>
+              <p><strong className="text-blue-600">5. Transparência Total:</strong> Você pode participar do evento sem fornecer dados pessoais. Apenas o ID do jogo é necessário para validação.</p>
               
-              <p><strong className="text-red-600">6. LGPD e Regulamentações:</strong> Total conformidade com LGPD (Brasil) e políticas internacionais de proteção de dados.</p>
+              <p><strong className="text-blue-600">6. Conformidade Google Ads:</strong> Total conformidade com políticas de privacidade do Google Ads e LGPD brasileira.</p>
             </div>
             
             <div className="p-4">
               <button 
-                onClick={() => { playClickSound(); setShowPrivacyModal(false); }}
+                onClick={() => setShowPrivacyModal(false)}
                 className="w-full text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 hover:scale-105"
                 style={{
-                  background: 'linear-gradient(135deg, #ff4444 0%, #ff6b00 100%)'
+                  background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
                 }}
               >
                 Entendi

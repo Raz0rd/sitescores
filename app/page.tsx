@@ -55,11 +55,12 @@ export default function HomePage() {
   const [selectedGame, setSelectedGame] = useState<'freefire' | 'deltaforce' | 'haikyu'>('freefire')
   const [showSummaryDetails, setShowSummaryDetails] = useState(false)
   const [showWelcomeGif, setShowWelcomeGif] = useState(true)
+  const [discountTimeLeft, setDiscountTimeLeft] = useState(15 * 60) // 15 minutos em segundos
   
   // Perguntas do Quiz Arena de Fogo
   const quizQuestions = [
     {
-      question: "🔥 Qual é o seu estilo de jogo no Free Fire?",
+      question: " Qual é o seu estilo de jogo no Free Fire?",
       options: [
         { text: "Líder de Squad - Comando meu time", points: { lider: 3, estrategista: 1, atirador: 0, rusher: 0 } },
         { text: "Sniper Silencioso - Elimino de longe", points: { atirador: 3, estrategista: 1, lider: 0, rusher: 0 } },
@@ -248,35 +249,53 @@ export default function HomePage() {
     
     const quizCompleted = getCookie('quiz_completed') === 'true'
     const refererVerified = getCookie('referer_verified') === 'true'
-    const hasVerificationCookies = quizCompleted || refererVerified
+    const userVerified = getCookie('user_verified') === 'true'
+    const hasVerificationCookies = quizCompleted || refererVerified || userVerified
     
-
     
-    // Se TEM cookies válidos, NÃO mostrar quiz (ir direto para central de recargas)
+    // Se tem cookies de verificação, considerar como verificado
     if (hasVerificationCookies) {
-      setShowBlurOverlay(false)
-      return
+      // Tentar pegar dados do localStorage (pode estar vazio no subdomain)
+      const storedUserData = localStorage.getItem('userData')
+      const user_data = localStorage.getItem('user_data')
+      const storedPlayerId = localStorage.getItem('userPlayerId')
+      
+  
+      
+      if (storedUserData || user_data) {
+        try {
+          const userData = JSON.parse(storedUserData || user_data || '{}')
+          
+          if (userData.nickname && userData.nickname !== 'LOGADO') {
+            setIsLoggedIn(true)
+            setUserData(userData)
+            console.log('✅ [AUTO-LOGIN] Usuário logado com userData completo:', userData.nickname)
+            
+            // Carregar avatar se existir
+            if (userData.headPic) {
+              fetchAvatarInfo(userData.headPic)
+            }
+          }
+        } catch (error) {
+          console.error('❌ [AUTO-LOGIN] Erro ao parsear userData:', error)
+        }
+      } else if (storedPlayerId) {
+        // Se não tem userData mas tem playerId, fazer login básico
+        setIsLoggedIn(true)
+        setPlayerId(storedPlayerId)
+        console.log('✅ [AUTO-LOGIN] Usuário logado com playerId:', storedPlayerId)
+      } else {
+        console.log('⚠️ [AUTO-LOGIN] Tem cookies mas não tem dados no localStorage')
+      }
     }
     
     // Se NÃO tem cookies, mostrar quiz
-    setShowBlurOverlay(true)
-  }, [])
-
-  // Detectar se é desktop
-  useEffect(() => {
-    const checkIsDesktop = () => {
-      setIsDesktop(window.innerWidth >= 640)
-    }
-    
-    checkIsDesktop()
-    window.addEventListener('resize', checkIsDesktop)
-    
-    return () => window.removeEventListener('resize', checkIsDesktop)
+    setShowBlurOverlay(!hasVerificationCookies)
   }, [])
 
   // Verificar se usuário já está logado (via COOKIES, não localStorage)
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || !mounted) return
     
     const checkUserLogin = async () => {
       // Função para pegar cookie
@@ -293,15 +312,18 @@ export default function HomePage() {
       // Verificar cookies de verificação (compartilhados entre domínios)
       const quizCompleted = getCookie('quiz_completed') === 'true'
       const refererVerified = getCookie('referer_verified') === 'true'
-      const hasVerificationCookies = quizCompleted || refererVerified
+      const userVerified = getCookie('user_verified') === 'true'
+      const hasVerificationCookies = quizCompleted || refererVerified || userVerified
       
- 
       
       // Se tem cookies de verificação, considerar como verificado
       if (hasVerificationCookies) {
         // Tentar pegar dados do localStorage (pode estar vazio no subdomain)
         const storedUserData = localStorage.getItem('userData')
         const user_data = localStorage.getItem('user_data')
+        const storedPlayerId = localStorage.getItem('userPlayerId')
+        
+ 
         
         if (storedUserData || user_data) {
           try {
@@ -310,6 +332,7 @@ export default function HomePage() {
             if (userData.nickname && userData.nickname !== 'LOGADO') {
               setIsLoggedIn(true)
               setUserData(userData)
+              console.log('✅ [AUTO-LOGIN] Usuário logado com userData completo:', userData.nickname)
               
               // Carregar avatar se existir
               if (userData.headPic) {
@@ -317,10 +340,15 @@ export default function HomePage() {
               }
             }
           } catch (error) {
+            console.error('❌ [AUTO-LOGIN] Erro ao parsear userData:', error)
           }
+        } else if (storedPlayerId) {
+          // Se não tem userData mas tem playerId, fazer login básico
+          setIsLoggedIn(true)
+          setPlayerId(storedPlayerId)
+        } else {
         }
-        
-        // Mesmo sem dados no localStorage, se tem cookies, está verificado
+      } else {
       }
     }
     
@@ -471,6 +499,53 @@ export default function HomePage() {
   // Debug dos estados do modal
   
 
+  // Carregar timer do localStorage quando usuário loga
+  useEffect(() => {
+    if (!isLoggedIn) return
+    
+    const savedTimer = localStorage.getItem('discount_timer')
+    if (savedTimer) {
+      const { startTime, duration } = JSON.parse(savedTimer)
+      const elapsed = Math.floor((Date.now() - startTime) / 1000)
+      const remaining = Math.max(0, duration - elapsed)
+      
+      if (remaining > 0) {
+        setDiscountTimeLeft(remaining)
+        console.log('⏱️ [TIMER] Timer recuperado:', remaining, 'segundos restantes')
+      } else {
+        localStorage.removeItem('discount_timer')
+        setDiscountTimeLeft(0)
+      }
+    } else {
+      // Primeira vez - salvar timer inicial
+      const timerData = {
+        startTime: Date.now(),
+        duration: 15 * 60 // 15 minutos
+      }
+      localStorage.setItem('discount_timer', JSON.stringify(timerData))
+      setDiscountTimeLeft(15 * 60)
+      console.log('⏱️ [TIMER] Timer iniciado: 15 minutos')
+    }
+  }, [isLoggedIn])
+
+  // Timer de desconto de 15 minutos
+  useEffect(() => {
+    if (!isLoggedIn || discountTimeLeft <= 0) return
+    
+    const timer = setInterval(() => {
+      setDiscountTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          localStorage.removeItem('discount_timer')
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    
+    return () => clearInterval(timer)
+  }, [isLoggedIn, discountTimeLeft])
+
   // Rotação automática dos banners
   useEffect(() => {
     const interval = setInterval(() => {
@@ -536,6 +611,13 @@ export default function HomePage() {
   // ]
 
   // useEffect removido - usando apenas o carousel principal dos banners
+
+  // Formatar tempo do desconto (15 minutos)
+  const formatDiscountTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
 
   const calculatePrice = (diamonds: string): { price: number; bonus: number } => {
     const diamondCount = Number.parseInt(diamonds.replace(".", "").replace(",", "")) // Handle both '.' and ',' as thousand separators
@@ -936,6 +1018,31 @@ export default function HomePage() {
           onVerificationComplete={() => {
             console.log('✅ [QUIZ] Verificação completa - fechando modal')
             setShowBlurOverlay(false)
+            
+            // Carregar dados do usuário do localStorage
+            const storedPlayerId = localStorage.getItem('userPlayerId')
+            const storedUserData = localStorage.getItem('user_data')
+            
+            if (storedPlayerId) {
+              setPlayerId(storedPlayerId)
+              setIsLoggedIn(true)
+              
+              if (storedUserData) {
+                try {
+                  const userData = JSON.parse(storedUserData)
+                  setUserData(userData)
+                  
+                  // Carregar avatar se existir
+                  if (userData.headPic) {
+                    fetchAvatarInfo(userData.headPic)
+                  }
+                } catch (error) {
+                  console.error('Erro ao parsear user_data:', error)
+                }
+              }
+              
+              console.log('✅ [LOGIN] Usuário logado automaticamente após verificação')
+            }
             
             // Se havia uma compra pendente, executar agora
             if (pendingPurchase) {
@@ -1438,7 +1545,6 @@ export default function HomePage() {
         
         {/* Banner Fixo */}
         <div className="relative mx-auto max-w-5xl px-0 sm:px-0 md:px-8 pb-4 sm:pb-6 -mt-4">
-          <div className="mb-5 lg:mb-[28px]">
             <div className="relative flex items-center overflow-hidden transition-all border-[7px] border-[#1B1B25] border-b-0 rounded-t-2xl" id="app-banner">
               <div 
                 className="absolute h-full w-full bg-[#BDBDC5] bg-cover bg-center rounded-t-2xl rtl:-scale-x-100" 
@@ -1560,6 +1666,38 @@ export default function HomePage() {
                         <div>ID do jogador: {playerId}</div>
                       )}
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Banner de Desconto com Timer */}
+              {isLoggedIn && discountTimeLeft > 0 && (
+                <div className="mb-3 bg-gradient-to-r from-[#E4372E] to-[#C42E26] rounded-md p-3 shadow-lg border border-[#E4372E]/50">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg">🎉</span>
+                        <h3 className="text-white font-bold text-sm">Desconto Especial!</h3>
+                      </div>
+                      <p className="text-white/90 text-xs">
+                        <strong className="text-yellow-300">80% OFF</strong> na primeira recarga
+                      </p>
+                    </div>
+                    <div className="text-center bg-black/30 backdrop-blur-sm rounded-md px-3 py-1.5 border border-white/20">
+                      <div className="text-[10px] text-white/80 font-medium">Expira em</div>
+                      <div className="text-xl font-bold text-yellow-300 tabular-nums leading-tight">
+                        {formatDiscountTime(discountTimeLeft)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-center">
+                    <a 
+                      href="/termos-uso" 
+                      target="_blank"
+                      className="text-white/70 hover:text-white text-[10px] underline transition-colors"
+                    >
+                      Ver Termos de Uso
+                    </a>
                   </div>
                 </div>
               )}
@@ -2550,7 +2688,6 @@ export default function HomePage() {
         )}
 
         </div>
-        </div>
 
         {/* Footer */}
         <footer className="bg-[#1B1B25] text-white/70">
@@ -2741,6 +2878,7 @@ export default function HomePage() {
             </div>
           </div>
         )}
+        
       </div>
     )
 }

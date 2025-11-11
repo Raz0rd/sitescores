@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Pagamento Confirmado',
-  description: 'Página de sucesso do pagamento',
+  title: 'Pedido Confirmado',
+  description: 'Confirmação do pedido',
 }
 
 export default function SuccessLayout({

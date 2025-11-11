@@ -8,6 +8,7 @@ export default function SucessoPage() {
   const searchParams = useSearchParams()
   const [conversionFired, setConversionFired] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
+  const [isCheckingVerification, setIsCheckingVerification] = useState(true)
   
   // Verificar se tem os parâmetros necessários
   const transactionId = searchParams.get('transactionId')
@@ -18,12 +19,24 @@ export default function SucessoPage() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     
-    const hasVerificationCookie = document.cookie.split(';').some(cookie => 
-      cookie.trim().startsWith('user_verified=')
-    )
+    // Verificar múltiplos cookies de verificação
+    const hasVerificationCookie = document.cookie.split(';').some(cookie => {
+      const trimmed = cookie.trim()
+      return trimmed.startsWith('user_verified=') || 
+             trimmed.startsWith('quiz_completed=') || 
+             trimmed.startsWith('referer_verified=')
+    })
+    
+    console.log('🔍 [SUCESSO] Verificando cookies:', hasVerificationCookie)
     
     if (hasVerificationCookie) {
       setIsVerified(true)
+      setIsCheckingVerification(false)
+    } else {
+      // Aguardar um pouco antes de mostrar verificação (evitar flash)
+      setTimeout(() => {
+        setIsCheckingVerification(false)
+      }, 300)
     }
   }, [])
 
@@ -57,7 +70,7 @@ export default function SucessoPage() {
       if (googleAdsId && conversionLabel) {
         window.gtag('event', 'conversion', {
           send_to: `${googleAdsId}/${conversionLabel}`,
-          value: parseFloat(amount),
+          value: parseFloat(amount) / 100, // Dividir por 100 pois vem multiplicado
           currency: currency,
           transaction_id: transactionId
         })
@@ -71,12 +84,25 @@ export default function SucessoPage() {
     setConversionFired(true)
   }, [searchParams, conversionFired, isVerified])
 
+  // Mostrar loading enquanto verifica
+  if (isCheckingVerification) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mb-4"></div>
+          <p className="text-gray-600 font-medium">Carregando...</p>
+        </div>
+      </div>
+    )
+  }
+
   // Renderizar tela de verificação se não estiver verificado
   if (!isVerified) {
     return (
       <UserVerificationWithTest 
         onVerificationComplete={() => {
           setIsVerified(true)
+          setIsCheckingVerification(false)
         }} 
       />
     )
