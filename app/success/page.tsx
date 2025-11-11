@@ -89,24 +89,28 @@ export default function SuccessPage() {
           return
         }
 
+        // Converter de centavos para reais (amount vem em centavos)
+        const amountInReais = amountValue / 100
+
         // Verificar no backend se deve enviar conversão
         const response = await fetch('/api/google-ads-conversion', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             transactionId, 
-            amount: amountValue 
+            amount: amountValue // Enviar em centavos para a API
           })
         })
 
         const data = await response.json()
 
         if (data.success && data.shouldSend) {
-          // Enviar conversão para Google Ads
-          trackPurchase(transactionId, amountValue / 100)
+          // Enviar conversão para Google Ads (já em reais)
+          trackPurchase(transactionId, amountInReais)
           console.log('[Success] ✅ Conversão Google Ads enviada:', { 
             transactionId, 
-            amount: amountValue / 100,
+            amount: amountInReais,
+            amountCents: amountValue,
             message: data.message 
           })
         } else {
