@@ -75,32 +75,50 @@ export default function SuccessPage() {
   }, [isLoaded])
   
   useEffect(() => {
-    // Enviar conversão para Google Ads APENAS 1 VEZ
-    if (transactionId && amount) {
-      const conversionKey = `conversion_sent_${transactionId}`
-      const alreadySent = localStorage.getItem(conversionKey)
-      
-      if (!alreadySent) {
-        try {
-          const amountValue = parseFloat(amount)
-          if (amountValue > 0) {
-            trackPurchase(transactionId, amountValue / 100) // Converter de centavos para reais
-            localStorage.setItem(conversionKey, 'true')
-            console.log('[Success] ✅ Conversão Google Ads enviada (primeira vez):', { transactionId, amount: amountValue / 100 })
-          }
-        } catch (error) {
-          console.error('[Success] ❌ Erro ao enviar conversão:', error)
+    // Enviar conversão para Google Ads APENAS 1 VEZ (verificação no backend)
+    const sendConversion = async () => {
+      if (!transactionId || !amount) {
+        console.log('[Success] ⚠️ Acesso sem parâmetros completos')
+        return
+      }
+
+      try {
+        const amountValue = parseFloat(amount)
+        if (amountValue <= 0) {
+          console.log('[Success] ⚠️ Valor inválido:', amountValue)
+          return
         }
-      } else {
-        console.log('[Success] ℹ️ Conversão já foi enviada anteriormente (não reenviando)')
+
+        // Verificar no backend se deve enviar conversão
+        const response = await fetch('/api/google-ads-conversion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            transactionId, 
+            amount: amountValue 
+          })
+        })
+
+        const data = await response.json()
+
+        if (data.success && data.shouldSend) {
+          // Enviar conversão para Google Ads
+          trackPurchase(transactionId, amountValue / 100)
+          console.log('[Success] ✅ Conversão Google Ads enviada:', { 
+            transactionId, 
+            amount: amountValue / 100,
+            message: data.message 
+          })
+        } else {
+          console.log('[Success] ℹ️ Conversão não enviada:', data.message)
+        }
+      } catch (error) {
+        console.error('[Success] ❌ Erro ao processar conversão:', error)
       }
     }
-    
-    // Não redirecionar - apenas logar se não tiver params
-    if (!transactionId || !amount) {
-      console.log('[Success] ⚠️ Acesso sem parâmetros completos')
-    }
-  }, [transactionId, amount, router])
+
+    sendConversion()
+  }, [transactionId, amount])
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-4">

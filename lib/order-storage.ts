@@ -19,6 +19,7 @@ interface OrderData {
   paidAt?: string
   utmifySent?: boolean // Flag para evitar duplicação de conversões
   utmifyPaidSent?: boolean // Flag específica para status paid
+  googleAdsConversionSent?: boolean // Flag para evitar duplicação de conversões Google Ads
 }
 
 // SOLUÇÃO: Usar globalThis para persistir entre hot-reloads do Next.js

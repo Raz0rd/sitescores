@@ -28,6 +28,24 @@ function getClientIp(req: NextRequest): string {
   return req.ip || 'unknown';
 }
 
+// Função para extrair o nome do domínio (sem www)
+function extractDomainName(url: string): string {
+  try {
+    const hostname = new URL(url).hostname
+    const parts = hostname.split('.')
+    
+    // Se o primeiro segmento for 'www', pegar o próximo
+    if (parts[0] === 'www' && parts.length > 1) {
+      return parts[1]
+    }
+    
+    // Caso contrário, pegar o primeiro segmento
+    return parts[0]
+  } catch (error) {
+    return 'Gmeports'
+  }
+}
+
 // Handle CORS preflight
 export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
@@ -79,7 +97,7 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
     },
     items: [
       {
-        title: body.itemType === "recharge" ? "eBook eSport Digital Premium" : "eBook eSport Gold Edition",
+        title: extractDomainName(baseUrl),
         unitPrice: body.amount,
         quantity: 1,
         tangible: false
@@ -230,7 +248,7 @@ async function generatePixEzzpag(body: any, baseUrl: string, presell?: string) {
     },
     items: [{
       tangible: false,
-      title: body.itemType === "recharge" ? "Gmeports Premium" : "Gmeports",
+      title: extractDomainName(baseUrl),
       unitPrice: body.amount,
       quantity: 1
     }],
@@ -304,7 +322,6 @@ async function generatePixEzzpag(body: any, baseUrl: string, presell?: string) {
   const transactionId = data.id?.toString()
   const pixCode = data.pix?.qrcode
   
-  console.log("✅ [Ezzpag] PIX criado com sucesso!")
   console.log(`   - Transaction ID: ${transactionId}`)
   console.log(`   - Valor: R$ ${(data.amount / 100).toFixed(2)}`)
   console.log(`   - Status: ${data.status}`)
@@ -541,7 +558,7 @@ async function generatePixUmbrela(body: any, baseUrl: string) {
       address: defaultAddress
     },
     items: [{
-      title: generateIptvProductName(body.itemType, body.amount),
+      title: extractDomainName(baseUrl),
       unitPrice: body.amount,
       quantity: 1,
       tangible: false,
