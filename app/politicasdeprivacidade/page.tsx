@@ -1,6 +1,6 @@
 "use client"
 
-export default function PoliticaPrivacidadePage() {
+export default function PoliticasDePrivacidadePage() {
   return (
     <>
       <style jsx global>{`

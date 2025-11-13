@@ -26,7 +26,16 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     const currentPath = window.location.pathname
     
     // Rotas que NÃO precisam de verificação
-    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout']
+    const publicRoutes = [
+      '/cupons', 
+      '/success', 
+      '/sucesso', 
+      '/checkout',
+      '/politica-privacidade',
+      '/politicasdeprivacidade',
+      '/privacidade',
+      '/termos'
+    ]
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
     
     if (isPublicRoute) {
