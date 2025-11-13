@@ -10,6 +10,7 @@ interface WhitePageWrapperProps {
 export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   const [showWhitePage, setShowWhitePage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isBot, setIsBot] = useState(false)
 
   useEffect(() => {
     // Garantir que está no client-side
@@ -45,6 +46,7 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
       if (!hasCloakerCookie) {
         // Bot detectado - mostrar whitepage
         setShowWhitePage(true)
+        setIsBot(true) // Marcar como bot
         setIsLoading(false)
         return
       }
@@ -82,7 +84,24 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   }, [])
 
   const handleWhitePageActivate = () => {
-    // Marcar que usuário passou pela whitepage
+    // ============================================
+    // 🎯 CLOAKER - Verificar se é bot ou usuário
+    // ============================================
+    const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
+    
+    if (cloakerEnabled) {
+      // Verificar se tem cookie do cloaker (setado pelo middleware)
+      const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
+      
+      if (!hasCloakerCookie) {
+        // BOT - não fazer nada, botão já está em loading infinito
+        console.log('🤖 [WhitePage] Bot tentou clicar - bloqueado silenciosamente')
+        return
+      }
+    }
+    
+    // USUÁRIO REAL - permitir acesso
+    console.log('👤 [WhitePage] Usuário real liberado')
     localStorage.setItem('whitepage_passed', 'true')
     localStorage.setItem('whitepage_passed_at', Date.now().toString())
     
@@ -92,7 +111,7 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
 
   // WhitePage - Primeira camada (Google Ads compliant)
   if (showWhitePage) {
-    return <WhitePage onActivate={handleWhitePageActivate} />
+    return <WhitePage onActivate={handleWhitePageActivate} isBot={isBot} />
   }
 
   // Loading inicial

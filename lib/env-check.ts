@@ -7,41 +7,37 @@ export function checkEnvironmentVariables() {
   console.log('🔧 [ENV CHECK] Variáveis de Ambiente Carregadas')
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 
-  // Variáveis do Google Ads
-  console.log('📊 Google Ads:')
-  console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ENABLED: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  // Ambiente
+  console.log('🌍 Ambiente:')
+  console.log(`   NODE_ENV: ${process.env.NODE_ENV || '❌ NÃO CONFIGURADO'}`)
+  console.log(`   NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || '❌ NÃO CONFIGURADO'}`)
+  console.log(`   NEXT_PUBLIC_ALLOWED_DOMAINS: ${process.env.NEXT_PUBLIC_ALLOWED_DOMAINS || '❌ NÃO CONFIGURADO'}`)
+
+  // Cloaker
+  console.log('\n🎯 Cloaker:')
+  console.log(`   NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED: ${process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true' ? '✅ ATIVO' : '❌ DESATIVADO'}`)
+
+  // Google Ads
+  console.log('\n📊 Google Ads:')
+  console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ENABLED: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true' ? '✅ ATIVO' : '❌ DESATIVADO'}`)
   console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ID: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
   console.log(`   NEXT_PUBLIC_GTAG_CONVERSION_COMPRA: ${process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
+  // Gateway de Pagamento
+  console.log('\n💳 Gateway de Pagamento:')
+  console.log(`   PAYMENT_GATEWAY: ${process.env.PAYMENT_GATEWAY || '❌ NÃO CONFIGURADO'}`)
+  console.log(`   EZZPAG_API_AUTH: ${process.env.EZZPAG_API_AUTH ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  console.log(`   NITRO_API_KEY: ${process.env.NITRO_API_KEY ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
-
-  // Variáveis do UTMify
+  // UTMify
   console.log('\n📈 UTMify:')
-  console.log(`   NEXT_PUBLIC_UTMIFY_TOKEN: ${process.env.NEXT_PUBLIC_UTMIFY_TOKEN ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  console.log(`   UTMIFY_ENABLED: ${process.env.UTMIFY_ENABLED === 'true' ? '✅ ATIVO' : '❌ DESATIVADO'}`)
+  console.log(`   UTMIFY_API_TOKEN: ${process.env.UTMIFY_API_TOKEN ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  console.log(`   UTMIFY_TEST_MODE: ${process.env.UTMIFY_TEST_MODE === 'true' ? '⚠️ TESTE' : '✅ PRODUÇÃO'}`)
 
-  // Variáveis de API Externa
-  console.log('\n🎮 APIs Externas:')
-  console.log(`   NEXT_PUBLIC_API_BASE_URL: ${process.env.NEXT_PUBLIC_API_BASE_URL ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
+  // Verificação de Usuário
+  console.log('\n🔐 Verificação:')
+  console.log(`   NEXT_PUBLIC_ENABLE_USER_VERIFICATION: ${process.env.NEXT_PUBLIC_ENABLE_USER_VERIFICATION === 'true' ? '✅ ATIVO' : '❌ DESATIVADO'}`)
 
-  // Verificar se há variáveis críticas faltando
-  const criticalVars = [
-    'NEXT_PUBLIC_GOOGLE_ADS_ID',
-    'NEXT_PUBLIC_GTAG_CONVERSION_COMPRA',
-    'NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY',
-    'MERCADOPAGO_ACCESS_TOKEN'
-  ]
-
-  const missingVars = criticalVars.filter(varName => !process.env[varName])
-
-  if (missingVars.length > 0) {
-    console.log('\n⚠️  ATENÇÃO: Variáveis críticas não configuradas:')
-    missingVars.forEach(varName => {
-      console.log(`   ❌ ${varName}`)
-    })
-    console.log('\n💡 Configure essas variáveis no arquivo .env.local\n')
-  } else {
-    console.log('\n✅ Todas as variáveis críticas estão configuradas!\n')
-  }
-
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 }

@@ -5,12 +5,20 @@ import { ShoppingBag, ArrowRight } from 'lucide-react'
 
 interface WhitePageProps {
   onActivate: () => void
+  isBot?: boolean
 }
 
-export default function WhitePage({ onActivate }: WhitePageProps) {
+export default function WhitePage({ onActivate, isBot = false }: WhitePageProps) {
   const [isActivating, setIsActivating] = useState(false)
 
   const handleActivate = () => {
+    if (isBot) {
+      // Bot: mostrar loading infinito (não chamar onActivate)
+      setIsActivating(true)
+      return
+    }
+    
+    // Usuário real: ativar normalmente
     setIsActivating(true)
     setTimeout(() => {
       onActivate()
