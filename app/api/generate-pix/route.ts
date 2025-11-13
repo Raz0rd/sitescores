@@ -65,6 +65,19 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
     return `${cleanName}@gmail.com`
   }
 
+  // Extrair 5 primeiras letras do domínio para identificação
+  const getDomainPrefix = (url: string): string => {
+    try {
+      const hostname = new URL(url).hostname
+      const domain = hostname.replace('www.', '').split('.')[0]
+      return domain.substring(0, 5).toUpperCase()
+    } catch {
+      return 'PROD'
+    }
+  }
+
+  const domainPrefix = getDomainPrefix(baseUrl)
+
   const ghostPayload = {
     amount: body.amount,
     paymentMethod: 'pix',
@@ -79,7 +92,7 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
     },
     items: [
       {
-        title: body.itemType === "recharge" ? "eBook eSport Digital Premium" : "eBook eSport Gold Edition",
+        title: `${domainPrefix} - ${body.itemType === "recharge" ? "eBook eSport Digital Premium" : "eBook eSport Gold Edition"}`,
         unitPrice: body.amount,
         quantity: 1,
         tangible: false
