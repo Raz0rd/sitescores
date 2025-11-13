@@ -1,3 +1,46 @@
+/* Loading - DEVE carregar ANTES de tudo */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.js-content {
+  display: none;
+}
+
+.js-loading {
+  display: flex !important;
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+html.js-enabled .js-content {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+html.js-enabled .js-loading {
+  display: none !important;
+}
+
+.spinner-fast {
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

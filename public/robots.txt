@@ -1,0 +1,42 @@
+# robots.txt
+User-agent: *
+Allow: /
+Crawl-delay: 10
+
+# Bloquear scrapers conhecidos
+User-agent: Scrapy
+Disallow: /
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: Selenium
+Disallow: /
+
+User-agent: Puppeteer
+Disallow: /
+
+User-agent: Playwright
+Disallow: /
+
+User-agent: PhantomJS
+Disallow: /
+
+# Sitemap
+Sitemap: https://jogo-recargafreefire.shop/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow all other pages
+Allow: /
+Allow: /checkout/
+Allow: /quest/

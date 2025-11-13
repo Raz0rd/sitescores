@@ -1,16 +1,3 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Política de Privacidade | Loja Digital',
-  description: 'Política de privacidade. Como protegemos seus dados pessoais.',
-  keywords: [
-    'privacidade',
-    'proteção de dados',
-    'lgpd',
-    'segurança'
-  ]
-}
-
 export default function PrivacidadePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">

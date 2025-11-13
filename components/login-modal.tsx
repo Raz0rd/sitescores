@@ -283,7 +283,7 @@ export default function LoginModal({ isOpen, onSuccess }: LoginModalProps) {
                   <p>Ao utilizar nosso serviço, você concorda com estes termos de uso.</p>
                   
                   <p><strong>2. Descrição do Serviço</strong></p>
-                  <p>Oferecemos serviço de recarga de diamantes para Free Fire de forma rápida e segura.</p>
+                  <p>Oferecemos serviço de distribuição de créditos digitais de forma rápida e segura.</p>
                   
                   <p><strong>3. Política de Pagamento</strong></p>
                   <p>Os pagamentos são processados via PIX. Após confirmação, a recarga é enviada automaticamente.</p>
@@ -298,7 +298,7 @@ export default function LoginModal({ isOpen, onSuccess }: LoginModalProps) {
                   <p>Seus dados são protegidos conforme a LGPD. Não compartilhamos informações com terceiros sem autorização.</p>
                   
                   <p><strong>7. Responsabilidades</strong></p>
-                  <p>Você é responsável por fornecer informações corretas de ID e servidor do Free Fire.</p>
+                  <p>Você é responsável por fornecer informações corretas de ID e dados de conta.</p>
                   
                   <p><strong>8. Suporte</strong></p>
                   <p>Em caso de dúvidas, entre em contato através dos nossos canais de suporte.</p>

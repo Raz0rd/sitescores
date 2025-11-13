@@ -1,8 +1,3 @@
-export const metadata = {
-  title: 'Checkout | Loja Digital',
-  description: 'Finalizar compra',
-}
-
 export default function RootLayout({
   children,
 }: {

@@ -111,7 +111,7 @@ export default function ArenaQuizModal({
                   DESCUBRA SEU PERFIL DE JOGADOR!
                 </h2>
                 <p className="text-gray-300 mb-6 leading-relaxed">
-                  Responda 5 perguntas rápidas e descubra qual é o seu verdadeiro estilo de jogo no Free Fire.
+                  Responda 5 perguntas rápidas e descubra qual é o seu verdadeiro estilo de jogo.
                 </p>
                 
                 <div className="bg-red-900/30 border border-red-600/50 rounded-lg p-4 mb-6">
@@ -268,10 +268,10 @@ export default function ArenaQuizModal({
                 <img 
                   className="h-16 w-16 rounded-xl bg-white outline outline-4 outline-red-600 mx-auto" 
                   src="/images/icon.png" 
-                  alt="Free Fire"
+                  alt="Jogo"
                 />
                 <div className="text-center mt-3">
-                  <div className="text-lg font-bold text-white">Free Fire</div>
+                  <div className="text-lg font-bold text-white">Créditos Digitais</div>
                   <div className="text-sm text-gray-400">Valide seu ID para ativar a oferta</div>
                 </div>
               </div>

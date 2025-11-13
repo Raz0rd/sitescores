@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react'
 import WhitePage from './WhitePage'
 
-interface VerificationWrapperProps {
+interface WhitePageWrapperProps {
   children: React.ReactNode
 }
 
-export default function VerificationWrapper({ children }: VerificationWrapperProps) {
-  const [showWhitePage, setShowWhitePage] = useState(false) // WhitePage genérica
+export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
+  const [showWhitePage, setShowWhitePage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     const currentPath = window.location.pathname
     
     // Rotas que NÃO precisam de whitepage
-    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout']
+    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout', '/termos', '/privacidade']
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
     
     if (isPublicRoute) {
@@ -48,7 +48,6 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     // Se já passou pela whitepage, mostrar conteúdo direto
     setIsLoading(false)
   }, [])
-
 
   const handleWhitePageActivate = () => {
     // Marcar que usuário passou pela whitepage
@@ -85,6 +84,6 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     )
   }
 
-  // Mostrar conteúdo direto (sem verificação)
+  // Mostrar conteúdo direto (sem verificação de usuário)
   return <>{children}</>
 }

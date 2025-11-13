@@ -69,14 +69,14 @@ export default function TermosUsoPage() {
 
           {/* Seção 3 */}
           <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">3. Sem Vínculo com Desenvolvedoras</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">3. Plataforma Independente</h2>
             <p className="text-gray-700 leading-relaxed">
-              <strong className="text-red-600">NÃO temos afiliação, parceria ou vínculo</strong> com Garena, Tencent ou qualquer desenvolvedora de jogos. 
-              Somos uma plataforma independente de eventos promocionais.
+              <strong className="text-red-600">Somos uma plataforma independente</strong> de eventos e promoções digitais. 
+              Não possuímos afiliação ou vínculo com desenvolvedoras de jogos ou aplicativos.
             </p>
             <p className="text-gray-700 leading-relaxed mt-2">
-              Todas as marcas, logos e nomes de jogos mencionados são propriedade de seus respectivos donos. 
-              Usamos essas referências apenas para indicar os jogos compatíveis com nossos cupons promocionais.
+              Oferecemos serviços de distribuição de créditos digitais de forma independente, 
+              seguindo todas as normas legais e regulamentações aplicáveis.
             </p>
           </section>
 

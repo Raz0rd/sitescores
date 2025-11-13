@@ -40,7 +40,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
   // Perguntas do Quiz
   const quizQuestions = [
     {
-      question: "🔮 Qual é o seu estilo de jogo no Free Fire?",
+      question: "🔮 Qual é o seu estilo de jogo favorito?",
       options: [
         { text: "Líder de Squad - Comando meu time", points: { lider: 3, estrategista: 1, atirador: 0, rusher: 0 } },
         { text: "Sniper Silencioso - Elimino de longe", points: { atirador: 3, estrategista: 1, lider: 0, rusher: 0 } },
@@ -67,7 +67,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       ]
     },
     {
-      question: "🏆 O que te motiva a jogar Free Fire?",
+      question: "🏆 O que te motiva a jogar?",
       options: [
         { text: "Ser o Mestre", points: { lider: 3, atirador: 1, estrategista: 0, rusher: 0 } },
         { text: "Adrenalina pura", points: { rusher: 3, lider: 0, atirador: 0, estrategista: 0 } },
@@ -356,7 +356,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
       <div className="fixed inset-0 z-[9999] overflow-hidden" style={{
         background: '#ffffff'
       }}>
-        {/* Efeitos de fundo Free Fire */}
+        {/* Efeitos de fundo */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Formas decorativas sutis */}
         <div className="absolute top-10 right-10 w-32 h-32 opacity-5" style={{
@@ -498,7 +498,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                     🎯 Desconto na Primeira Compra
                   </p>
                   <p className="text-red-700 text-xs leading-relaxed">
-                    Complete a validação e concorra a desconto especial na sua primeira compra de diamantes para Free Fire
+                    Complete a validação e concorra a desconto especial na sua primeira compra de créditos digitais
                   </p>
                 </div>
 
@@ -765,11 +765,11 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                 </div>
                 
                 <div className="p-4 space-y-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
-                  <p><strong className="text-blue-600">1. Natureza do Evento:</strong> Somos uma plataforma de eventos promocionais que oferece cupons de desconto para recargas em jogos como Free Fire, Delta Force e outros. NÃO somos jogo de azar, cassino ou plataforma de apostas.</p>
+                  <p><strong className="text-blue-600">1. Natureza do Evento:</strong> Somos uma plataforma de eventos promocionais que oferece cupons de desconto para recargas de créditos digitais. NÃO somos jogo de azar, cassino ou plataforma de apostas.</p>
                   
                   <p><strong className="text-blue-600">2. Conformidade Google Ads:</strong> Estamos em total conformidade com as políticas do Google Ads. Promovemos apenas eventos legítimos com cupons para plataformas de recarga de jogos mobile.</p>
                   
-                  <p><strong className="text-blue-600">3. Sem Vínculo com Desenvolvedoras:</strong> NÃO temos afiliação, parceria ou vínculo com Garena, Tencent ou qualquer desenvolvedora de jogos. Somos uma plataforma independente de eventos promocionais.</p>
+                  <p><strong className="text-blue-600">3. Plataforma Independente:</strong> NÃO temos afiliação, parceria ou vínculo com desenvolvedoras de jogos ou aplicativos. Somos uma plataforma independente de eventos promocionais.</p>
                   
                   <p><strong className="text-blue-600">4. Cupons e Promoções:</strong> Os cupons são válidos para primeira recarga. Sujeitos a disponibilidade e termos específicos de cada evento.</p>
                   
@@ -906,7 +906,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
                       📍 Como encontrar seu ID:
                     </p>
                     <p className="text-xs text-orange-800 mb-2">
-                      Abra o Free Fire → <span className="font-bold">Configurações</span> → <span className="font-bold">Informações Básicas</span>
+                      Abra o jogo → <span className="font-bold">Configurações</span> → <span className="font-bold">Informações Básicas</span>
                     </p>
                     <button
                       onClick={() => setShowTutorial(true)}
@@ -1010,7 +1010,7 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-800">Como encontrar seu ID - Free Fire</h3>
+                <h3 className="text-xl font-bold text-gray-800">Como encontrar seu ID</h3>
                 <button 
                   onClick={() => setShowTutorial(false)}
                   className="text-gray-400 hover:text-gray-600"
@@ -1023,10 +1023,10 @@ export default function UserVerification({ onVerificationComplete }: UserVerific
               
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-gray-700 mb-3">Veja onde encontrar seu ID no Free Fire:</p>
+                  <p className="text-sm text-gray-700 mb-3">Veja onde encontrar seu ID no jogo:</p>
                   <img 
                     src="/images/tutorialff.jpg" 
-                    alt="Tutorial Free Fire" 
+                    alt="Tutorial ID" 
                     className="w-full rounded-lg border border-gray-200"
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;

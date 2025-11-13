@@ -54,7 +54,6 @@ export default function HomePage() {
   // const [pendingDisqualifyAnswer, setPendingDisqualifyAnswer] = useState<string | null>(null)
   const [selectedGame, setSelectedGame] = useState<'freefire' | 'deltaforce' | 'haikyu'>('freefire')
   const [showSummaryDetails, setShowSummaryDetails] = useState(false)
-  const [showWelcomeGif, setShowWelcomeGif] = useState(true)
   const [discountTimeLeft, setDiscountTimeLeft] = useState(15 * 60) // 15 minutos em segundos
   
   // Perguntas do Quiz Arena de Fogo
@@ -216,19 +215,6 @@ export default function HomePage() {
     setMounted(true)
   }, [])
 
-  // Bloquear scroll quando modal de boas-vindas estiver aberto (mas não quando quiz estiver ativo)
-  useEffect(() => {
-    if (showWelcomeGif && !showBlurOverlay) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [showWelcomeGif, showBlurOverlay])
-
   // Controlar exibição do quiz (SEM SUBDOMAIN - tudo no mesmo domínio)
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -289,8 +275,9 @@ export default function HomePage() {
       }
     }
     
-    // Se NÃO tem cookies, mostrar quiz
-    setShowBlurOverlay(!hasVerificationCookies)
+    // DESABILITADO: Não mostrar mais verificação inicial
+    // setShowBlurOverlay(!hasVerificationCookies)
+    setShowBlurOverlay(false) // Sempre começa sem verificação
   }, [])
 
   // Verificar se usuário já está logado (via COOKIES, não localStorage)
@@ -1217,7 +1204,11 @@ export default function HomePage() {
               <div className="flex items-center gap-2">
                 
                 <div className="w-px h-8 bg-gray-300"></div>
-                <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Canal</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-25 md:text-base/5">Promocional de Recarga</p></div>
+                {isLoggedIn ? (
+                  <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Centro de</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-25 md:text-base/5">Recarga Free Fire</p></div>
+                ) : (
+                  <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Eventos e Promoções</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-25 md:text-base/5">Free Brasil Fire</p></div>
+                )}
               </div>
             </div>
             <div className="w-8 h-8 sm:w-10 sm:h-10">
@@ -2844,40 +2835,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Modal de Boas-Vindas com GIF - Só mostrar se não estiver exibindo quiz/verificação */}
-        {showWelcomeGif && !showBlurOverlay && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-            <div className="relative bg-[#1B1B25] rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[#3C3E65]">
-              {/* Título */}
-              <h2 className="text-2xl font-bold text-white text-center mb-2">
-                Domine o poder do Dragão!
-              </h2>
-              <p className="text-red-500 text-center mb-4 text-xs font-semibold">
-                Oferta diária, limitada somente a 3 unidades!
-              </p>
-              <p className="text-white/80 text-center mb-4">
-                Adquira já!
-              </p>
-              
-              {/* GIF */}
-              <div className="flex justify-center mb-6">
-                <img 
-                  src="/images/giftFogo.gif" 
-                  alt="Dragão de Fogo" 
-                  className="w-full h-auto rounded-lg"
-                />
-              </div>
-              
-              {/* Botão Fechar */}
-              <button
-                onClick={() => setShowWelcomeGif(false)}
-                className="w-full h-12 text-lg font-bold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        )}
         
       </div>
     )

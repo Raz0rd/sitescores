@@ -1,16 +1,3 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Termos de Uso | Loja Digital',
-  description: 'Termos de uso da plataforma. Condições de uso e políticas.',
-  keywords: [
-    'termos de uso',
-    'políticas',
-    'condições',
-    'loja online'
-  ]
-}
-
 export default function TermosPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">

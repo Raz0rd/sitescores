@@ -1,10 +1,3 @@
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Pedido Confirmado',
-  description: 'Confirmação do pedido',
-}
-
 export default function SuccessLayout({
   children,
 }: {

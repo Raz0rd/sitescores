@@ -1,86 +1,20 @@
 import type React from "react"
-import type { Metadata } from "next"
 import { Suspense } from "react"
+import type { Metadata } from "next"
+import Script from "next/script"
 import "./globals.css"
 import HeadManager from "@/components/HeadManager"
 import ClickTracker from "@/components/ClickTracker"
-import PWAInstaller from "@/components/PWAInstaller"
 import DynamicTheme from "@/components/DynamicTheme"
-import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
+import WhitePageWrapper from "@/components/WhitePageWrapper"
+import AntiScraping from "@/components/AntiScraping"
+import GoogleTagConditional from "@/components/GoogleTagConditional"
 
+// Metadata para SEO
 export const metadata: Metadata = {
-  title: "Loja de Itens Digitais | Recarga para Jogos Mobile",
-  description: "Plataforma de recarga para jogos mobile. Entrega rápida e segura. Suporte 24h.",
-  keywords: [
-    "recarga jogos",
-    "itens digitais",
-    "loja online",
-    "jogos mobile",
-    "recarga segura",
-    "plataforma digital",
-    "loja virtual",
-    "e-commerce"
-  ],
-  authors: [{ name: "Loja Digital" }],
-  generator: "Next.js",
-  applicationName: "Loja Digital",
-  referrer: "origin-when-cross-origin",
-  creator: "Plataforma Digital",
-  publisher: "Loja Online",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://localhost:3000'),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "Loja Digital | Recarga para Jogos",
-    description: "Plataforma de recarga para jogos mobile. Entrega rápida e segura.",
-    url: "/",
-    siteName: "Loja Digital",
-    locale: "pt_BR",
-    type: "website",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Loja de Diamantes Free Fire - Comprar Itens para Jogos Mobile"
-      }
-    ]
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Loja de Diamantes Free Fire | Comprar Itens Jogos",
-    description: "🔥 Loja oficial! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança e preços promocionais.",
-    images: ["/images/twitter-card.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: false,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Recarga Jogo Free Fire"
-  },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-  }
+  title: "Eventos e Promoções",
+  description: "Plataforma de eventos e promoções digitais",
 }
 
 export default function RootLayout({
@@ -90,16 +24,52 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
+      <head>
+        {/* Noscript no head para funcionar sem JavaScript */}
+        <noscript>
+          <iframe 
+            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002'}`}
+            height="0" 
+            width="0" 
+            style={{display: 'none', visibility: 'hidden'}}
+          />
+        </noscript>
+      </head>
       <body className="font-sans">
+        {/* Google Tag - APENAS em / e /success */}
+        <GoogleTagConditional />
+
+        {/* Script blocking - executa IMEDIATAMENTE antes de tudo */}
+        <Script
+          id="js-enabled"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                document.documentElement.classList.add('js-enabled');
+              })();
+            `
+          }}
+        />
+        
+        {/* Loading inline - aparece ANTES de qualquer JS */}
+        <div className="js-loading">
+          <div style={{position: 'relative', width: '48px', height: '48px'}}>
+            <div style={{position: 'absolute', inset: 0, border: '4px solid #1f2937', borderRadius: '9999px'}}></div>
+            <div className="spinner-fast" style={{position: 'absolute', inset: 0, border: '4px solid transparent', borderTopColor: '#dc2626', borderRadius: '9999px'}}></div>
+          </div>
+        </div>
+
         <HeadManager />
         <DynamicTheme />
-        <PWAInstaller />
         <DevToolsBlocker />
-        <VerificationWrapper>
-          <ClickTracker>
-            <Suspense fallback={null}>{children}</Suspense>
-          </ClickTracker>
-        </VerificationWrapper>
+        <AntiScraping>
+          <WhitePageWrapper>
+            <ClickTracker>
+              <Suspense fallback={null}>{children}</Suspense>
+            </ClickTracker>
+          </WhitePageWrapper>
+        </AntiScraping>
       </body>
     </html>
   )

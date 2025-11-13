@@ -142,7 +142,13 @@ export default function HeadManager() {
       return;
     }
 
-    // Carregar Google Tag em TODAS as páginas para ser reconhecido pelo Tag Assistant
+    // Carregar Google Tag APENAS na página inicial (/) e sucesso (/success)
+    const allowedPages = ['/', '/success'];
+    if (!allowedPages.includes(pathname)) {
+      console.log('[Google Ads] Tag NÃO carregada na página:', pathname);
+      return;
+    }
+
     console.log('[Google Ads] Carregando tag na página:', pathname);
 
     // Remover scripts antigos se existirem
@@ -215,15 +221,15 @@ export default function HeadManager() {
     const oldMetas = document.querySelectorAll('meta[data-seo="true"]');
     oldMetas.forEach(meta => meta.remove());
 
-    // Criar e injetar novas meta tags
+    // Meta tags genéricas (anti-scraping)
     const metaTags = [
       { 
         name: 'description', 
-        content: 'Central de recargas para Free Fire. Site de recargas pro Free Fire com entrega instantânea. Recarregue Free Fire e turbine seu jogo com diamantes!' 
+        content: 'Plataforma de eventos e promoções digitais. Participe de campanhas exclusivas e ganhe benefícios.' 
       },
       { 
         name: 'keywords', 
-        content: 'central de recargas, recargas pro ff, site de recargas pro free fire, recarregue freefire, turbine seu jogo, diamantes free fire, recarga ff instantânea, comprar diamantes ff' 
+        content: 'eventos, promoções, campanhas, benefícios, plataforma digital' 
       }
     ];
 
