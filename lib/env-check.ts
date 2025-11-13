@@ -9,10 +9,9 @@ export function checkEnvironmentVariables() {
 
   // Variáveis do Google Ads
   console.log('📊 Google Ads:')
+  console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ENABLED: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
   console.log(`   NEXT_PUBLIC_GOOGLE_ADS_ID: ${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
   console.log(`   NEXT_PUBLIC_GTAG_CONVERSION_COMPRA: ${process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
-  console.log(`   NEXT_PUBLIC_GOOGLE_AW_ID: ${process.env.NEXT_PUBLIC_GOOGLE_AW_ID ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
-  console.log(`   NEXT_PUBLIC_GOGLE_CONVERSION_LABEL: ${process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL ? '✅ Configurado' : '❌ NÃO CONFIGURADO'}`)
 
 
 

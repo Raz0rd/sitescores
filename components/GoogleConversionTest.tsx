@@ -24,12 +24,12 @@ export default function GoogleConversionTest() {
 
     try {
       // Pegar variáveis do ambiente (SEM FALLBACK)
-      const awId = process.env.NEXT_PUBLIC_GOOGLE_AW_ID
-      const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL
+      const awId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+      const conversionLabel = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA
 
       // Validar se as variáveis existem
       if (!awId || !conversionLabel) {
-        setResult('❌ Erro: Variáveis de ambiente não configuradas!\n\nConfigure no .env.local:\nNEXT_PUBLIC_GOOGLE_AW_ID\nNEXT_PUBLIC_GOOGLE_CONVERSION_LABEL')
+        setResult('❌ Erro: Variáveis de ambiente não configuradas!\n\nConfigure no .env:\nNEXT_PUBLIC_GOOGLE_ADS_ID\nNEXT_PUBLIC_GTAG_CONVERSION_COMPRA')
         setIsSending(false)
         return
       }
@@ -107,8 +107,8 @@ export default function GoogleConversionTest() {
 
         <div className="mt-4 text-xs opacity-75">
           <p>💡 Variáveis de ambiente:</p>
-          <p>NEXT_PUBLIC_GOOGLE_AW_ID</p>
-          <p>NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL</p>
+          <p>NEXT_PUBLIC_GOOGLE_ADS_ID</p>
+          <p>NEXT_PUBLIC_GTAG_CONVERSION_COMPRA</p>
         </div>
       </div>
     </div>

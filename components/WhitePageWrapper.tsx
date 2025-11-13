@@ -33,7 +33,39 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     }
     
     // ============================================
-    // 🎯 WHITEPAGE - Primeira camada (Google Ads)
+    // 🎯 CLOAKER - Verificar cookie do middleware
+    // ============================================
+    // Se o cloaker está ativado, verificar cookie
+    const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
+    
+    if (cloakerEnabled) {
+      // Verificar se tem cookie do cloaker (setado pelo middleware)
+      const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
+      
+      if (!hasCloakerCookie) {
+        // Bot detectado - mostrar whitepage
+        setShowWhitePage(true)
+        setIsLoading(false)
+        return
+      }
+      
+      // Usuário real - verificar se já passou pela whitepage
+      const whitePagePassed = localStorage.getItem('whitepage_passed')
+      
+      if (!whitePagePassed) {
+        // Primeira vez do usuário real - mostrar whitepage
+        setShowWhitePage(true)
+        setIsLoading(false)
+        return
+      }
+      
+      // Usuário real que já passou - mostrar loja
+      setIsLoading(false)
+      return
+    }
+    
+    // ============================================
+    // 🎯 WHITEPAGE - Modo sem cloaker (fallback)
     // ============================================
     // Verificar se usuário já passou pela whitepage
     const whitePagePassed = localStorage.getItem('whitepage_passed')
