@@ -4,7 +4,7 @@ import { isBlockedBotIP } from '@/lib/bot-ips'
 
 // Configuração do cloaker
 const CLOAKER_CONFIG = {
-  url: 'https://www.altercpa.one/fltr/969-8f076e082dbcb1d080037ec2c216d589-16109',
+  url: 'https://www.altercpa.one/fltr/969-8f076e082dbcb1d080037ec2c216d589-15523',
   enabled: process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
 }
 
