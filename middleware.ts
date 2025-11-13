@@ -174,7 +174,11 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ['/api/', '/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml']
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path))
   
-  if (!isPublicPath && (isBot || hasNoUserAgent || hasSuspiciousHeaders)) {
+  // IMPORTANTE: Se cloaker está ativo na rota /, NÃO bloquear anti-scraping
+  // O cloaker vai decidir se é bot ou usuário
+  const skipAntiScraping = pathname === '/' && CLOAKER_CONFIG.enabled
+  
+  if (!isPublicPath && !skipAntiScraping && (isBot || hasNoUserAgent || hasSuspiciousHeaders)) {
     // Retornar página vazia ou erro 403
     return new NextResponse(
       JSON.stringify({ 
