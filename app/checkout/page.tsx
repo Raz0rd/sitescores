@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Toast from "../../components/toast"
 import PendingPaymentModal from "../../components/pending-payment-modal"
-import UserVerificationWithTest from "../../components/UserVerificationWithTest"
 import { useUtmParams } from "@/hooks/useUtmParams"
 import QRCode from "qrcode"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
@@ -94,33 +93,32 @@ export default function CheckoutPage() {
   const [selectedPromos, setSelectedPromos] = useState<string[]>([])
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
-  const [isVerified, setIsVerified] = useState(false)
-  const [isCheckingVerification, setIsCheckingVerification] = useState(true)
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false) // Se usuário está logado
 
-  // Verificar cookie de verificação ao carregar (PROTEÇÃO)
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    
-    // Verificar múltiplos cookies de verificação
-    const hasVerificationCookie = document.cookie.split(';').some(cookie => {
-      const trimmed = cookie.trim()
-      return trimmed.startsWith('user_verified=') || 
-             trimmed.startsWith('quiz_completed=') || 
-             trimmed.startsWith('referer_verified=')
-    })
-    
-    console.log('🔍 [CHECKOUT] Verificando cookies:', hasVerificationCookie)
-    
-    if (hasVerificationCookie) {
-      setIsVerified(true)
-      setIsCheckingVerification(false)
-    } else {
-      // Aguardar um pouco antes de mostrar verificação (evitar flash)
-      setTimeout(() => {
-        setIsCheckingVerification(false)
-      }, 300)
-    }
-  }, [])
+  // ❌ VERIFICAÇÃO REMOVIDA - Usuário compra direto
+  // useEffect(() => {
+  //   if (typeof window === 'undefined') return
+  //   
+  //   // Verificar múltiplos cookies de verificação
+  //   const hasVerificationCookie = document.cookie.split(';').some(cookie => {
+  //     const trimmed = cookie.trim()
+  //     return trimmed.startsWith('user_verified=') || 
+  //            trimmed.startsWith('quiz_completed=') || 
+  //            trimmed.startsWith('referer_verified=')
+  //   })
+  //   
+  //   console.log('🔍 [CHECKOUT] Verificando cookies:', hasVerificationCookie)
+  //   
+  //   if (hasVerificationCookie) {
+  //     setIsVerified(true)
+  //     setIsCheckingVerification(false)
+  //   } else {
+  //     // Aguardar um pouco antes de mostrar verificação (evitar flash)
+  //     setTimeout(() => {
+  //       setIsCheckingVerification(false)
+  //     }, 300)
+  //   }
+  // }, [])
 
   // Get URL parameters
   const itemType = searchParams.get("type") || searchParams.get("itemType") || "recharge"
@@ -208,9 +206,11 @@ export default function CheckoutPage() {
       const verificationData = localStorage.getItem('verificationData')
       const user_data = localStorage.getItem('userData')
       
-      // Se já temos dados de usuário, não mostrar o modal de login
+      // Se já temos dados de usuário, está logado
       if (userData || verificationData || user_data) {
-        setIsProcessingPayment(false)
+        setIsUserLoggedIn(true)
+      } else {
+        setIsUserLoggedIn(false)
       }
     }
     
@@ -413,6 +413,24 @@ export default function CheckoutPage() {
   }
 
   const handleProceedToPayment = async () => {
+    // ✅ VERIFICAR SE USUÁRIO ESTÁ LOGADO ANTES DE TUDO
+    if (!isUserLoggedIn) {
+      // Salvar dados do checkout para retomar depois
+      const checkoutData = {
+        itemType,
+        itemValue,
+        price,
+        gameApp,
+        bonus: itemBonus,
+        returnUrl: window.location.href
+      }
+      localStorage.setItem('pending_checkout', JSON.stringify(checkoutData))
+      
+      // Redirecionar para home que vai abrir o modal de login
+      window.location.href = '/?showLogin=true'
+      return // Para aqui e não prossegue
+    }
+    
     if (isProcessingPayment) {
       return
     }
@@ -636,8 +654,17 @@ export default function CheckoutPage() {
   useEffect(() => {
     let statusInterval: NodeJS.Timeout
     
+    // Função para verificar se a página está visível
+    const isPageVisible = () => !document.hidden
+    
     if (pixData && paymentStatus === 'pending' && timerActive) {
       statusInterval = setInterval(async () => {
+        // ⚠️ IMPORTANTE: Só fazer polling se a página estiver visível
+        if (!isPageVisible()) {
+          console.log('[POLLING] ⏸️ Página não visível - pausando polling')
+          return
+        }
+        
         try {
           const response = await fetch('/api/check-transaction-status', {
             method: 'POST',
@@ -1002,29 +1029,7 @@ export default function CheckoutPage() {
     window.location.href = successUrl.toString()
   }
 
-  // Mostrar loading enquanto verifica
-  if (isCheckingVerification) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mb-4"></div>
-          <p className="text-gray-600 font-medium">Carregando checkout...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Renderizar tela de verificação se não estiver verificado
-  if (!isVerified) {
-    return (
-      <UserVerificationWithTest 
-        onVerificationComplete={() => {
-          setIsVerified(true)
-          setIsCheckingVerification(false)
-        }} 
-      />
-    )
-  }
+  // ✅ Não precisa mais de loading - modal aparece quando necessário
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1544,6 +1549,8 @@ export default function CheckoutPage() {
         onContinue={handleContinuePendingPayment}
         onStartNew={handleStartNewPayment}
       />
+
+      {/* Modal de Login removido - usuário é redirecionado para home */}
 
     </div>
   )

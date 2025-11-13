@@ -22,10 +22,13 @@ export async function middleware(request: NextRequest) {
   const allowedDomains = [
     ...allowedDomainsEnv.split(',').map(d => d.trim()).filter(Boolean),
     'localhost:3000',
-    'localhost:3001'
+    'localhost:3001',
+    'localhost:3002',
+    'localhost:3003',
+    'localhost:3004'
   ]
   
-  // Bloquear se não for um domínio autorizado (acesso por IP)
+  // Bloquear se não for um domínio autorizado (acesso por IP) 
   if (allowedDomains.length > 2 && !allowedDomains.some(domain => requestHost.includes(domain))) {
     console.log(`🚫 [Middleware] Bloqueado acesso por IP/domínio não autorizado: ${requestHost}`)
     return new NextResponse('Forbidden', {

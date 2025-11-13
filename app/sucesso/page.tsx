@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import UserVerificationWithTest from '../../components/UserVerificationWithTest'
 
 export default function SucessoPage() {
   const searchParams = useSearchParams()
@@ -96,17 +95,17 @@ export default function SucessoPage() {
     )
   }
 
-  // Renderizar tela de verificação se não estiver verificado
-  if (!isVerified) {
-    return (
-      <UserVerificationWithTest 
-        onVerificationComplete={() => {
-          setIsVerified(true)
-          setIsCheckingVerification(false)
-        }} 
-      />
-    )
-  }
+  // ❌ VERIFICAÇÃO REMOVIDA - Usuário acessa direto
+  // if (!isVerified) {
+  //   return (
+  //     <UserVerificationWithTest 
+  //       onVerificationComplete={() => {
+  //         setIsVerified(true)
+  //         setIsCheckingVerification(false)
+  //       }} 
+  //     />
+  //   )
+  // }
 
   // Se não tiver parâmetros obrigatórios, mostrar mensagem
   if (!hasRequiredParams) {

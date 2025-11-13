@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useUtmParams } from '@/hooks/useUtmParams';
 import LoginModal from '@/components/login-modal';
 import { useAuth } from '@/hooks/useAuth';
-import UserVerification from '@/components/UserVerification';
 import GoogleConversionTest from '@/components/GoogleConversionTest';
 
 // Log GLOBAL - executa ao carregar o módulo
@@ -211,8 +210,20 @@ export default function HomePage() {
   
   // Evitar problemas de hidratação
   useEffect(() => {
-
     setMounted(true)
+    
+    // Verificar se deve abrir modal de login
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      if (urlParams.get('showLogin') === 'true') {
+        console.log('🔓 [HOME] Abrindo modal de login (vindo do checkout)')
+        setShowBlurOverlay(true)
+        // Limpar parâmetro da URL
+        urlParams.delete('showLogin')
+        const newUrl = urlParams.toString() ? `/?${urlParams.toString()}` : '/'
+        window.history.replaceState({}, '', newUrl)
+      }
+    }
   }, [])
 
   // Controlar exibição do quiz (SEM SUBDOMAIN - tudo no mesmo domínio)
@@ -270,8 +281,6 @@ export default function HomePage() {
         setIsLoggedIn(true)
         setPlayerId(storedPlayerId)
         console.log('✅ [AUTO-LOGIN] Usuário logado com playerId:', storedPlayerId)
-      } else {
-        console.log('⚠️ [AUTO-LOGIN] Tem cookies mas não tem dados no localStorage')
       }
     }
     
@@ -999,8 +1008,8 @@ export default function HomePage() {
       {/* Botão de teste Google Ads */}
       <GoogleConversionTest />
       
-      {/* QUIZ MODAL - Aparece sobre a página quando showBlurOverlay = true */}
-      {showBlurOverlay && (
+      {/* ❌ QUIZ MODAL REMOVIDO - Usuário não precisa mais verificar */}
+      {/* {showBlurOverlay && (
         <UserVerification
           onVerificationComplete={() => {
             console.log('✅ [QUIZ] Verificação completa - fechando modal')
@@ -1041,12 +1050,12 @@ export default function HomePage() {
             }
           }}
         />
-      )}
+      )} */}
       
       {/* CENTRAL DE RECARGAS - Sempre renderizada */}
         
-        {/* REMOVER MODAL ANTIGO - Substituído pelo Quiz */}
-        {false && showBlurOverlay && (
+        {/* Modal de Login - Aparece quando showBlurOverlay = true */}
+        {showBlurOverlay && (
           <div 
             className="fixed inset-0 z-[9999]"
             style={{
