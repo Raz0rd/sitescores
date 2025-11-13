@@ -44,10 +44,10 @@ export function trackPurchase(transactionId: string, value: number) {
   try {
     // Pegar ID de conversão do .env
     const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-    const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL;
+    const conversionLabel = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA;
     
     if (!googleAdsId || !conversionLabel) {
-      console.error('[Google Ads] ❌ NEXT_PUBLIC_GOOGLE_ADS_ID ou NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL não configurado no .env');
+      console.error('[Google Ads] ❌ NEXT_PUBLIC_GOOGLE_ADS_ID ou NEXT_PUBLIC_GTAG_CONVERSION_COMPRA não configurado no .env');
       return;
     }
     

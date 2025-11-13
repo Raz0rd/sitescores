@@ -535,10 +535,10 @@ export default function CheckoutPage() {
         }
         localStorage.setItem('pending_payment', JSON.stringify(pendingPaymentData))
         
-        // ❌ REMOVIDO: Envio duplicado para UTMify
-        // O webhook já envia automaticamente quando recebe a confirmação
-        // sendToUtmify('pending', data).catch(err => {
-        // })
+        // ✅ Enviar waiting_payment para UTMify
+        sendToUtmify('pending', data).catch(err => {
+          console.error('Erro ao enviar waiting_payment para UTMify:', err)
+        })
         
       } else {
         const errorData = await response.json().catch(() => ({}))
