@@ -276,9 +276,6 @@ export async function POST(request: NextRequest) {
           src: params.src || null,
           sck: params.sck || null
         }
-        console.log(`[CHECK-STATUS] UTMs recuperados e limpos do storage:`, trackingParameters)
-      } else {
-        console.warn(`[CHECK-STATUS] Nenhum UTM encontrado no storage para ${transactionId}`)
       }
 
       // Atualizar status no storage

@@ -9,7 +9,7 @@ interface WhitePageWrapperProps {
 
 export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   const [showWhitePage, setShowWhitePage] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true) // Começa como loading
   const [isBot, setIsBot] = useState(false)
 
   useEffect(() => {
@@ -34,34 +34,25 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     }
     
     // ============================================
-    // 🎯 CLOAKER - Verificar cookie do middleware
+    // 🎯 CLOAKER - Verificar cookie
     // ============================================
-    // Se o cloaker está ativado, verificar cookie
     const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
     
     if (cloakerEnabled) {
-      // Verificar se tem cookie do cloaker (setado pelo middleware)
+      // Verificar se tem cookie do cloaker
       const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
       
       if (!hasCloakerCookie) {
-        // Bot detectado - mostrar whitepage
+        // Bot - mostrar whitepage
+        console.log('🤖 [WhitePage] Bot detectado')
         setShowWhitePage(true)
-        setIsBot(true) // Marcar como bot
+        setIsBot(true)
         setIsLoading(false)
         return
       }
       
-      // Usuário real - verificar se já passou pela whitepage
-      const whitePagePassed = localStorage.getItem('whitepage_passed')
-      
-      if (!whitePagePassed) {
-        // Primeira vez do usuário real - mostrar whitepage
-        setShowWhitePage(true)
-        setIsLoading(false)
-        return
-      }
-      
-      // Usuário real que já passou - mostrar loja
+      // Usuário real - vai DIRETO pra loja
+      console.log('👤 [WhitePage] Usuário real detectado')
       setIsLoading(false)
       return
     }
@@ -90,7 +81,7 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
     
     if (cloakerEnabled) {
-      // Verificar se tem cookie do cloaker (setado pelo middleware)
+      // Verificar se tem cookie do cloaker
       const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
       
       if (!hasCloakerCookie) {

@@ -232,8 +232,6 @@ export async function POST(request: NextRequest) {
           } else {
             console.log("[v0] ❌ Nenhum pedido encontrado no order storage")
           }
-        } else {
-          console.log("[v0] ✅ UTMs já recuperados do metadata, não precisa do fallback")
         }
         
       } catch (error) {

@@ -89,7 +89,7 @@ export async function middleware(request: NextRequest) {
             console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
             const response = NextResponse.next()
             response.cookies.set('cloaker_verified', 'true', {
-              httpOnly: true,
+              httpOnly: false, // Permitir leitura no client-side
               secure: true,
               sameSite: 'lax',
               maxAge: 60 * 60 * 24 // 24 horas
