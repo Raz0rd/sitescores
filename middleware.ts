@@ -89,6 +89,25 @@ export async function middleware(request: NextRequest) {
         if (responseText && responseText.trim()) {
           const result = JSON.parse(responseText)
           
+          // Log detalhado da verificação
+          const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.ip || 'unknown'
+          console.log('🔍 [Cloaker] Verificando acesso:', {
+            ip: clientIp,
+            userAgent: request.headers.get('user-agent') || '',
+            referer: request.headers.get('referer') || '',
+            queryString: request.nextUrl.search.substring(1),
+            url: request.nextUrl.pathname + request.nextUrl.search
+          })
+          
+          console.log('📥 [Cloaker] Resposta:', {
+            type: result.type,
+            result: result.result,
+            action: result.action,
+            reason: result.reason,
+            url: result.url,
+            referer: result.referer
+          })
+          
           // Se for "black" (usuário real), setar cookie
           if (result.type === 'black') {
             console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
