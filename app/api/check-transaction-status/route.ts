@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
+import { decodeGateway } from "@/lib/gateway-mapper"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -40,15 +41,16 @@ async function checkStatusEzzpag(transactionId: string) {
 async function checkStatusGhostPay(transactionId: string) {
   const ghostpayUrl = `https://api.ghostspaysv2.com/functions/v1/transactions/${transactionId}`
   const secretKey = process.env.GHOSTPAY_API_KEY
+  const companyId = process.env.GHOSTPAY_COMPANY_ID
 
-  if (!secretKey) {
-    throw new Error("GHOSTPAY_API_KEY não configurado")
+  if (!secretKey || !companyId) {
+    throw new Error("GHOSTPAY_API_KEY e GHOSTPAY_COMPANY_ID não configurados")
   }
 
   console.log(`[GhostPay] Consultando: ${ghostpayUrl}`)
 
-  // Criar auth Basic com base64
-  const authString = Buffer.from(`${secretKey}:x`).toString('base64')
+  // Criar auth Basic com base64 (SECRET_KEY:COMPANY_ID)
+  const authString = Buffer.from(`${secretKey}:${companyId}`).toString('base64')
 
   const response = await fetch(ghostpayUrl, {
     method: "GET",
@@ -141,8 +143,12 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Escolher gateway baseado na variável de ambiente
-    const gateway = process.env.PAYMENT_GATEWAY || 'ezzpag'
+    // Buscar gateway usado no storage e decodificar
+    const savedOrder = orderStorageService.getOrder(transactionId)
+    const encodedGateway = savedOrder?.gateway || 'gw_beta'
+    const gateway = decodeGateway(encodedGateway)
+    
+    console.log(`🏦 [CHECK-STATUS] Gateway: ${encodedGateway} → ${gateway} (transactionId: ${transactionId})`)
     
     // Log simplificado (1 linha apenas)
 

@@ -7,6 +7,7 @@ interface OrderData {
   orderId: string
   transactionId?: string
   amount: number
+  gateway?: string // Gateway usado (ghostpay, ezzpag, umbrela, etc)
   customerData: {
     name: string
     email: string

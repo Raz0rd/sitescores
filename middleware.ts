@@ -43,6 +43,22 @@ export async function middleware(request: NextRequest) {
   }
   
   // ============================================
+  // 🔒 PROTEÇÃO ROTA /recarga - Apenas com cookie do cloaker
+  // ============================================
+  
+  if (pathname === '/recarga' || pathname === '/recarga/') {
+    const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
+    
+    if (!hasValidCookie) {
+      console.log('🚫 [Middleware] Acesso a /recarga sem cookie do cloaker - redirecionando para /')
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+    
+    console.log('✅ [Middleware] Acesso a /recarga permitido (cookie válido)')
+    return NextResponse.next()
+  }
+  
+  // ============================================
   // 🎯 CLOAKER - Detecção de Bot vs Usuário Real
   // ============================================
   
@@ -70,7 +86,7 @@ export async function middleware(request: NextRequest) {
           QUERY_STRING: request.nextUrl.search.substring(1),
           HTTP_COOKIE: request.headers.get('cookie') || '',
         }
-
+        
         // Fazer requisição para o cloaker
         const formBody = new URLSearchParams(serverData as any).toString()
         

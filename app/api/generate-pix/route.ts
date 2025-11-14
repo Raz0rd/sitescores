@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { orderStorageService } from "@/lib/order-storage"
 import { getConfig, getEnvVar } from "./config"
+import { encodeGateway } from "@/lib/gateway-mapper"
 
 // Forçar Node.js runtime
 export const runtime = 'nodejs'
@@ -796,10 +797,14 @@ export async function POST(request: NextRequest) {
         trackingParameters = body.utmParams
       }
       
+      // Ofuscar nome do gateway antes de salvar
+      const encodedGateway = encodeGateway(gateway)
+      
       const orderData = {
         orderId: validResult.transactionId,
         transactionId: validResult.transactionId,
         amount: body.amount,
+        gateway: encodedGateway, // Salvar gateway ofuscado
         customerData: {
           name: body.customer?.name || '',
           email: body.customer?.email || '',
@@ -810,6 +815,8 @@ export async function POST(request: NextRequest) {
         createdAt: new Date().toISOString(),
         status: 'pending' as const
       }
+      
+      console.log("🏦 [STORAGE] Gateway usado:", gateway, "→ Ofuscado:", encodedGateway)
       
       console.log("💾 [STORAGE] Salvando pedido no orderStorage...")
       console.log("💾 [STORAGE] Transaction ID:", validResult.transactionId)
