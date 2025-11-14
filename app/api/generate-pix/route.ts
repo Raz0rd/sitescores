@@ -55,12 +55,8 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
     throw new Error("GHOSTPAY_API_KEY e GHOSTPAY_COMPANY_ID são obrigatórios")
   }
 
-  console.log("📤 [GhostPay] REQUEST BODY:", JSON.stringify(body, null, 2))
-  
-  // Log dos parâmetros UTM recebidos
-  console.log("🔗 [UTM PARAMS] Parâmetros recebidos para PIX:")
-  console.log("📊 [UTM PARAMS] UTM Source:", body.utmParams?.utm_source || 'N/A')
-  console.log("📊 [UTM PARAMS] Todos os UTMs:", JSON.stringify(body.utmParams || {}, null, 2))
+  // Log simplificado
+  console.log("📤 [GhostPay] Gerando PIX - Valor: R$", (body.amount / 100).toFixed(2))
   
   console.log("🌐 [GhostPay] URL dinâmica detectada:", baseUrl)
 
@@ -108,9 +104,7 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
   // Criar auth Basic com base64 (SECRET_KEY:COMPANY_ID)
   const authString = Buffer.from(`${secretKey}:${companyId}`).toString('base64')
   
-  console.log("📦 [GhostPay] PAYLOAD ENVIADO:", JSON.stringify(ghostPayload, null, 2))
-  console.log("🎯 [GhostPay] URL:", "https://api.ghostspaysv2.com/functions/v1/transactions")
-  console.log("🔑 [GhostPay] Auth Token:", authString.substring(0, 10) + "...")
+  console.log("🚀 [GhostPay] Enviando requisição para API...")
   
   const response = await fetch("https://api.ghostspaysv2.com/functions/v1/transactions", {
     method: "POST",
@@ -121,8 +115,7 @@ async function generatePixGhostPay(body: any, baseUrl: string) {
     body: JSON.stringify(ghostPayload),
   })
 
-  console.log("📡 [GhostPay] RESPONSE STATUS:", response.status)
-  console.log("📊 [GhostPay] RESPONSE HEADERS:", Object.fromEntries(response.headers.entries()))
+  console.log("📡 [GhostPay] Status:", response.status)
 
   if (!response.ok) {
     const errorText = await response.text()
@@ -484,7 +477,8 @@ async function generatePixUmbrela(body: any, baseUrl: string) {
     throw new Error("UMBRELA_API_KEY não configurado no servidor")
   }
 
-  console.log("📤 [Umbrela] REQUEST BODY:", JSON.stringify(body, null, 2))
+  // Log simplificado
+  console.log("📤 [Umbrela] Gerando PIX - Valor: R$", (body.amount / 100).toFixed(2))
   console.log("🌐 [Umbrela] URL dinâmica detectada:", baseUrl)
 
   // Gerar email fake baseado no nome do usuário
@@ -593,9 +587,7 @@ async function generatePixUmbrela(body: any, baseUrl: string) {
     ip: "0.0.0.0"
   }
   
-  console.log("📦 [Umbrela] PAYLOAD ENVIADO:", JSON.stringify(umbrelaPayload, null, 2))
-  console.log("🎯 [Umbrela] URL:", "https://api-gateway.umbrellapag.com/api/user/transactions")
-  console.log("🔑 [Umbrela] API Key:", apiKey.substring(0, 10) + "...")
+  console.log("🚀 [Umbrela] Enviando requisição para API...")
   
   // Salvar debug em storage para Netlify
   const debugInfo = {
@@ -618,8 +610,7 @@ async function generatePixUmbrela(body: any, baseUrl: string) {
       body: JSON.stringify(umbrelaPayload),
     })
 
-    console.log("📡 [Umbrela] RESPONSE STATUS:", response.status)
-    console.log("📊 [Umbrela] RESPONSE HEADERS:", Object.fromEntries(response.headers.entries()))
+    console.log("📡 [Umbrela] Status:", response.status)
 
     if (!response.ok) {
       const errorText = await response.text()
