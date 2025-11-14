@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ShoppingBag, ArrowRight } from 'lucide-react'
+import { Shield, FileText, Info, ExternalLink } from 'lucide-react'
 import Script from 'next/script'
 
 interface WhitePageProps {
@@ -10,8 +10,11 @@ interface WhitePageProps {
 }
 
 export default function WhitePage({ onActivate, isBot = false }: WhitePageProps) {
-  const [isActivating, setIsActivating] = useState(false)
   const [showTestButton, setShowTestButton] = useState(false)
+  const [hasAccepted, setHasAccepted] = useState(false)
+  const [showBlog, setShowBlog] = useState(false)
+  const [blogContent, setBlogContent] = useState<string>('')
+  const [isLoadingBlog, setIsLoadingBlog] = useState(false)
   
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || ''
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true'
@@ -47,18 +50,13 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
     }
   }
 
-  const handleActivate = () => {
-    if (isBot) {
-      // Bot: mostrar loading infinito (não chamar onActivate)
-      setIsActivating(true)
-      return
-    }
+  const handleAccept = () => {
+    setHasAccepted(true)
     
-    // Usuário real: ativar normalmente
-    setIsActivating(true)
+    // Redirecionar para /blog
     setTimeout(() => {
-      onActivate()
-    }, 300)
+      window.location.href = '/blog'
+    }, 500)
   }
 
   return (
@@ -81,73 +79,113 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
         </>
       )}
       
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4" style={{
-        backgroundImage: `
-          radial-gradient(circle, rgba(156, 163, 175, 0.15) 1px, transparent 1px)
-        `,
-        backgroundSize: '24px 24px'
-      }}>
-      <div className="max-w-lg w-full">
-        {/* Card Central Simples */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 p-10 md:p-14 text-center">
-          {/* Ícone */}
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-            <ShoppingBag className="w-12 h-12 text-white" />
-          </div>
-          
-          {/* Título */}
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Créditos Digitais
-          </h1>
-          
-          {/* Descrição */}
-          <p className="text-lg text-gray-700 mb-8">
-            Aproveite descontos especiais em créditos para jogos
-          </p>
+      <div className="min-h-screen bg-white p-4">
+        <div className="max-w-4xl mx-auto">
+          {!hasAccepted ? (
+            /* Política de Privacidade */
+            <div className="py-8">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 md:p-12">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-xl mb-4">
+                    <Shield className="w-8 h-8 text-white" />
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-black mb-2">
+                    Política de Privacidade
+                  </h1>
+                  <p className="text-gray-600">
+                    Informações sobre nosso serviço
+                  </p>
+                </div>
 
-          {/* Botão Grande e Centralizado */}
-          <button
-            onClick={handleActivate}
-            disabled={isActivating}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-5 rounded-2xl font-bold text-xl hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl flex items-center justify-center gap-3"
-          >
-            {isActivating ? (
-              <>
-                <div className="animate-spin rounded-full h-6 w-6 border-3 border-white border-t-transparent"></div>
-                <span>Carregando...</span>
-              </>
-            ) : (
-              <>
-                <span>Acessar Loja</span>
-                <ArrowRight className="w-6 h-6" />
-              </>
-            )}
-          </button>
-          
-          {/* Info */}
-          <p className="text-gray-600 text-sm mt-6">
-            ⚡ Descontos exclusivos disponíveis
-          </p>
+                {/* Conteúdo */}
+                <div className="space-y-6 text-gray-700 mb-8">
+                  <div className="flex gap-3">
+                    <Info className="w-5 h-5 text-red-600 flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-bold text-black mb-2">Sobre Nosso Serviço</h3>
+                      <p className="text-sm leading-relaxed">
+                        Somos uma plataforma de indicação que conecta usuários interessados em conteúdo sobre jogos digitais. 
+                        Não realizamos vendas diretas, apenas facilitamos o acesso a informações e conteúdos relevantes.
+                      </p>
+                    </div>
+                  </div>
 
-          {/* Botão secreto de teste de conversão */}
+                  <div className="flex gap-3">
+                    <Shield className="w-5 h-5 text-red-600 flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-bold text-black mb-2">Proteção de Dados Pessoais (LGPD)</h3>
+                      <p className="text-sm leading-relaxed">
+                        Em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), informamos que 
+                        <strong className="text-black"> não coletamos dados pessoais identificáveis</strong> como nome, e-mail, 
+                        CPF, telefone ou endereço. Coletamos apenas dados anônimos de navegação (páginas visitadas, tempo de 
+                        permanência, dispositivo utilizado) para fins estatísticos e melhoria da experiência do usuário.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <FileText className="w-5 h-5 text-red-600 flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-bold text-black mb-2">Conformidade com Google Ads</h3>
+                      <p className="text-sm leading-relaxed">
+                        Este site está em conformidade com as políticas do Google Ads. Utilizamos cookies e tecnologias 
+                        semelhantes apenas para análise de tráfego e publicidade. Nenhum dado pessoal sensível é armazenado 
+                        ou compartilhado com terceiros. Ao continuar, você concorda com nossa política de privacidade.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <ExternalLink className="w-5 h-5 text-red-600 flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-bold text-black mb-2">Conteúdo e Redirecionamento</h3>
+                      <p className="text-sm leading-relaxed">
+                        Ao aceitar, você terá acesso a conteúdo informativo sobre Free Fire. 
+                        Todo o conteúdo é fornecido por parceiros oficiais e sites autorizados. Podemos redirecionar você 
+                        para sites de terceiros, onde suas próprias políticas de privacidade se aplicam.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botão de Aceitar */}
+                <button
+                  onClick={handleAccept}
+                  disabled={isLoadingBlog}
+                  className="w-full bg-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg disabled:opacity-50"
+                >
+                  {isLoadingBlog ? 'Carregando...' : 'Aceitar e Continuar'}
+                </button>
+
+                <p className="text-center text-xs text-gray-500 mt-4">
+                  Ao clicar em "Aceitar e Continuar", você concorda com nossos termos de uso
+                </p>
+              </div>
+            </div>
+          ) : (
+            /* Redirecionando */
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4 animate-pulse">
+                  <ExternalLink className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-gray-600">Redirecionando...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Botão de teste (oculto) */}
           {showTestButton && (
             <button
               onClick={handleTestConversion}
-              className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg"
+              className="mt-4 w-full bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold hover:bg-yellow-600 transition-colors"
             >
               🧪 Disparar Conversão de Teste (Google Ads)
             </button>
           )}
         </div>
-
-        {/* Disclaimer */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-500 text-xs">
-            Plataforma independente de eventos e promoções digitais
-          </p>
-        </div>
       </div>
-    </div>
     </>
   )
 }

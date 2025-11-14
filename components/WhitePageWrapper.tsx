@@ -25,7 +25,7 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     const currentPath = window.location.pathname
     
     // Rotas que NÃO precisam de whitepage
-    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout', '/termos', '/privacidade']
+    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout', '/termos', '/privacidade', '/blog']
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
     
     if (isPublicRoute) {
@@ -106,17 +106,10 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 bg-gray-100" style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(229, 231, 235, 0.8) 0%, transparent 50%),
-          radial-gradient(circle at 70% 20%, rgba(243, 244, 246, 0.6) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(229, 231, 235, 0.7) 0%, transparent 60%),
-          radial-gradient(circle at 30% 90%, rgba(243, 244, 246, 0.5) 0%, transparent 45%)
-        `
-      }}>
+      <div className="fixed inset-0 z-50 bg-white">
         <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center text-gray-800">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-red-500 border-t-transparent mb-4"></div>
+          <div className="text-center text-black">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent mb-4"></div>
             <p>Carregando...</p>
           </div>
         </div>
