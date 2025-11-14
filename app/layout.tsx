@@ -34,6 +34,15 @@ export default function RootLayout({
             style={{display: 'none', visibility: 'hidden'}}
           />
         </noscript>
+        
+        {/* UTMify Script */}
+        <script
+          src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+          data-utmify-prevent-xcod-sck
+          data-utmify-prevent-subids
+          async
+          defer
+        />
       </head>
       <body className="font-sans">
         {/* Google Tag - APENAS em / e /success */}
