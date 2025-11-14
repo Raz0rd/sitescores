@@ -40,9 +40,6 @@ export default function SucessoPage() {
   }, [])
 
   useEffect(() => {
-    // Só executar se estiver verificado
-    if (!isVerified) return
-    
     // Pegar parâmetros da URL
     const transactionId = searchParams.get('transactionId')
     const amount = searchParams.get('amount')
@@ -51,6 +48,7 @@ export default function SucessoPage() {
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
+      console.log('❌ [Google Ads] Parâmetros obrigatórios ausentes')
       return
     }
 
@@ -59,8 +57,11 @@ export default function SucessoPage() {
     const alreadySent = localStorage.getItem(storageKey)
     
     if (alreadySent || conversionFired) {
+      console.log('⚠️ [Google Ads] Conversão já foi enviada anteriormente')
       return
     }
+    
+    console.log('🎯 [Google Ads] Preparando para enviar conversão...')
 
     // Função para hashear email em SHA256
     const hashEmail = async (email: string): Promise<string> => {
@@ -101,19 +102,36 @@ export default function SucessoPage() {
             }
           }
 
+          console.log('🚀 [Google Ads] Disparando conversão:', {
+            send_to: conversionData.send_to,
+            value: conversionData.value,
+            currency: conversionData.currency,
+            transaction_id: conversionData.transaction_id,
+            has_email: !!email
+          })
+
           window.gtag('event', 'conversion', conversionData)
+          
+          console.log('✅ [Google Ads] Conversão disparada com sucesso!')
           
           // Salvar no localStorage para evitar duplicação
           const timestamp = new Date().toISOString()
           localStorage.setItem(storageKey, timestamp)
+        } else {
+          console.error('❌ [Google Ads] Variáveis de ambiente não configuradas:', {
+            googleAdsId,
+            conversionLabel
+          })
         }
+      } else {
+        console.error('❌ [Google Ads] window.gtag não está disponível')
       }
 
       setConversionFired(true)
     }
 
     sendConversion()
-  }, [searchParams, conversionFired, isVerified])
+  }, [searchParams, conversionFired])
 
   // Mostrar loading enquanto verifica
   if (isCheckingVerification) {
