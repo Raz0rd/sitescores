@@ -25,10 +25,26 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17731323187'}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17731323187'}');
+            `
+          }}
+        />
+        
         {/* Noscript no head para funcionar sem JavaScript */}
         <noscript>
           <iframe 
-            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002'}`}
+            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17731323187'}`}
             height="0" 
             width="0" 
             style={{display: 'none', visibility: 'hidden'}}
