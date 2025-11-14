@@ -311,7 +311,6 @@ export async function middleware(request: NextRequest) {
     object-src 'none';
     base-uri 'self';
     form-action 'self' https://www.mercadopago.com https://www.mercadopago.com.br;
-    frame-ancestors 'none';
     upgrade-insecure-requests;
   `.replace(/\s{2,}/g, ' ').trim()
   
