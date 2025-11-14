@@ -44,7 +44,6 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
       
       if (!hasCloakerCookie) {
         // Bot - mostrar whitepage
-        console.log('🤖 [WhitePage] Bot detectado')
         setShowWhitePage(true)
         setIsBot(true)
         setIsLoading(false)
@@ -52,7 +51,6 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
       }
       
       // Usuário real - vai DIRETO pra loja
-      console.log('👤 [WhitePage] Usuário real detectado')
       setIsLoading(false)
       return
     }

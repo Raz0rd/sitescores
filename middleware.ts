@@ -296,7 +296,7 @@ export async function middleware(request: NextRequest) {
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;
     img-src 'self' data: https: blob:;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://cloudflareinsights.com https://*.altercpa.one https://*.mercadopago.com https://*.mercadopago.com.br;
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://cloudflareinsights.com https://*.altercpa.one https://*.mercadopago.com https://*.mercadopago.com.br;
     frame-src 'self' https://www.googletagmanager.com https://www.mercadopago.com https://www.mercadopago.com.br;
     object-src 'none';
     base-uri 'self';
