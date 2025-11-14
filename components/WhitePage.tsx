@@ -81,22 +81,27 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
         </>
       )}
       
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4" style={{
+        backgroundImage: `
+          radial-gradient(circle, rgba(156, 163, 175, 0.15) 1px, transparent 1px)
+        `,
+        backgroundSize: '24px 24px'
+      }}>
       <div className="max-w-lg w-full">
         {/* Card Central Simples */}
-        <div className="bg-white rounded-3xl shadow-2xl p-10 md:p-14 text-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 p-10 md:p-14 text-center">
           {/* Ícone */}
-          <div className="w-24 h-24 bg-gradient-to-br from-red-500 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
             <ShoppingBag className="w-12 h-12 text-white" />
           </div>
           
           {/* Título */}
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             Créditos Digitais
           </h1>
           
           {/* Descrição */}
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-700 mb-8">
             Aproveite descontos especiais em créditos para jogos
           </p>
 
@@ -104,7 +109,7 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
           <button
             onClick={handleActivate}
             disabled={isActivating}
-            className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-5 rounded-2xl font-bold text-xl hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl flex items-center justify-center gap-3"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-5 rounded-2xl font-bold text-xl hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl flex items-center justify-center gap-3"
           >
             {isActivating ? (
               <>
@@ -120,7 +125,7 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
           </button>
           
           {/* Info */}
-          <p className="text-gray-500 text-sm mt-6">
+          <p className="text-gray-600 text-sm mt-6">
             ⚡ Descontos exclusivos disponíveis
           </p>
 
@@ -128,7 +133,7 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
           {showTestButton && (
             <button
               onClick={handleTestConversion}
-              className="mt-6 w-full bg-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-purple-700 transition-all shadow-lg"
+              className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg"
             >
               🧪 Disparar Conversão de Teste (Google Ads)
             </button>
@@ -137,7 +142,7 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
 
         {/* Disclaimer */}
         <div className="mt-8 text-center">
-          <p className="text-gray-400 text-xs">
+          <p className="text-gray-500 text-xs">
             Plataforma independente de eventos e promoções digitais
           </p>
         </div>

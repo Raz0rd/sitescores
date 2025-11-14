@@ -84,6 +84,7 @@ export default function CheckoutPage() {
   const [pixData, setPixData] = useState<{code: string, qrCode: string, transactionId: string} | null>(null)
   const [showPixInline, setShowPixInline] = useState(false)
   const [pixError, setPixError] = useState("")
+  const [emailError, setEmailError] = useState("")
   const [isCopied, setIsCopied] = useState(false)
   const [qrCodeImage, setQrCodeImage] = useState("")
   const [timeLeft, setTimeLeft] = useState(15 * 60) // 15 minutos em segundos
@@ -468,11 +469,12 @@ export default function CheckoutPage() {
     setIsProcessingPayment(true)
     setShowPixInline(true)
     setPixError("")
+    setEmailError("")
     
     // Validar email (mínimo 3 caracteres antes do @)
     const emailParts = email.split('@')
     if (!email || emailParts.length !== 2 || emailParts[0].length < 3) {
-      setPixError("Email inválido. Use um email válido com pelo menos 3 caracteres antes do @")
+      setEmailError("Email inválido")
       setIsProcessingPayment(false)
       return
     }
@@ -1204,16 +1206,24 @@ export default function CheckoutPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    setEmailError("") // Limpar erro ao digitar
+                  }}
                   disabled={isProcessingPayment}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 disabled:bg-gray-100 disabled:cursor-not-allowed ${
+                    emailError 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-red-500'
+                  }`}
                   placeholder="seuemail@gmail.com"
-                  minLength={7}
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Use um email válido (mínimo 3 caracteres antes do @)
-                </p>
+                {emailError && (
+                  <p className="text-xs text-red-600 mt-1">
+                    {emailError}
+                  </p>
+                )}
               </div>
             </div>
           ) : (
