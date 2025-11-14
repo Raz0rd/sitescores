@@ -469,6 +469,14 @@ export default function CheckoutPage() {
     setShowPixInline(true)
     setPixError("")
     
+    // Validar email (mínimo 3 caracteres antes do @)
+    const emailParts = email.split('@')
+    if (!email || emailParts.length !== 2 || emailParts[0].length < 3) {
+      setPixError("Email inválido. Use um email válido com pelo menos 3 caracteres antes do @")
+      setIsProcessingPayment(false)
+      return
+    }
+    
     // Garantir que o telefone foi gerado
     if (!phone) {
       const randomData = generateRandomUserData()
@@ -711,6 +719,9 @@ export default function CheckoutPage() {
               sucessoUrl.searchParams.set('transactionId', pixData.transactionId)
               sucessoUrl.searchParams.set('amount', totalValue.toString())
               sucessoUrl.searchParams.set('currency', 'BRL')
+              
+              // Email do cliente (será hasheado na página de sucesso)
+              if (email) sucessoUrl.searchParams.set('email', email)
               
               // Parâmetros de tracking principais
               if (gclid) sucessoUrl.searchParams.set('gclid', gclid)
@@ -1196,10 +1207,12 @@ export default function CheckoutPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isProcessingPayment}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                  placeholder="seu@email.com"
+                  placeholder="seuemail@gmail.com"
+                  minLength={7}
+                  required
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Você receberá o comprovante da recarga neste email
+                  Use um email válido (mínimo 3 caracteres antes do @)
                 </p>
               </div>
             </div>

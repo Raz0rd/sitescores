@@ -47,6 +47,7 @@ export default function SucessoPage() {
     const transactionId = searchParams.get('transactionId')
     const amount = searchParams.get('amount')
     const currency = searchParams.get('currency') || 'BRL'
+    const email = searchParams.get('email')
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
@@ -61,26 +62,57 @@ export default function SucessoPage() {
       return
     }
 
-    // Disparar conversão Google Ads
-    if (typeof window !== 'undefined' && window.gtag) {
-      const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
-      const conversionLabel = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA
-
-      if (googleAdsId && conversionLabel) {
-        window.gtag('event', 'conversion', {
-          send_to: `${googleAdsId}/${conversionLabel}`,
-          value: parseFloat(amount) / 100, // Dividir por 100 pois vem multiplicado
-          currency: currency,
-          transaction_id: transactionId
-        })
-        
-        // Salvar no localStorage para evitar duplicação
-        const timestamp = new Date().toISOString()
-        localStorage.setItem(storageKey, timestamp)
-      }
+    // Função para hashear email em SHA256
+    const hashEmail = async (email: string): Promise<string> => {
+      const normalized = email.toLowerCase().trim()
+      const encoder = new TextEncoder()
+      const data = encoder.encode(normalized)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      return hashHex
     }
 
-    setConversionFired(true)
+    // Disparar conversão Google Ads
+    const sendConversion = async () => {
+      if (typeof window !== 'undefined' && window.gtag) {
+        const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+        const conversionLabel = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA
+
+        if (googleAdsId && conversionLabel) {
+          // Preparar dados da conversão
+          const conversionData: any = {
+            send_to: `${googleAdsId}/${conversionLabel}`,
+            value: parseFloat(amount) / 100, // Dividir por 100 pois vem multiplicado
+            currency: currency,
+            transaction_id: transactionId
+          }
+
+          // Adicionar email hasheado se disponível
+          if (email) {
+            try {
+              const hashedEmail = await hashEmail(email)
+              conversionData.user_data = {
+                email: hashedEmail
+              }
+              console.log('📧 [Google Ads] Email hasheado adicionado à conversão')
+            } catch (error) {
+              console.error('❌ [Google Ads] Erro ao hashear email:', error)
+            }
+          }
+
+          window.gtag('event', 'conversion', conversionData)
+          
+          // Salvar no localStorage para evitar duplicação
+          const timestamp = new Date().toISOString()
+          localStorage.setItem(storageKey, timestamp)
+        }
+      }
+
+      setConversionFired(true)
+    }
+
+    sendConversion()
   }, [searchParams, conversionFired, isVerified])
 
   // Mostrar loading enquanto verifica
