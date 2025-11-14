@@ -437,23 +437,33 @@ export async function POST(request: NextRequest) {
     if (isWaitingPayment) {
       const storedOrder = orderStorageService.getOrder(transactionId)
       
-      // PROTEÇÃO: Verificar se já enviou pending para UTMify
-      const pendingKey = `${transactionId}-pending`
-      const lastPendingSent = processedConversions.get(pendingKey)
-      const now = Date.now()
-      
-      // Se já enviou nos últimos 5 minutos, ignorar
-      if (lastPendingSent && (now - lastPendingSent) < 5 * 60 * 1000) {
+      // PROTEÇÃO 1: Verificar no storage se já enviou
+      if (storedOrder && storedOrder.utmifySent) {
         return NextResponse.json({
           success: true,
           status: 'pending',
           message: 'Aguardando pagamento',
-          alreadySent: true
+          alreadySent: true,
+          note: 'UTMify PENDING já foi enviado anteriormente'
         })
       }
       
-      // Verificar também no storage
-      if (storedOrder && storedOrder.utmifySent) {
+      // PROTEÇÃO 2: Verificar cache em memória
+      const pendingKey = `${transactionId}-pending`
+      const lastPendingSent = processedConversions.get(pendingKey)
+      
+      if (lastPendingSent) {
+        return NextResponse.json({
+          success: true,
+          status: 'pending',
+          message: 'Aguardando pagamento',
+          alreadySent: true,
+          note: 'UTMify PENDING já foi enviado (cache)'
+        })
+      }
+      
+      // Se não tem no storage, não processar (evitar envios sem dados completos)
+      if (!storedOrder) {
         return NextResponse.json({
           success: true,
           status: 'pending',
@@ -469,6 +479,7 @@ export async function POST(request: NextRequest) {
       }
       
       // Marcar como enviado ANTES de enviar (evita race condition)
+      const now = Date.now()
       processedConversions.set(pendingKey, now)
       
       // Enviar para UTMify
