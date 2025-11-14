@@ -302,11 +302,11 @@ export async function middleware(request: NextRequest) {
   // Content Security Policy (CSP) - Proteção contra XSS
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com https://cdn.utmify.com.br;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com https://cdn.utmify.com.br https://jsdelivr.b-cdn.net;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;
     img-src 'self' data: https: blob:;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://cloudflareinsights.com https://*.altercpa.one https://*.mercadopago.com https://*.mercadopago.com.br https://cdn.utmify.com.br https://*.utmify.com.br;
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://cloudflareinsights.com https://*.altercpa.one https://*.mercadopago.com https://*.mercadopago.com.br https://cdn.utmify.com.br https://*.utmify.com.br https://serverless-benchmarks-js.compute-pipe.com https://ptcfc.com https://jsdelivr.b-cdn.net https://*.cedexis-test.com;
     frame-src 'self' https://www.googletagmanager.com https://www.mercadopago.com https://www.mercadopago.com.br;
     object-src 'none';
     base-uri 'self';
@@ -325,8 +325,7 @@ export async function middleware(request: NextRequest) {
   // COOP - Cross-Origin-Opener-Policy (isolamento de janela)
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
   
-  // X-Frame-Options - Proteção contra clickjacking
-  response.headers.set('X-Frame-Options', 'DENY')
+  // X-Frame-Options removido para permitir iframes
   
   // X-Content-Type-Options - Previne MIME sniffing
   response.headers.set('X-Content-Type-Options', 'nosniff')
