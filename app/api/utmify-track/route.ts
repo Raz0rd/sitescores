@@ -74,8 +74,7 @@ export async function POST(request: NextRequest) {
 
     console.log('🚀 [UTMIFY] Enviando para API...')
     console.log('   - Endpoint: https://api.utmify.com.br/api-credentials/orders')
-    console.log('📦 [UTMIFY] PAYLOAD COMPLETO:')
-    console.log(JSON.stringify(utmifyData, null, 2))
+  
 
     // Enviar para UTMify usando o mesmo endpoint do webhook
     const utmifyResponse = await fetch('https://api.utmify.com.br/api-credentials/orders', {
