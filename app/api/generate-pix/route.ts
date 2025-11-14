@@ -372,13 +372,25 @@ async function generatePixNitro(body: any, baseUrl: string) {
   const domainParts = hostname.replace('www.', '').split('.')
   const domainName = domainParts[0]
 
+  // Garantir email válido - fallback com 3 letras + 2 números aleatórios
+  const generateRandomEmail = () => {
+    const letters = 'abcdefghijklmnopqrstuvwxyz'
+    const randomLetters = Array.from({length: 3}, () => letters[Math.floor(Math.random() * letters.length)]).join('')
+    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(2, '0')
+    return `${randomLetters}${randomNumbers}@gmail.com`
+  }
+  
+  const customerEmail = body.customer.email || generateRandomEmail()
+  
+  console.log("📧 [Nitro] Email do cliente:", customerEmail)
+  
   const nitroPayload = {
     amount: body.amount,
     offer_hash: offerHash,
     payment_method: "pix",
     customer: {
       name: body.customer.name,
-      email: body.customer.email || `${body.customer.name.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
+      email: customerEmail,
       phone_number: body.customer.phone,
       document: body.customer.document.number || body.customer.document,
       street_name: "Nome da Rua",
