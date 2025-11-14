@@ -6,8 +6,8 @@ import { isBlockedBotIP } from '@/lib/bot-ips'
 const CLOAKER_CONFIG = {
   url: process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID 
     ? `https://www.altercpa.one/fltr/${process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID}`
-    : 'https://www.altercpa.one/fltr/969-8f076e082dbcb1d080037ec2c216d589-15523',
-  enabled: process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
+    : null,
+  enabled: process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true' && !!process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID
 }
 
 export async function middleware(request: NextRequest) {
@@ -30,9 +30,19 @@ export async function middleware(request: NextRequest) {
     'localhost:3004'
   ]
   
-  // Bloquear se não for um domínio autorizado (acesso por IP) 
-  if (allowedDomains.length > 2 && !allowedDomains.some(domain => requestHost.includes(domain))) {
+  // Bloquear se não for um domínio autorizado (acesso por IP)
+  // Normalizar domínios removendo hífens para comparação flexível
+  const normalizeHost = (host: string) => host.replace(/-/g, '').toLowerCase()
+  const normalizedRequestHost = normalizeHost(requestHost)
+  
+  const isAllowedDomain = allowedDomains.some(domain => {
+    const normalizedDomain = normalizeHost(domain)
+    return normalizedRequestHost.includes(normalizedDomain) || requestHost.includes(domain)
+  })
+  
+  if (allowedDomains.length > 2 && !isAllowedDomain) {
     console.log(`🚫 [Middleware] Bloqueado acesso por IP/domínio não autorizado: ${requestHost}`)
+    console.log(`   Domínios permitidos: ${allowedDomains.join(', ')}`)
     return new NextResponse('Forbidden', {
       status: 403,
       headers: {
@@ -62,8 +72,8 @@ export async function middleware(request: NextRequest) {
   // 🎯 CLOAKER - Detecção de Bot vs Usuário Real
   // ============================================
   
-  // Apenas na rota raiz (/) e se cloaker estiver ativado
-  if (pathname === '/' && CLOAKER_CONFIG.enabled) {
+  // Apenas na rota raiz (/) e se cloaker estiver ativado e configurado
+  if (pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url) {
     // Pular cloaker se já tem cookie de verificação (usuário já passou)
     const hasVerifiedCookie = request.cookies.get('cloaker_verified')?.value === 'true'
     
