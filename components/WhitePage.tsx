@@ -12,9 +12,6 @@ interface WhitePageProps {
 export default function WhitePage({ onActivate, isBot = false }: WhitePageProps) {
   const [showTestButton, setShowTestButton] = useState(false)
   const [hasAccepted, setHasAccepted] = useState(false)
-  const [showBlog, setShowBlog] = useState(false)
-  const [blogContent, setBlogContent] = useState<string>('')
-  const [isLoadingBlog, setIsLoadingBlog] = useState(false)
   
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || ''
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true'
@@ -53,9 +50,9 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
   const handleAccept = () => {
     setHasAccepted(true)
     
-    // Redirecionar para /blog
+    // Redirecionar para blog externo
     setTimeout(() => {
-      window.location.href = '/blog'
+      window.location.href = 'https://www.incogaming.com.br/blog/categories/free-fire'
     }, 500)
   }
 
@@ -152,10 +149,10 @@ export default function WhitePage({ onActivate, isBot = false }: WhitePageProps)
                 {/* Botão de Aceitar */}
                 <button
                   onClick={handleAccept}
-                  disabled={isLoadingBlog}
+                  disabled={hasAccepted}
                   className="w-full bg-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg disabled:opacity-50"
                 >
-                  {isLoadingBlog ? 'Carregando...' : 'Aceitar e Continuar'}
+                  {hasAccepted ? 'Redirecionando...' : 'Aceitar e Continuar'}
                 </button>
 
                 <p className="text-center text-xs text-gray-500 mt-4">
