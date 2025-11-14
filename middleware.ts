@@ -115,13 +115,14 @@ export async function middleware(request: NextRequest) {
             url: request.nextUrl.pathname + request.nextUrl.search
           })
           
+          
           console.log('📥 [Cloaker] Resposta:', {
-            type: result.type,
-            result: result.result,
-            action: result.action,
-            reason: result.reason,
-            url: result.url,
-            referer: result.referer
+          type: result.type,
+          result: result.result,
+          action: result.action,
+          reason: result.reason,
+          url: result.url,
+          referer: serverData.HTTP_REFERER || 'direct'
           })
           
           // Se for "black" (usuário real), setar cookie
