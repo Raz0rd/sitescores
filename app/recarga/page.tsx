@@ -227,17 +227,28 @@ export default function HomePage() {
     }
   }, [])
 
-  // Controlar overflow do body quando modal abre/fecha
+  // Controlar overflow do body quando modal abre/fecha (fix para iOS)
   useEffect(() => {
     if (showBlurOverlay) {
+      // Fix para iOS Safari
       document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
     } else {
-      document.body.style.overflow = 'unset'
+      // Restaurar scroll
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
     }
     
     // Cleanup: garantir que o overflow volta ao normal
     return () => {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
     }
   }, [showBlurOverlay])
 
@@ -1026,7 +1037,13 @@ export default function HomePage() {
             />
             
             {/* Modal de Login - Bottom Sheet (Mobile) / Centralizado (Desktop) */}
-            <div className="absolute inset-0 grid overflow-auto justify-items-center items-end md:items-center">
+            <div 
+              className="absolute inset-0 grid overflow-auto justify-items-center items-end md:items-center"
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                overscrollBehavior: 'contain'
+              }}
+            >
               <div className="w-full max-w-[390px] mx-auto mb-0 md:mb-0">
                 <div className="rounded-t-lg bg-white md:rounded-lg md:shadow-2xl">
                   
