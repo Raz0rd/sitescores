@@ -23,10 +23,17 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     // 🔒 ROTAS PÚBLICAS (sem whitepage)
     // ============================================
     const currentPath = window.location.pathname
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     
     // Rotas que NÃO precisam de whitepage
     const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout', '/termos', '/privacidade']
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
+    
+    // /recarga é liberada apenas no localhost (para testes)
+    if (currentPath.startsWith('/recarga') && isLocalhost) {
+      setIsLoading(false)
+      return
+    }
     
     if (isPublicRoute) {
       setIsLoading(false)

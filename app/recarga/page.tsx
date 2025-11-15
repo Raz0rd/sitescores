@@ -227,6 +227,20 @@ export default function HomePage() {
     }
   }, [])
 
+  // Controlar overflow do body quando modal abre/fecha
+  useEffect(() => {
+    if (showBlurOverlay) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    // Cleanup: garantir que o overflow volta ao normal
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [showBlurOverlay])
+
   // Verificar se usuário já está logado (via COOKIES, não localStorage)
   useEffect(() => {
     if (typeof window === 'undefined' || !mounted) return
@@ -787,6 +801,11 @@ export default function HomePage() {
       // Marcar que há uma compra pendente e abrir verificação
       setPendingPurchase(true)
       setShowBlurOverlay(true)
+      return
+    }
+
+    if (!selectedRechargeValue && !selectedSpecialOffer) {
+      alert('Por favor, selecione um valor de recarga ou oferta especial')
       return
     }
 

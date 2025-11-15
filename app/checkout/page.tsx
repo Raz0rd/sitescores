@@ -1456,8 +1456,8 @@ export default function CheckoutPage() {
 
       {/* Modal de Promoção */}
       {showPromoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-4" style={{ touchAction: 'auto' }}>
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col" style={{ touchAction: 'auto' }}>
             {/* Header */}
             <div className="p-6 pb-0">
               <h2 className="font-semibold text-center text-xl mb-2">Promoção Especial</h2>
