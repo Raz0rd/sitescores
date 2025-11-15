@@ -1415,13 +1415,19 @@ export default function CheckoutPage() {
                   {paymentStatus === 'pending' && timeLeft > 0 && (
                     <button
                       onClick={() => {
-                        setShowPixInline(false)
-                        setPixData(null)
-                        setIsCopied(false)
-                        setQrCodeImage("")
-                        setTimerActive(false)
-                        setTimeLeft(15 * 60)
-                        setPaymentStatus('pending')
+                        // Preservar parâmetros UTM ao voltar
+                        const currentParams = new URLSearchParams(window.location.search)
+                        const app = currentParams.get('app') || '100067'
+                        
+                        // Manter apenas parâmetros UTM
+                        const utmOnlyParams = new URLSearchParams()
+                        currentParams.forEach((value, key) => {
+                          if (key.startsWith('utm_') || key === 'app') {
+                            utmOnlyParams.set(key, value)
+                          }
+                        })
+                        
+                        router.push(`/recarga?${utmOnlyParams.toString()}`)
                       }}
                       className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md transition-colors px-4 py-2 h-11 text-base font-bold w-full bg-gray-500 text-white hover:bg-gray-600 mt-4"
                     >

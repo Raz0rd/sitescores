@@ -57,6 +57,13 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
         return
       }
       
+      // Usuário real com cookie - redirecionar para /recarga se estiver na raiz
+      if (currentPath === '/') {
+        const currentParams = window.location.search
+        window.location.href = `/recarga${currentParams}`
+        return
+      }
+      
       // Usuário real - vai DIRETO pra loja
       setIsLoading(false)
       return
