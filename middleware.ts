@@ -213,8 +213,27 @@ export async function middleware(request: NextRequest) {
     request.headers.has(header)
   )
   
-  // Verificar se é um bot/scraper conhecido
-  const isBot = blockedUserAgents.some(bot => 
+  // Lista de bots permitidos (Google, Bing, etc.)
+  const allowedBots = [
+    'googlebot',
+    'bingbot',
+    'slurp', // Yahoo
+    'duckduckbot',
+    'baiduspider',
+    'yandexbot',
+    'facebookexternalhit',
+    'twitterbot',
+    'whatsapp',
+    'telegrambot'
+  ]
+  
+  // Verificar se é um bot permitido
+  const isAllowedBot = allowedBots.some(bot => 
+    userAgent.toLowerCase().includes(bot.toLowerCase())
+  )
+  
+  // Verificar se é um bot/scraper conhecido (mas não permitido)
+  const isBot = !isAllowedBot && blockedUserAgents.some(bot => 
     userAgent.toLowerCase().includes(bot.toLowerCase())
   )
   
