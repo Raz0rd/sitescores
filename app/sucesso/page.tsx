@@ -275,7 +275,7 @@ export default function SucessoPage() {
 
           {/* Box de informação de entrega - DESTAQUE */}
           <div 
-            className="bg-red-50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border-2 border-red-200"
+            className="bg-blue-50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border-2 border-blue-200"
           >
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 text-left">
               <div className="flex-shrink-0">
