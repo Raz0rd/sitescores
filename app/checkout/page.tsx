@@ -387,7 +387,18 @@ export default function CheckoutPage() {
   }
 
   const handleBack = () => {
-    router.back()
+    // Preservar parâmetros UTM ao voltar
+    const currentParams = new URLSearchParams(window.location.search)
+    
+    // Manter apenas parâmetros UTM e app
+    const utmOnlyParams = new URLSearchParams()
+    currentParams.forEach((value, key) => {
+      if (key.startsWith('utm_') || key === 'app') {
+        utmOnlyParams.set(key, value)
+      }
+    })
+    
+    router.push(`/recarga?${utmOnlyParams.toString()}`)
   }
 
   const promoItems = [
