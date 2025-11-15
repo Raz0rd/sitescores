@@ -25,6 +25,15 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <head>
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ef4444" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Recarga FF" />
+        <link rel="apple-touch-icon" href="/images/icon.png" />
+        
         {/* Noscript no head para funcionar sem JavaScript */}
         <noscript>
           <iframe 

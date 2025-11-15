@@ -8,6 +8,13 @@ interface WhitePageWrapperProps {
 }
 
 export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
+  // EM DESENVOLVIMENTO, DESABILITAR COMPLETAMENTE O WRAPPER
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  
+  if (isDevelopment) {
+    return <>{children}</>
+  }
+
   const [showWhitePage, setShowWhitePage] = useState(false)
   const [isLoading, setIsLoading] = useState(true) // Começa como loading
   const [isBot, setIsBot] = useState(false)
@@ -20,20 +27,25 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     }
 
     // ============================================
+    // 🔒 LOCALHOST/REDE LOCAL - Liberar tudo
+    // ============================================
+    const hostname = window.location.hostname
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')
+    
+    // Em localhost, liberar TUDO
+    if (isLocalhost) {
+      setIsLoading(false)
+      return
+    }
+
+    // ============================================
     // 🔒 ROTAS PÚBLICAS (sem whitepage)
     // ============================================
     const currentPath = window.location.pathname
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     
     // Rotas que NÃO precisam de whitepage
     const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout', '/termos', '/privacidade']
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
-    
-    // /recarga é liberada apenas no localhost (para testes)
-    if (currentPath.startsWith('/recarga') && isLocalhost) {
-      setIsLoading(false)
-      return
-    }
     
     if (isPublicRoute) {
       setIsLoading(false)
@@ -87,7 +99,22 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   }, [])
 
   const handleWhitePageActivate = () => {
-    // Botão só fica em loading infinito - não faz nada
+    const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
+    
+    if (!cloakerEnabled) {
+      // Sem cloaker - permitir acesso direto
+      localStorage.setItem('whitepage_passed', 'true')
+      localStorage.setItem('whitepage_passed_at', Date.now().toString())
+      
+      // Redirecionar para /recarga preservando parâmetros
+      if (typeof window !== 'undefined') {
+        const currentParams = window.location.search
+        window.location.href = `/recarga${currentParams}`
+      }
+      return
+    }
+    
+    // Com cloaker - botão só fica em loading infinito
     // O cloaker no middleware é quem decide se libera ou não
   }
 

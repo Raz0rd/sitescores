@@ -28,7 +28,8 @@ export async function middleware(request: NextRequest) {
     'localhost:3002',
     'localhost:3003',
     'localhost:3004',
-    'localhost:3063'
+    'localhost:3063',
+    '192.168.88.254:3000'
   ]
   
   // Bloquear se não for um domínio autorizado (acesso por IP)
@@ -58,17 +59,23 @@ export async function middleware(request: NextRequest) {
   // ============================================
   
   if (pathname === '/recarga' || pathname === '/recarga/') {
-    // Verificar se está em localhost (desenvolvimento)
+    // Verificar se está em localhost ou rede local (desenvolvimento)
     const host = request.headers.get('host') || ''
-    const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1')
+    const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('192.168.')
     
-    // Em localhost, liberar acesso direto
+    // Em localhost/rede local, liberar acesso direto
     if (isLocalhost) {
-      console.log('✅ [Middleware] Acesso a /recarga permitido (localhost)')
+      console.log('✅ [Middleware] Acesso a /recarga permitido (localhost/rede local)')
       return NextResponse.next()
     }
     
-    // Em produção, verificar cookie do cloaker
+    // Se cloaker estiver desativado, liberar acesso
+    if (!CLOAKER_CONFIG.enabled) {
+      console.log('✅ [Middleware] Acesso a /recarga permitido (cloaker desativado)')
+      return NextResponse.next()
+    }
+    
+    // Em produção com cloaker ativo, verificar cookie
     const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
     
     if (!hasValidCookie) {

@@ -217,7 +217,6 @@ export default function HomePage() {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.get('showLogin') === 'true') {
-        console.log('🔓 [HOME] Abrindo modal de login (vindo do checkout)')
         setShowBlurOverlay(true)
         // Limpar parâmetro da URL
         urlParams.delete('showLogin')
@@ -227,28 +226,19 @@ export default function HomePage() {
     }
   }, [])
 
-  // Controlar overflow do body quando modal abre/fecha (fix para iOS)
+  // Controlar overflow do body quando modal abre/fecha
   useEffect(() => {
     if (showBlurOverlay) {
-      // Fix para iOS Safari
+      // Apenas bloquear scroll - SEM position fixed que causa bug no iOS
       document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
-      document.body.style.height = '100%'
     } else {
       // Restaurar scroll
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
     }
     
-    // Cleanup: garantir que o overflow volta ao normal
+    // Cleanup
     return () => {
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
     }
   }, [showBlurOverlay])
 
@@ -291,7 +281,6 @@ export default function HomePage() {
             if (userData.nickname) {
               setIsLoggedIn(true)
               setUserData(userData)
-              console.log('✅ [AUTO-LOGIN] Usuário logado com userData completo:', userData.nickname)
               
               // Carregar avatar se existir
               if (userData.headPic) {
@@ -374,10 +363,6 @@ export default function HomePage() {
     // Configurar cookie
     const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
     document.cookie = `quiz_completed=true; ${cookieOptions}`
-    
-    console.log('🍪 [QUIZ COMPLETED] Cookie definido')
-    console.log('   - quiz_completed=true')
-    console.log('🎁 [REWARD] Recompensa aceita - fechando quiz')
     
     // Fechar quiz e mostrar central de recargas
     setShowBlurOverlay(false)
@@ -466,7 +451,6 @@ export default function HomePage() {
       
       if (remaining > 0) {
         setDiscountTimeLeft(remaining)
-        console.log('⏱️ [TIMER] Timer recuperado:', remaining, 'segundos restantes')
       } else {
         localStorage.removeItem('discount_timer')
         setDiscountTimeLeft(0)
@@ -479,7 +463,6 @@ export default function HomePage() {
       }
       localStorage.setItem('discount_timer', JSON.stringify(timerData))
       setDiscountTimeLeft(15 * 60)
-      console.log('⏱️ [TIMER] Timer iniciado: 15 minutos')
     }
   }, [isLoggedIn])
 
@@ -704,8 +687,6 @@ export default function HomePage() {
         // Salvar cookie de quiz completado
         const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
         document.cookie = `quiz_completed=true; ${cookieOptions}`
-        
-        console.log('🍪 [LOGIN] Cookie definido - quiz completado')
       }, 1500)
       return
     }
@@ -732,8 +713,6 @@ export default function HomePage() {
             // Salvar cookie de quiz completado
             const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
             document.cookie = `quiz_completed=true; ${cookieOptions}`
-            
-            console.log('🍪 [LOGIN] Cookie definido - quiz completado')
           }
         } else {
           setIsLoggedIn(false)
@@ -1041,11 +1020,18 @@ export default function HomePage() {
               className="absolute inset-0 grid overflow-auto justify-items-center items-end md:items-center"
               style={{
                 WebkitOverflowScrolling: 'touch',
-                overscrollBehavior: 'contain'
-              }}
+                overscrollBehavior: 'contain',
+                minHeight: '-webkit-fill-available'
+              } as React.CSSProperties}
             >
               <div className="w-full max-w-[390px] mx-auto mb-0 md:mb-0">
-                <div className="rounded-t-lg bg-white md:rounded-lg md:shadow-2xl">
+                <div 
+                  className="rounded-t-lg bg-white md:rounded-lg md:shadow-2xl"
+                  style={{
+                    transform: 'translateZ(0)',
+                    WebkitTransform: 'translateZ(0)'
+                  }}
+                >
                   
                   {/* Header com imagem de fundo */}
                   <div className="relative h-[79px] text-white">

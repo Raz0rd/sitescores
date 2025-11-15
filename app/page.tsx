@@ -28,5 +28,6 @@ export default function HomePage() {
   }
   
   // Sem parâmetros: A WhitePage será mostrada pelo WhitePageWrapper no layout.tsx
+  // Em localhost, o WhitePageWrapper libera tudo automaticamente
   return null
 }
