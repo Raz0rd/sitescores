@@ -27,7 +27,8 @@ export async function middleware(request: NextRequest) {
     'localhost:3001',
     'localhost:3002',
     'localhost:3003',
-    'localhost:3004'
+    'localhost:3004',
+    'localhost:3063'
   ]
   
   // Bloquear se não for um domínio autorizado (acesso por IP)
