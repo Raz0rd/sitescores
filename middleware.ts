@@ -240,15 +240,20 @@ export async function middleware(request: NextRequest) {
   // Verificar se não tem user-agent (suspeito)
   const hasNoUserAgent = !userAgent || userAgent.trim() === ''
   
-  // Bloquear bots/scrapers (exceto em rotas públicas específicas)
+  // IMPORTANTE: Se cloaker está ativo, DEIXAR ELE DECIDIR sobre bots
+  // Apenas bloquear scrapers em rotas que não são gerenciadas pelo cloaker
   const publicPaths = ['/api/', '/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml']
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path))
   
-  // IMPORTANTE: Se cloaker está ativo na rota /, NÃO bloquear anti-scraping
-  // O cloaker vai decidir se é bot ou usuário
-  const skipAntiScraping = pathname === '/' && CLOAKER_CONFIG.enabled
+  // Rotas gerenciadas pelo cloaker - não bloquear bots aqui
+  // Apenas a raiz (/) passa pelo cloaker, /recarga só verifica cookie
+  const cloakerManagedPaths = ['/']
+  const isCloakerManaged = CLOAKER_CONFIG.enabled && cloakerManagedPaths.some(path => 
+    pathname === path
+  )
   
-  if (!isPublicPath && !skipAntiScraping && (isBot || hasNoUserAgent || hasSuspiciousHeaders)) {
+  // Apenas bloquear scrapers maliciosos em rotas não gerenciadas pelo cloaker
+  if (!isPublicPath && !isCloakerManaged && (isBot || hasSuspiciousHeaders)) {
     // Retornar página vazia ou erro 403
     return new NextResponse(
       JSON.stringify({ 
