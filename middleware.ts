@@ -58,6 +58,17 @@ export async function middleware(request: NextRequest) {
   // ============================================
   
   if (pathname === '/recarga' || pathname === '/recarga/') {
+    // Verificar se está em localhost (desenvolvimento)
+    const host = request.headers.get('host') || ''
+    const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1')
+    
+    // Em localhost, liberar acesso direto
+    if (isLocalhost) {
+      console.log('✅ [Middleware] Acesso a /recarga permitido (localhost)')
+      return NextResponse.next()
+    }
+    
+    // Em produção, verificar cookie do cloaker
     const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
     
     if (!hasValidCookie) {

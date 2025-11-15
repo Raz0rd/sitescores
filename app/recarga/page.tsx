@@ -133,7 +133,8 @@ export default function HomePage() {
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search)
       searchParams.set('app', appId)
-      router.push(`/?${searchParams.toString()}`)
+      // Mudar URL sem refresh
+      window.history.pushState({}, '', `/recarga?${searchParams.toString()}`)
     }
   }
 
@@ -226,69 +227,6 @@ export default function HomePage() {
     }
   }, [])
 
-  // Controlar exibição do quiz (SEM SUBDOMAIN - tudo no mesmo domínio)
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    
-    const hostname = window.location.hostname
-
-    
-    // Verificar cookies de validação
-    const getCookie = (name: string): string | null => {
-      const value = `; ${document.cookie}`
-      const parts = value.split(`; ${name}=`)
-      if (parts.length === 2) {
-        const cookieValue = parts.pop()?.split(';').shift()
-        return cookieValue || null
-      }
-      return null
-    }
-    
-    const quizCompleted = getCookie('quiz_completed') === 'true'
-    const refererVerified = getCookie('referer_verified') === 'true'
-    const userVerified = getCookie('user_verified') === 'true'
-    const hasVerificationCookies = quizCompleted || refererVerified || userVerified
-    
-    
-    // Se tem cookies de verificação, considerar como verificado
-    if (hasVerificationCookies) {
-      // Tentar pegar dados do localStorage (pode estar vazio no subdomain)
-      const storedUserData = localStorage.getItem('userData')
-      const user_data = localStorage.getItem('user_data')
-      const storedPlayerId = localStorage.getItem('userPlayerId')
-      
-  
-      
-      if (storedUserData || user_data) {
-        try {
-          const userData = JSON.parse(storedUserData || user_data || '{}')
-          
-          if (userData.nickname && userData.nickname !== 'LOGADO') {
-            setIsLoggedIn(true)
-            setUserData(userData)
-            console.log('✅ [AUTO-LOGIN] Usuário logado com userData completo:', userData.nickname)
-            
-            // Carregar avatar se existir
-            if (userData.headPic) {
-              fetchAvatarInfo(userData.headPic)
-            }
-          }
-        } catch (error) {
-          console.error('❌ [AUTO-LOGIN] Erro ao parsear userData:', error)
-        }
-      } else if (storedPlayerId) {
-        // Se não tem userData mas tem playerId, fazer login básico
-        setIsLoggedIn(true)
-        setPlayerId(storedPlayerId)
-        console.log('✅ [AUTO-LOGIN] Usuário logado com playerId:', storedPlayerId)
-      }
-    }
-    
-    // DESABILITADO: Não mostrar mais verificação inicial
-    // setShowBlurOverlay(!hasVerificationCookies)
-    setShowBlurOverlay(false) // Sempre começa sem verificação
-  }, [])
-
   // Verificar se usuário já está logado (via COOKIES, não localStorage)
   useEffect(() => {
     if (typeof window === 'undefined' || !mounted) return
@@ -325,7 +263,7 @@ export default function HomePage() {
           try {
             const userData = JSON.parse(storedUserData || user_data || '{}')
             
-            if (userData.nickname && userData.nickname !== 'LOGADO') {
+            if (userData.nickname) {
               setIsLoggedIn(true)
               setUserData(userData)
               console.log('✅ [AUTO-LOGIN] Usuário logado com userData completo:', userData.nickname)
@@ -438,23 +376,19 @@ export default function HomePage() {
     setShowCookieBanner(false)
   }
   
-  // Array de banners para carousel (4 banners diferentes)
+  // Array de banners para carousel
   const banners = [
     {
-      src: "/images/banner1.png",
+      src: "/images/banner.png",
       alt: "Banner 1 - Promoção Especial de Recarga"
     },
     {
-      src: "/images/banner2.png",
+      src: "/images/banner1.png",
       alt: "Banner 2 - Ofertas Exclusivas"
     },
     {
-      src: "/images/banner3.png",
+      src: "/images/banner2.png",
       alt: "Banner 3 - Recarga Segura e Rápida"
-    },
-    {
-      src: "/images/carouselHaikyu.jpg",
-      alt: "Banner Haikyu - Promoção Especial"
     }
   ]
 
@@ -759,10 +693,7 @@ export default function HomePage() {
 
       if (response.ok && data.success) {
         if (data.data && data.data.basicInfo && data.data.basicInfo.nickname) {
-          if (data.data.basicInfo.nickname === "LOGADO" || response.status !== 200) {
-            setIsLoggedIn(false)
-            setLoginError("Login inválido. Verifique seu ID de jogador.")
-          } else {
+          if (response.status === 200) {
             setIsLoggedIn(true)
             setUserData(data.data.basicInfo)
             setLoginError("")
@@ -928,29 +859,29 @@ export default function HomePage() {
 
           {/* Content */}
           <div className="p-4">
-            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 mb-4 border-2 border-red-200">
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-6 mb-4 border-2 border-red-200">
               <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-16 h-16 bg-red-400 rounded-full flex items-center justify-center mx-auto mb-3">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <h2 className="text-xl font-bold text-red-600 mb-2">Parabéns! 🎉</h2>
+                <h2 className="text-xl font-bold text-red-500 mb-2">Parabéns! 🎉</h2>
                 <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                  Você ganhou um <span className="font-bold text-red-600">cupom de 5% de desconto</span> para usar na sua recarga!
+                  Você ganhou um <span className="font-bold text-red-500">cupom de 5% de desconto</span> para usar na sua recarga!
                 </p>
                 
                 {/* Cupom */}
                 <div className="bg-white border-2 border-dashed border-red-300 rounded-lg p-4 mb-4">
                   <p className="text-xs text-gray-500 mb-1">Seu cupom de desconto:</p>
                   <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
-                    <span className="font-mono text-lg font-bold text-red-600">{generatedCoupon}</span>
+                    <span className="font-mono text-lg font-bold text-red-500">{generatedCoupon}</span>
                     <button
                       onClick={() => copyToClipboard(generatedCoupon)}
                       className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                         couponCopied 
                           ? "bg-green-500 text-white" 
-                          : "bg-red-500 hover:bg-red-600 text-white"
+                          : "bg-red-400 hover:bg-red-500 text-white"
                       }`}
                     >
                       {couponCopied ? "✓ Copiado" : "Copiar"}
@@ -1196,7 +1127,7 @@ export default function HomePage() {
         )}
 
         {/* Header Fixo */}
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 safe-area-top">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white safe-area-top">
           <div 
             className="mx-auto w-full max-w-[1366px] px-3 py-3 sm:py-4"
             style={isDesktop ? {
@@ -1212,7 +1143,6 @@ export default function HomePage() {
              
               <div className="flex items-center gap-2">
                 
-                <div className="w-px h-8 bg-gray-300"></div>
                 {isLoggedIn ? (
                   <div><h1 className="text-xs font-medium text-gray-800 max-md:max-w-24 md:text-base/5">Centro de</h1><p className="text-xs font-medium text-gray-800 max-md:max-w-25 md:text-base/5">Recarga Free Fire</p></div>
                 ) : (
@@ -1234,16 +1164,30 @@ export default function HomePage() {
         {/* Conteúdo Principal com padding para header e footer */}
         <div className="flex-1 pt-20 pb-32 overflow-y-auto">
 
-        {/* Hero Banner Fixo */}
-        <div className="md:bg-[#151515] md:py-2.5 lg:py-5">
+        {/* Hero Banner Carousel */}
+        <div>
           <div className="mx-auto w-full md:max-w-[1366px] md:px-8 lg:px-10">
-            <div className="relative overflow-hidden bg-[#151515]">
+            <div className="relative overflow-hidden md:rounded-xl">
               <img
-                src="/images/banner.jpeg"
-                alt="Banner Principal"
-                className="w-full h-auto md:rounded-xl"
-                style={{ maxHeight: '400px', objectFit: 'cover' }}
+                src={banners[currentBannerIndex].src}
+                alt={banners[currentBannerIndex].alt}
+                className="w-full h-auto transition-opacity duration-500"
               />
+              {/* Indicadores do carousel */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+                {banners.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentBannerIndex(index)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${
+                      index === currentBannerIndex 
+                        ? 'bg-white/70' 
+                        : 'bg-white/30 hover:bg-white/50'
+                    }`}
+                    aria-label={`Ir para banner ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -1670,39 +1614,7 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Banner de Desconto com Timer */}
-              {isLoggedIn && discountTimeLeft > 0 && (
-                <div className="mb-3 bg-gradient-to-r from-[#E4372E] to-[#C42E26] rounded-md p-3 shadow-lg border border-[#E4372E]/50">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg">🎉</span>
-                        <h3 className="text-white font-bold text-sm">Desconto Especial!</h3>
-                      </div>
-                      <p className="text-white/90 text-xs">
-                        <strong className="text-yellow-300">80% OFF</strong> na primeira recarga
-                      </p>
-                    </div>
-                    <div className="text-center bg-black/30 backdrop-blur-sm rounded-md px-3 py-1.5 border border-white/20">
-                      <div className="text-[10px] text-white/80 font-medium">Expira em</div>
-                      <div className="text-xl font-bold text-yellow-300 tabular-nums leading-tight">
-                        {formatDiscountTime(discountTimeLeft)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-2 text-center">
-                    <a 
-                      href="/termos-uso" 
-                      target="_blank"
-                      className="text-white/70 hover:text-white text-[10px] underline transition-colors"
-                    >
-                      Ver Termos de Uso
-                    </a>
-                  </div>
-                </div>
-              )}
-
-{!isLoggedIn && (
+              {!isLoggedIn && (
                 <form className="mb-3 sm:mb-4" onSubmit={handleLogin}>
                   <label
                     className="mb-2 flex items-center gap-1 text-[15px]/4 font-medium text-text-title"
