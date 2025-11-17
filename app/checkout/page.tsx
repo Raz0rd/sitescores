@@ -730,7 +730,7 @@ export default function CheckoutPage() {
               
               // Dados da compra
               sucessoUrl.searchParams.set('transactionId', pixData.transactionId)
-              sucessoUrl.searchParams.set('amount', totalValue.toString())
+              sucessoUrl.searchParams.set('amount', (totalValue * 100).toString())
               sucessoUrl.searchParams.set('currency', 'BRL')
               
               // Email do cliente (será hasheado na página de sucesso)
