@@ -376,10 +376,9 @@ export async function POST(request: NextRequest) {
           console.log(`   - GAD Source: ${utmifyData.trackingParameters.gad_source || 'N/A'}`)
           console.log(`   - GBraid: ${utmifyData.trackingParameters.gbraid || 'N/A'}`)
 
-          // Detectar URL base automaticamente
-          const protocol = request.headers.get('x-forwarded-proto') || 'https'
+          // Detectar URL base automaticamente (SEMPRE usar HTTPS em produção)
           const host = request.headers.get('host')
-          const baseUrl = `${protocol}://${host}`
+          const baseUrl = `https://${host}`
           
           // Usar a mesma API que usamos para pending
           const utmifyResponse = await fetch(`${baseUrl}/api/utmify-track`, {
@@ -486,9 +485,9 @@ export async function POST(request: NextRequest) {
       const utmifyEnabled = process.env.UTMIFY_ENABLED === 'true'
       if (utmifyEnabled) {
           try {
-            const protocol = request.headers.get('x-forwarded-proto') || 'https'
+            // SEMPRE usar HTTPS em produção
             const host = request.headers.get('host')
-            const baseUrl = `${protocol}://${host}`
+            const baseUrl = `https://${host}`
             
             // Recuperar UTMs do storage (já verificado acima que trackingParameters existe)
             const utmTrackingParams = storedOrder?.trackingParameters || trackingParameters

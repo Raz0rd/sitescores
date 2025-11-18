@@ -675,17 +675,21 @@ export default function CheckoutPage() {
   useEffect(() => {
     let statusInterval: NodeJS.Timeout
     
-    // Função para verificar se a página está visível
-    const isPageVisible = () => !document.hidden
+    if (pixData && paymentStatus === 'pending' && timerActive) {
+      console.log('[POLLING] ✅ Iniciando polling - Verificando a cada 10s')
+      console.log('[POLLING] Transaction ID:', pixData.transactionId)
+    } else {
+      console.log('[POLLING] ❌ Polling NÃO iniciado:', {
+        hasPixData: !!pixData,
+        paymentStatus,
+        timerActive
+      })
+    }
     
     if (pixData && paymentStatus === 'pending' && timerActive) {
+      
       statusInterval = setInterval(async () => {
-        // ⚠️ IMPORTANTE: Só fazer polling se a página estiver visível
-        if (!isPageVisible()) {
-          console.log('[POLLING] ⏸️ Página não visível - pausando polling')
-          return
-        }
-        
+        console.log('[POLLING] 🔄 Verificando status...')
         try {
           const response = await fetch('/api/check-transaction-status', {
             method: 'POST',
@@ -695,8 +699,10 @@ export default function CheckoutPage() {
           
           if (response.ok) {
             const data = await response.json()
+            console.log('[POLLING] 📊 Status recebido:', data.status)
             
             if (data.success && data.status === 'paid') {
+              console.log('[POLLING] 🎉 PAGAMENTO CONFIRMADO!')
               setPaymentStatus('paid')
               setTimerActive(false)
               
