@@ -15,6 +15,28 @@ const nextConfig = {
   // Sem redirects - www e sem www retornam 200 OK
   skipTrailingSlashRedirect: true,
 
+  // Security Headers - CSP DESABILITADO para não bloquear cloaker e tracking
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          // Referrer Policy - manter para não expor URLs
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Cross-Origin-Opener-Policy
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin-allow-popups',
+          },
+          // ❌ CSP DESABILITADO - Cloaker e UTMify precisam de liberdade total
+        ],
+      },
+    ]
+  },
+
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -55,34 +77,6 @@ const nextConfig = {
       '@radix-ui/react-switch',
       '@radix-ui/react-dialog'
     ],
-    instrumentationHook: true,
-  },
-
-  // Cabeçalhos de segurança (fallback - principal está no middleware)
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          },
-        ],
-      },
-    ]
   },
 }
 
