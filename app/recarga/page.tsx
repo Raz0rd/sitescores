@@ -1126,6 +1126,8 @@ export default function HomePage() {
                       <div className="flex">
                         <input
                           type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           className="w-full bg-gray-100 px-3 py-2.5 rounded-l-md border border-gray-200 border-r-0 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="Insira o ID de jogador aqui"
                           value={playerId}
@@ -1746,6 +1748,8 @@ export default function HomePage() {
                       name="player-id"
                       placeholder="Insira o ID de jogador aqui"
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       autoComplete="off"
                       value={playerId}
                       onChange={(e) => setPlayerId(e.target.value)}

@@ -285,6 +285,8 @@ export default function ArenaQuizModal({
                   <div className="flex mb-4">
                     <input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       className="w-full bg-black/50 border-2 border-red-600/50 px-4 py-3 rounded-l-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
                       placeholder="Insira seu ID aqui"
                       value={playerId}
