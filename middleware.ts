@@ -53,19 +53,30 @@ export async function middleware(request: NextRequest) {
   }
   
   // ============================================
-  // 🔒 PROTEÇÃO ROTA /recarga - Apenas com cookie do cloaker
+  // 🍪 VERIFICAÇÃO DE COOKIE - Prioridade máxima
   // ============================================
+  // Se o usuário já tem cookie válido, liberar acesso total a TODAS as rotas
+  const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
   
-  if (pathname === '/recarga' || pathname === '/recarga/') {
-    const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
-    
-    if (!hasValidCookie) {
-      console.log('🚫 [Middleware] Acesso a /recarga sem cookie do cloaker - redirecionando para /')
-      return NextResponse.redirect(new URL('/', request.url))
+  if (hasValidCookie) {
+    // Se tem cookie e está na rota raiz (/), redirecionar para /recarga
+    if (pathname === '/' || pathname === '') {
+      console.log('✅ [Middleware] Cookie válido - redirecionando / para /recarga')
+      return NextResponse.redirect(new URL('/recarga', request.url))
     }
     
-    console.log('✅ [Middleware] Acesso a /recarga permitido (cookie válido)')
+    // Para outras rotas, liberar acesso
+    console.log('✅ [Middleware] Cookie válido - acesso liberado para:', pathname)
     return NextResponse.next()
+  }
+  
+  // ============================================
+  // 🔒 PROTEÇÃO ROTA /recarga - Apenas com cookie do cloaker
+  // ============================================
+  // Se chegou aqui, NÃO tem cookie válido
+  if (pathname === '/recarga' || pathname === '/recarga/') {
+    console.log('🚫 [Middleware] Acesso a /recarga sem cookie do cloaker - redirecionando para /')
+    return NextResponse.redirect(new URL('/', request.url))
   }
   
   // ============================================
@@ -73,88 +84,101 @@ export async function middleware(request: NextRequest) {
   // ============================================
   
   // Apenas na rota raiz (/) e se cloaker estiver ativado e configurado
+  // Se chegou aqui, o usuário NÃO tem cookie (já verificamos acima)
   if (pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url) {
-    // Pular cloaker se já tem cookie de verificação (usuário já passou)
-    const hasVerifiedCookie = request.cookies.get('cloaker_verified')?.value === 'true'
+    // Verificar referer ANTES de chamar o cloaker
+    const referer = request.headers.get('referer') || ''
     
-    if (!hasVerifiedCookie) {
-      try {
-        // Preparar dados do servidor para o cloaker
-        const serverData = {
-          HTTP_HOST: request.headers.get('host') || '',
-          HTTP_USER_AGENT: request.headers.get('user-agent') || '',
-          HTTP_ACCEPT: request.headers.get('accept') || '',
-          HTTP_ACCEPT_LANGUAGE: request.headers.get('accept-language') || '',
-          HTTP_ACCEPT_ENCODING: request.headers.get('accept-encoding') || '',
-          HTTP_REFERER: request.headers.get('referer') || '',
-          HTTP_X_FORWARDED_FOR: request.headers.get('x-forwarded-for') || '',
-          HTTP_CF_CONNECTING_IP: request.headers.get('cf-connecting-ip') || '',
-          REMOTE_ADDR: request.ip || request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '',
-          REQUEST_URI: request.nextUrl.pathname + request.nextUrl.search,
-          REQUEST_METHOD: request.method,
-          SERVER_PROTOCOL: 'HTTP/1.1',
-          QUERY_STRING: request.nextUrl.search.substring(1),
-          HTTP_COOKIE: request.headers.get('cookie') || '',
-        }
-        
-        // Fazer requisição para o cloaker
-        const formBody = new URLSearchParams(serverData as any).toString()
-        
-        const cloakerResponse = await fetch(CLOAKER_CONFIG.url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:135.0) Gecko/20100101 Firefox/135.0',
-            'Accept-Encoding': 'gzip, deflate, br'
-          },
-          body: formBody
-        })
-
-        const responseText = await cloakerResponse.text()
-        
-        if (responseText && responseText.trim()) {
-          const result = JSON.parse(responseText)
-          
-          // Log detalhado da verificação
-          const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.ip || 'unknown'
-          console.log('🔍 [Cloaker] Verificando acesso:', {
-            ip: clientIp,
-            userAgent: request.headers.get('user-agent') || '',
-            referer: request.headers.get('referer') || '',
-            queryString: request.nextUrl.search.substring(1),
-            url: request.nextUrl.pathname + request.nextUrl.search
-          })
-          
-          
-          console.log('📥 [Cloaker] Resposta:', {
-          type: result.type,
-          result: result.result,
-          action: result.action,
-          reason: result.reason,
-          url: result.url,
-          referer: serverData.HTTP_REFERER || 'direct'
-          })
-          
-          // Se for "black" (usuário real), setar cookie
-          if (result.type === 'black') {
-            console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
-            const response = NextResponse.next()
-            response.cookies.set('cloaker_verified', 'true', {
-              httpOnly: false, // Permitir leitura no client-side
-              secure: true,
-              sameSite: 'lax',
-              maxAge: 60 * 60 * 24 // 24 horas
-            })
-            return response
-          }
-          
-          // Se for "white" (bot), deixar passar sem cookie
-          console.log('🤖 [Cloaker] BOT detectado - mostrando whitepage')
-        }
-      } catch (error) {
-        console.error('⚠️ [Cloaker] Erro:', error)
-        // Em caso de erro, deixar passar (fail-safe)
+    // Se NÃO tiver referer, mostrar whitepage (não chama cloaker)
+    if (!referer) {
+      console.log('🚫 [Cloaker] Sem referer - mostrando whitepage')
+      return NextResponse.next()
+    }
+    
+    // Se tiver referer mas NÃO for exatamente https://www.google.com/, mostrar whitepage
+    if (referer !== 'https://www.google.com/') {
+      console.log('🚫 [Cloaker] Referer inválido:', referer, '- mostrando whitepage')
+      return NextResponse.next()
+    }
+    
+    // Se chegou aqui, referer é válido (https://www.google.com/) - chamar cloaker
+    console.log('✅ [Cloaker] Referer válido - verificando com cloaker')
+    try {
+      // Preparar dados do servidor para o cloaker
+      const serverData = {
+        HTTP_HOST: request.headers.get('host') || '',
+        HTTP_USER_AGENT: request.headers.get('user-agent') || '',
+        HTTP_ACCEPT: request.headers.get('accept') || '',
+        HTTP_ACCEPT_LANGUAGE: request.headers.get('accept-language') || '',
+        HTTP_ACCEPT_ENCODING: request.headers.get('accept-encoding') || '',
+        HTTP_REFERER: request.headers.get('referer') || '',
+        HTTP_X_FORWARDED_FOR: request.headers.get('x-forwarded-for') || '',
+        HTTP_CF_CONNECTING_IP: request.headers.get('cf-connecting-ip') || '',
+        REMOTE_ADDR: request.ip || request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '',
+        REQUEST_URI: request.nextUrl.pathname + request.nextUrl.search,
+        REQUEST_METHOD: request.method,
+        SERVER_PROTOCOL: 'HTTP/1.1',
+        QUERY_STRING: request.nextUrl.search.substring(1),
+        HTTP_COOKIE: request.headers.get('cookie') || '',
       }
+      
+      // Fazer requisição para o cloaker
+      const formBody = new URLSearchParams(serverData as any).toString()
+      
+      const cloakerResponse = await fetch(CLOAKER_CONFIG.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:135.0) Gecko/20100101 Firefox/135.0',
+          'Accept-Encoding': 'gzip, deflate, br'
+        },
+        body: formBody
+      })
+
+      const responseText = await cloakerResponse.text()
+      
+      if (responseText && responseText.trim()) {
+        const result = JSON.parse(responseText)
+        
+        // Log detalhado da verificação
+        const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.ip || 'unknown'
+        console.log('🔍 [Cloaker] Verificando acesso:', {
+          ip: clientIp,
+          userAgent: request.headers.get('user-agent') || '',
+          referer: request.headers.get('referer') || '',
+          queryString: request.nextUrl.search.substring(1),
+          url: request.nextUrl.pathname + request.nextUrl.search
+        })
+        
+        
+        console.log('📥 [Cloaker] Resposta:', {
+        type: result.type,
+        result: result.result,
+        action: result.action,
+        reason: result.reason,
+        url: result.url,
+        referer: serverData.HTTP_REFERER || 'direct'
+        })
+        
+        // Se for "black" (usuário real), setar cookie
+        if (result.type === 'black') {
+          console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
+          const response = NextResponse.next()
+          response.cookies.set('cloaker_verified', 'true', {
+            httpOnly: false, // Permitir leitura no client-side
+            secure: true,
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 // 24 horas
+          })
+          return response
+        }
+        
+        // Se for "white" (bot), deixar passar sem cookie
+        console.log('🤖 [Cloaker] BOT detectado - mostrando whitepage')
+      }
+    } catch (error) {
+      console.error('⚠️ [Cloaker] Erro:', error)
+      // Em caso de erro, deixar passar (fail-safe)
     }
   }
   
