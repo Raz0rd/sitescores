@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     // URL e chave escondidas no servidor
-    const API_URL = 'https://api.recargatop.sbs/api/data/br'
+    const API_URL = 'https://razord.vercel.app/api/data/br'
     const API_KEY = 'razord'
     
     // Fazer requisição para a API externa
