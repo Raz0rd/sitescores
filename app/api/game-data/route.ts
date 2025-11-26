@@ -46,6 +46,15 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json()
     
+    // Log colorido no console do servidor
+    if (data.basicInfo && data.basicInfo.nickname) {
+      console.log('\x1b[36m%s\x1b[0m', '='.repeat(50))
+      console.log('\x1b[32m✓ LOGIN REALIZADO\x1b[0m')
+      console.log('\x1b[33mNickname:\x1b[0m \x1b[1m\x1b[35m%s\x1b[0m', data.basicInfo.nickname)
+      console.log('\x1b[33mID:\x1b[0m \x1b[1m\x1b[34m%s\x1b[0m', uid)
+      console.log('\x1b[36m%s\x1b[0m', '='.repeat(50))
+    }
+    
     // Retornar apenas os dados necessários (filtrar se necessário)
     return NextResponse.json({ 
       success: true, 
