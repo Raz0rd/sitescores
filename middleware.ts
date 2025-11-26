@@ -87,7 +87,7 @@ export async function middleware(request: NextRequest) {
   // 🍪 VERIFICAÇÃO DE COOKIE - Prioridade máxima
   // ============================================
   // Se o usuário já tem cookie válido, liberar acesso total a TODAS as rotas
-  const hasValidCookie = request.cookies.get('cloaker_verified')?.value === 'true'
+  const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
   
   if (hasValidCookie) {
     // Se tem cookie e está na rota raiz (/), redirecionar para /recarga
@@ -96,8 +96,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/recarga', request.url))
     }
     
-    // Para outras rotas, liberar acesso
-    console.log('✅ [Middleware] Cookie válido - acesso liberado para:', pathname)
+    // Para outras rotas, liberar acesso (sem log de assets)
+    const isAsset = pathname.startsWith('/images/') || 
+                    pathname.startsWith('/fonts/') || 
+                    pathname.startsWith('/_next/')
+    
+    if (!isAsset) {
+      console.log('✅ [Middleware] Cookie válido - acesso liberado para:', pathname)
+    }
+    
     return NextResponse.next()
   }
   
@@ -195,7 +202,7 @@ export async function middleware(request: NextRequest) {
         if (result.type === 'black') {
           console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
           const response = NextResponse.next()
-          response.cookies.set('cloaker_verified', 'true', {
+          response.cookies.set('_x9f2w8k5', 'true', {
             httpOnly: false, // Permitir leitura no client-side
             secure: true,
             sameSite: 'lax',

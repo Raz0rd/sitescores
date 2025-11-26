@@ -410,10 +410,12 @@ export default function HomePage() {
     
     // Configurar cookie
     const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
-    document.cookie = `quiz_completed=true; ${cookieOptions}`
+    document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
+    document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
     
-    console.log('🍪 [QUIZ COMPLETED] Cookie definido')
-    console.log('   - quiz_completed=true')
+    console.log('🍪 [SESSION] Cookies definidos')
+    console.log('   - _s7k2m9p4=true')
+    console.log('   - _x9f2w8k5=true')
     console.log('🎁 [REWARD] Recompensa aceita - fechando quiz')
     
     // Fechar quiz e mostrar central de recargas
@@ -742,11 +744,14 @@ export default function HomePage() {
         setShowIllusoryLoading(false)
         setShowBlurOverlay(false) // Fecha o modal após login
         
-        // Salvar cookie de quiz completado
+        // Salvar cookie de sessão
         const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
-        document.cookie = `quiz_completed=true; ${cookieOptions}`
+        document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
+        document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
         
-        console.log('🍪 [LOGIN] Cookie definido - quiz completado')
+        console.log('🍪 [LOGIN] Cookies definidos')
+        console.log('   - _s7k2m9p4=true')
+        console.log('   - _x9f2w8k5=true')
       }, 1500)
       return
     }
@@ -773,11 +778,14 @@ export default function HomePage() {
               await fetchAvatarInfo(data.data.basicInfo.headPic)
             }
             
-            // Salvar cookie de quiz completado
+            // Salvar cookie de sessão
             const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
-            document.cookie = `quiz_completed=true; ${cookieOptions}`
+            document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
+            document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
             
-            console.log('🍪 [LOGIN] Cookie definido - quiz completado')
+            console.log('🍪 [LOGIN] Cookies definidos')
+            console.log('   - _s7k2m9p4=true')
+            console.log('   - _x9f2w8k5=true')
           }
         } else {
           setIsLoggedIn(false)
