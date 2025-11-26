@@ -14,6 +14,37 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
   // ============================================
+  // 🚫 BLOQUEIO DE IPs ESPECÍFICOS - PRIORIDADE MÁXIMA
+  // ============================================
+  
+  const clientIp = request.headers.get('cf-connecting-ip') || 
+                   request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
+                   request.headers.get('x-real-ip') || 
+                   request.ip || 
+                   'unknown'
+  
+  // Lista de ranges de IPs bloqueados permanentemente
+  const blockedIPRanges = [
+    /^2001:4860:.*/  // Bloqueia todo o range 2001:4860:*
+  ]
+  
+  // Verificar se o IP está em algum range bloqueado
+  const isBlockedIP = blockedIPRanges.some(range => range.test(clientIp))
+  
+  if (isBlockedIP) {
+    console.log(`🚫 [BLOQUEIO] IP bloqueado tentou acessar: ${clientIp} - Rota: ${pathname}`)
+    
+    // Se tentar acessar qualquer rota que não seja a raiz, redirecionar para /
+    if (pathname !== '/' && !pathname.startsWith('/_next') && !pathname.startsWith('/api')) {
+      console.log(`🚫 [BLOQUEIO] Redirecionando IP bloqueado de ${pathname} para /`)
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+    
+    // Se estiver na raiz, mostrar a whitepage (página inicial)
+    return NextResponse.next()
+  }
+  
+  // ============================================
   // 🛡️ PROTEÇÃO CONTRA ACESSO POR IP
   // ============================================
   
