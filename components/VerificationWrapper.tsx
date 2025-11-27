@@ -19,6 +19,18 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     }
 
     // ============================================
+    // 🔓 LOCALHOST - Desabilitar whitepage em desenvolvimento
+    // ============================================
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    
+    if (isLocalhost) {
+      console.log('🏠 [VerificationWrapper] LOCALHOST detectado - desabilitando whitepage')
+      setShowWhitePage(false)
+      setIsLoading(false)
+      return
+    }
+
+    // ============================================
     // 🔒 ROTAS PÚBLICAS (sem whitepage)
     // ============================================
     const currentPath = window.location.pathname

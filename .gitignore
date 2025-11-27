@@ -58,6 +58,3 @@ vercel.json
 # Arquivos HTML temporários
 /*.html
 
-# Scripts de preparação
-prepare-github.js
-quiz-script-updated.js

@@ -25,20 +25,31 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <head>
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17731323187'}`}
+        {/* DNS Prefetch para origens externas */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
+        <link rel="dns-prefetch" href="https://api.ipify.org" />
+        <link rel="dns-prefetch" href="https://api6.ipify.org" />
+        <link rel="dns-prefetch" href="https://tracking.utmify.com.br" />
+        
+        {/* Preconnect apenas para as mais críticas */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        
+        {/* Preload de fontes críticas */}
+        <link 
+          rel="preload" 
+          href="/fonts/Metropolis-Regular-e920e6b0.woff2" 
+          as="font" 
+          type="font/woff2" 
+          crossOrigin="anonymous"
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17731323187'}');
-            `
-          }}
+        <link 
+          rel="preload" 
+          href="/fonts/Metropolis-Bold-9a712a2c.woff2" 
+          as="font" 
+          type="font/woff2" 
+          crossOrigin="anonymous"
         />
         
         {/* Noscript no head para funcionar sem JavaScript */}
@@ -54,27 +65,6 @@ export default function RootLayout({
       <body className="font-sans">
         {/* Google Tag - APENAS em / e /success */}
         <GoogleTagConditional />
-
-        {/* Script blocking - executa IMEDIATAMENTE antes de tudo */}
-        <Script
-          id="js-enabled"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                document.documentElement.classList.add('js-enabled');
-              })();
-            `
-          }}
-        />
-        
-        {/* Loading inline - aparece ANTES de qualquer JS */}
-        <div className="js-loading">
-          <div style={{position: 'relative', width: '48px', height: '48px'}}>
-            <div style={{position: 'absolute', inset: 0, border: '4px solid #1f2937', borderRadius: '9999px'}}></div>
-            <div className="spinner-fast" style={{position: 'absolute', inset: 0, border: '4px solid transparent', borderTopColor: '#dc2626', borderRadius: '9999px'}}></div>
-          </div>
-        </div>
 
         <HeadManager />
         <DynamicTheme />

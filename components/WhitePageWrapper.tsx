@@ -9,12 +9,23 @@ interface WhitePageWrapperProps {
 
 export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
   const [showWhitePage, setShowWhitePage] = useState(false)
-  const [isLoading, setIsLoading] = useState(true) // Começa como loading
+  const [isLoading, setIsLoading] = useState(true)
   const [isBot, setIsBot] = useState(false)
 
   useEffect(() => {
     // Garantir que está no client-side
     if (typeof window === 'undefined') {
+      setIsLoading(false)
+      return
+    }
+
+    // ============================================
+    // 🔓 LOCALHOST - Desabilitar whitepage em desenvolvimento
+    // ============================================
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    
+    if (isLocalhost) {
+      setShowWhitePage(false)
       setIsLoading(false)
       return
     }
@@ -40,7 +51,7 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     
     if (cloakerEnabled) {
       // Verificar se tem cookie do cloaker
-      const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
+      const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
       
       if (!hasCloakerCookie) {
         // Bot - mostrar whitepage
@@ -80,17 +91,15 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     
     if (cloakerEnabled) {
       // Verificar se tem cookie do cloaker
-      const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
+      const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
       
       if (!hasCloakerCookie) {
         // BOT - não fazer nada, botão já está em loading infinito
-        console.log('🤖 [WhitePage] Bot tentou clicar - bloqueado silenciosamente')
         return
       }
     }
     
     // USUÁRIO REAL - permitir acesso
-    console.log('👤 [WhitePage] Usuário real liberado')
     localStorage.setItem('whitepage_passed', 'true')
     localStorage.setItem('whitepage_passed_at', Date.now().toString())
     

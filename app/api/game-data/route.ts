@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     
     // Fazer requisição para a API externa
     const response = await fetch(`${API_URL}?uid=${uid}&key=${API_KEY}`, {
-      method: 'GET',
+      method: 'GET',  
       headers: {
         'User-Agent': 'RecargaJogo/1.0',
         'Accept': 'application/json'

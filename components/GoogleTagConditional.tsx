@@ -64,11 +64,12 @@ export default function GoogleTagConditional() {
     <>
       <script
         id="google-gtag-ssr"
-        async
+        defer
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
       />
       <script
         id="google-gtag-init-ssr"
+        defer
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

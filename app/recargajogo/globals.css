@@ -1,23 +1,3 @@
-/* Loading - DEVE carregar ANTES de tudo */
-body {
-  margin: 0;
-  padding: 0;
-}
-
-.spinner-fast {
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -54,6 +34,105 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Forçar html e body a terem background branco e texto escuro */
+  html:not(.dark),
+  html:not(.dark) body {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+  }
+}
+
+/* Forçar bg-white a ser sempre branco quando não estiver no dark mode */
+html:not(.dark) .bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Forçar todos os backgrounds a respeitarem as classes Tailwind */
+html:not(.dark) [class*="bg-gray-"],
+html:not(.dark) [class*="bg-slate-"],
+html:not(.dark) [class*="bg-red-"],
+html:not(.dark) [class*="bg-blue-"] {
+  background-color: inherit;
+}
+
+/* Forçar textos escuros em todos os elementos de texto (exceto dentro de bg-destructive) */
+html:not(.dark) p:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) span:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) div:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h1:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h2:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h3:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h4:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h5:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) h6:not([class*="text-"]):not(.bg-destructive *),
+html:not(.dark) label:not([class*="text-"]):not(.bg-destructive *) {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Botões vermelhos devem ter texto branco */
+html:not(.dark) button[class*="bg-red-"],
+html:not(.dark) button[class*="bg-[#"],
+html:not(.dark) .bg-red-500,
+html:not(.dark) .bg-red-600,
+html:not(.dark) [style*="background-color: #E4"],
+html:not(.dark) [style*="background-color: #D8"],
+html:not(.dark) [style*="background: #E4"],
+html:not(.dark) [style*="background: #D8"] {
+  color: white !important;
+}
+
+/* Forçar backgrounds vermelhos a serem vermelhos */
+html:not(.dark) .bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+html:not(.dark) .bg-red-600 {
+  background-color: #dc2626 !important;
+}
+
+/* Botões com bg-white devem ter texto escuro */
+html:not(.dark) button.bg-white,
+html:not(.dark) button.bg-white * {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Forçar textos específicos a serem BRANCOS */
+html:not(.dark) [class*="badge"],
+html:not(.dark) [class*="tag"],
+html:not(.dark) [class*="label"],
+html:not(.dark) .text-white {
+  color: white !important;
+}
+
+/* Textos específicos do modal de cookie devem ser brancos */
+html:not(.dark) .bg-black\/75 .text-base,
+html:not(.dark) .bg-black\/75 a {
+  color: white !important;
+}
+
+/* Badge/tag de promo deve ter texto branco */
+html:not(.dark) .bg-destructive,
+html:not(.dark) .bg-destructive *,
+html:not(.dark) .bg-destructive span,
+html:not(.dark) div.bg-destructive {
+  color: white !important;
+}
+
+/* Footer deve ter textos escuros (sobrescrever regra anterior) */
+html:not(.dark) footer,
+html:not(.dark) footer * {
+  color: inherit !important;
+}
+
+/* Esconder scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 :root {
@@ -77,6 +156,11 @@ body {
   --input: 214.3 31.8% 91.4%;
   --ring: 222.2 84% 4.9%;
   --radius: 0.5rem;
+  
+  /* Variáveis customizadas - valores claros */
+  --bg-base: 255 255 255; /* Branco */
+  --text-primary: 17 24 39; /* Cinza escuro */
+  --text-title: 17 24 39; /* Cinza escuro */
 }
 
 .dark {
@@ -182,43 +266,5 @@ body {
       padding-left: 9rem !important;
       padding-right: 11rem !important;
     }
-  }
-  
-  /* Form input PromoFF style */
-  .form-input {
-    border: 1px solid hsl(var(--line));
-    border-radius: 0.375rem;
-    padding: 0.875rem 1rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: hsl(var(--text-title));
-    background-color: #353542;
-    transition: all 0.2s;
-  }
-  
-  .form-input:focus {
-    outline: none;
-    border-color: hsl(var(--box-border-focus));
-    box-shadow: 0 0 0 1px hsl(var(--box-border-focus));
-  }
-  
-  .form-input::placeholder {
-    color: hsl(var(--text-secondary));
-  }
-
-  /* Animação fade-in-up para verificação */
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 0.6s ease-out;
   }
 }
