@@ -14,23 +14,14 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const referer = request.headers.get('referer') || ''
   
-  // Debug headers (visíveis no browser)
-  const debugHeaders = {
-    'X-Middleware-Executed': 'true',
-    'X-Middleware-Path': pathname,
-    'X-Middleware-Referer': referer || 'none',
-    'X-Cloaker-Enabled': CLOAKER_CONFIG.enabled ? 'true' : 'false',
-    'X-Cloaker-URL': CLOAKER_CONFIG.url || 'none'
-  }
-  
   // ============================================
   // 🌐 ROTAS PÚBLICAS - Acesso livre sem verificações
   // ============================================
   const publicRoutes = [
     '/politica-privacidade',
     '/termos-uso',
-    '/quem-somos',
-    '/' // Whitepage
+    '/quem-somos'
+    // Nota: '/' NÃO está aqui pois precisa passar pelo cloaker
   ]
   
   // Rota /sucesso ou /success requer parâmetros
@@ -46,12 +37,7 @@ export async function middleware(request: NextRequest) {
   
   // Liberar rotas públicas
   if (publicRoutes.includes(pathname)) {
-    const response = NextResponse.next()
-    Object.entries(debugHeaders).forEach(([key, value]) => {
-      response.headers.set(key, value)
-    })
-    response.headers.set('X-Middleware-Route', 'public')
-    return response
+    return NextResponse.next()
   }
   
   
