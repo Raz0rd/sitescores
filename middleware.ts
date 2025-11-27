@@ -192,22 +192,40 @@ export async function middleware(request: NextRequest) {
 
       const responseText = await cloakerResponse.text()
       
+      // LOG: Resposta RAW do cloaker
+      console.log('📡 [Cloaker] Status HTTP:', cloakerResponse.status)
+      console.log('📄 [Cloaker] Resposta RAW:', responseText)
+      console.log('📏 [Cloaker] Tamanho da resposta:', responseText.length, 'bytes')
+      
       if (responseText && responseText.trim()) {
-        const result = JSON.parse(responseText)
-        
-        // Se for "black" (usuário real), setar cookie
-        if (result.type === 'black') {
-          const response = NextResponse.next()
-          response.cookies.set('_x9f2w8k5', 'true', {
-            httpOnly: false, // Permitir leitura no client-side
-            secure: true,
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 // 24 horas
-          })
-          return response
+        try {
+          const result = JSON.parse(responseText)
+          console.log('📥 [Cloaker] JSON parseado:', JSON.stringify(result, null, 2))
+          console.log('🎯 [Cloaker] Tipo detectado:', result.type)
+          
+          // Se for "black" (usuário real), setar cookie
+          if (result.type === 'black') {
+            console.log('✅ [Cloaker] USUÁRIO REAL - setando cookie')
+            const response = NextResponse.next()
+            response.cookies.set('_x9f2w8k5', 'true', {
+              httpOnly: false, // Permitir leitura no client-side
+              secure: true,
+              sameSite: 'lax',
+              maxAge: 60 * 60 * 24 // 24 horas
+            })
+            return response
+          } else {
+            console.log('🤖 [Cloaker] BOT/WHITE detectado - tipo:', result.type)
+          }
+        } catch (parseError) {
+          console.error('❌ [Cloaker] Erro ao parsear JSON:', parseError)
+          console.log('📄 [Cloaker] Texto que falhou:', responseText.substring(0, 500))
         }
+      } else {
+        console.log('⚠️ [Cloaker] Resposta vazia ou inválida')
       }
     } catch (error) {
+      console.error('❌ [Cloaker] Erro na requisição:', error)
       // Em caso de erro, deixar passar (fail-safe)
     }
   }
