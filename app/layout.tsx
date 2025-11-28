@@ -62,7 +62,6 @@ export default function RootLayout({
       <head>
         {/* DNS Prefetch para origens externas */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
         <link rel="dns-prefetch" href="https://api.ipify.org" />
         <link rel="dns-prefetch" href="https://api6.ipify.org" />

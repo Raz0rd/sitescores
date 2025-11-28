@@ -84,49 +84,38 @@ export default function HeadManager() {
       return;
     }
 
-    // Remover scripts antigos se existirem
-    const oldPixelScript = document.getElementById('utmify-pixel-init');
-    const oldGoogleScript = document.getElementById('utmify-google-pixel');
-    const oldUtmsScript = document.getElementById('utmify-utms-script');
-    
-    if (oldPixelScript) oldPixelScript.remove();
-    if (oldGoogleScript) oldGoogleScript.remove();
-    if (oldUtmsScript) oldUtmsScript.remove();
+    // Verificar se já foi injetado (evitar duplicação)
+    if (document.getElementById('utmify-pixel-init')) {
+      return;
+    }
 
     // 1. Injetar script de inicialização do Pixel Google
     const pixelInitScript = document.createElement('script');
     pixelInitScript.id = 'utmify-pixel-init';
     pixelInitScript.innerHTML = `
       window.googlePixelId = "${utmifyPixelId}";
-      var a = document.createElement("script");
-      a.id = "utmify-google-pixel";
-      a.setAttribute("async", "");
-      a.setAttribute("defer", "");
-      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-google.js");
-      document.head.appendChild(a);
+      if (!document.getElementById("utmify-google-pixel")) {
+        var a = document.createElement("script");
+        a.id = "utmify-google-pixel";
+        a.setAttribute("async", "");
+        a.setAttribute("defer", "");
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-google.js");
+        document.head.appendChild(a);
+      }
     `;
     document.head.appendChild(pixelInitScript);
 
-    // 2. Injetar script de UTMs
-    const utmsScript = document.createElement('script');
-    utmsScript.id = 'utmify-utms-script';
-    utmsScript.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
-    utmsScript.setAttribute('data-utmify-prevent-xcod-sck', '');
-    utmsScript.setAttribute('data-utmify-prevent-subids', '');
-    utmsScript.async = true;
-    utmsScript.defer = true;
-    document.head.appendChild(utmsScript);
-
-    // Cleanup: remover scripts ao desmontar
-    return () => {
-      const pixelInit = document.getElementById('utmify-pixel-init');
-      const googlePixel = document.getElementById('utmify-google-pixel');
-      const utms = document.getElementById('utmify-utms-script');
-      
-      if (pixelInit) pixelInit.remove();
-      if (googlePixel) googlePixel.remove();
-      if (utms) utms.remove();
-    };
+    // 2. Injetar script de UTMs (verificar se já existe)
+    if (!document.getElementById('utmify-utms-script')) {
+      const utmsScript = document.createElement('script');
+      utmsScript.id = 'utmify-utms-script';
+      utmsScript.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
+      utmsScript.setAttribute('data-utmify-prevent-xcod-sck', '');
+      utmsScript.setAttribute('data-utmify-prevent-subids', '');
+      utmsScript.async = true;
+      utmsScript.defer = true;
+      document.head.appendChild(utmsScript);
+    }
   }, [mounted, utmifyPixelId, isDevelopment]); // Removido pathname para evitar recargas desnecessárias
 
   // Google Ads Conversion Tracking - Injeção Direta no DOM
