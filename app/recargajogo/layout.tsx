@@ -9,9 +9,17 @@ import DynamicTheme from "@/components/DynamicTheme"
 import VerificationWrapper from "@/components/VerificationWrapper"
 
 export const metadata: Metadata = {
-  title: "Recarga Free Fire, Delta Force, Haikyu - Site Oficial de Diamantes",
-  description: "Site oficial de recarga para jogos! Compre diamantes Free Fire, créditos Delta Force e moedas Haikyu com segurança. Recarga rápida, bônus exclusivos e preços promocionais. Centro de recarga oficial de jogos mobile.",
+  title: "Diamantes FF Grátis - Dicas Free Fire, Cupons e Promoções FF",
+  description: "Dicas exclusivas de Free Fire, cupons de diamantes grátis, promoções FF e estratégias para melhorar seu jogo. Aproveite eventos e ganhe recompensas!",
   keywords: [
+    "diamantes ff grátis",
+    "dicas free fire",
+    "cupons ff",
+    "promoções free fire",
+    "eventos ff",
+    "free fire dicas",
+    "como ganhar diamantes ff",
+    "cupons free fire grátis",
     "recarga free fire",
     "comprar diamantes free fire", 
     "diamantes free fire barato",

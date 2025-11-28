@@ -11,10 +11,45 @@ import WhitePageWrapper from "@/components/WhitePageWrapper"
 import AntiScraping from "@/components/AntiScraping"
 import GoogleTagConditional from "@/components/GoogleTagConditional"
 
-// Metadata para SEO
+// Metadata para SEO - Whitepage (Free Fire)
 export const metadata: Metadata = {
-  title: "Eventos e Promoções",
-  description: "Plataforma de eventos e promoções digitais",
+  title: "Diamantes FF Grátis - Dicas Free Fire, Cupons e Promoções FF",
+  description: "Dicas exclusivas de Free Fire, cupons de diamantes grátis, promoções FF e estratégias para melhorar seu jogo. Aproveite eventos e ganhe recompensas!",
+  keywords: [
+    "diamantes ff grátis",
+    "dicas free fire",
+    "cupons ff",
+    "promoções free fire",
+    "eventos ff",
+    "free fire dicas",
+    "como ganhar diamantes ff",
+    "cupons free fire grátis",
+    "recarga free fire",
+    "comprar diamantes free fire", 
+    "diamantes free fire barato",
+    "free fire recarga oficial",
+    "site recarga free fire",
+    "diamantes ff",
+    "recarga ff oficial",
+    "recarga delta force",
+    "comprar creditos delta force",
+    "delta force recarga oficial",
+    "site recarga delta force",
+    "recarga haikyu",
+    "comprar moedas haikyu",
+    "haikyu recarga oficial",
+    "site recarga haikyu",
+    "recarga jogo",
+    "site de recarga de jogos",
+    "recarga jogos mobile",
+    "comprar creditos jogos",
+    "recarga oficial jogos",
+    "centro de recarga",
+    "recarga segura jogos",
+    "recarga rapida jogos",
+    "bonus recarga jogos",
+    "promocao recarga jogos"
+  ]
 }
 
 export default function RootLayout({
