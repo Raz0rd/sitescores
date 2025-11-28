@@ -16,6 +16,8 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false)
   const [showLeadMessage, setShowLeadMessage] = useState(false)
   
+  // Página /recargajogo
+  
   // Forçar light mode removendo classe dark
   useEffect(() => {
     const html = document.documentElement

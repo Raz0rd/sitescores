@@ -127,7 +127,7 @@ export default function HeadManager() {
       if (googlePixel) googlePixel.remove();
       if (utms) utms.remove();
     };
-  }, [mounted, pathname, utmifyPixelId, isDevelopment]);
+  }, [mounted, utmifyPixelId, isDevelopment]); // Removido pathname para evitar recargas desnecessárias
 
   // Google Ads Conversion Tracking - Injeção Direta no DOM
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true';
@@ -145,11 +145,8 @@ export default function HeadManager() {
     // Carregar Google Tag APENAS na página inicial (/) e sucesso (/success)
     const allowedPages = ['/', '/success'];
     if (!allowedPages.includes(pathname)) {
-      console.log('[Google Ads] Tag NÃO carregada na página:', pathname);
       return;
     }
-
-    console.log('[Google Ads] Carregando tag na página:', pathname);
 
     // Remover scripts antigos se existirem
     const oldGtagScript = document.getElementById('google-gtag-script');

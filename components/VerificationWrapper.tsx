@@ -31,12 +31,12 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     }
 
     // ============================================
-    // 🔒 ROTAS PÚBLICAS (sem whitepage)
+    // 🔒 ROTAS CONHECIDAS (whitelist de rotas válidas)
     // ============================================
     const currentPath = window.location.pathname
     
     // Rotas que NÃO precisam de whitepage
-    const publicRoutes = ['/cupons', '/success', '/sucesso', '/checkout']
+    const publicRoutes = ['/cupons', '/checkout']
     const isPublicRoute = publicRoutes.some(route => currentPath.startsWith(route))
     
     if (isPublicRoute) {
@@ -44,20 +44,48 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
       return
     }
     
-    // ============================================
-    // 🎯 WHITEPAGE - Primeira camada (Google Ads)
-    // ============================================
-    // Verificar se usuário já passou pela whitepage
-    const whitePagePassed = localStorage.getItem('whitepage_passed')
+    // Rotas válidas que devem passar pela verificação de whitepage
+    const validRoutes = [
+      '/',
+      '/recargajogo',
+      '/success',
+      '/sucesso',
+      '/politica-privacidade',
+      '/termos-uso',
+      '/quem-somos',
+      '/blog',
+      '/api'
+    ]
     
-    if (!whitePagePassed) {
-      // Mostrar WhitePage genérica (sem marcas de jogos)
-      setShowWhitePage(true)
+    // Se não é uma rota válida, deixar Next.js mostrar 404
+    const isValidRoute = validRoutes.some(route => 
+      currentPath === route || currentPath.startsWith(route + '/')
+    )
+    
+    if (!isValidRoute) {
+      // Rota inválida - deixar Next.js lidar (404)
       setIsLoading(false)
       return
     }
     
-    // Se já passou pela whitepage, mostrar conteúdo direto
+    // ============================================
+    // 🎯 VERIFICAR COOKIE DO CLOAKER
+    // ============================================
+    // Verificar se tem cookie válido do cloaker
+    const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
+    
+    if (hasCloakerCookie) {
+      // Tem cookie do cloaker - liberar acesso direto
+      setShowWhitePage(false)
+      setIsLoading(false)
+      return
+    }
+    
+    // ============================================
+    // 🎯 WHITEPAGE - Sem cookie do cloaker
+    // ============================================
+    // Se não tem cookie do cloaker, mostrar whitepage
+    setShowWhitePage(true)
     setIsLoading(false)
   }, [])
 

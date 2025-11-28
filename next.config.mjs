@@ -10,10 +10,6 @@ const nextConfig = {
   images: {
     unoptimized: true, // evita erro com o otimizador de imagens do Next
   },
-  trailingSlash: true,
-  
-  // Sem redirects - www e sem www retornam 200 OK
-  skipTrailingSlashRedirect: true,
 
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {

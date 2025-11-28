@@ -12,8 +12,7 @@ import GoogleConversionTest from '@/components/GoogleConversionTest';
 // Log GLOBAL - executa ao carregar o módulo
 
 export default function HomePage() {
-  // Log IMEDIATO para debug
-
+  // Página raiz
   
   const { isAuthenticated, loading: authLoading, login } = useAuth();
   const [mounted, setMounted] = useState(false)
@@ -207,6 +206,23 @@ export default function HomePage() {
 
   const router = useRouter()
   const { getUtmObject } = useUtmParams()
+  
+  // Verificar cookie IMEDIATAMENTE (antes de qualquer renderização)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const hasSessionCookie = document.cookie.includes('_x9f2w8k5=true')
+    if (hasSessionCookie) {
+      // Usar replace em vez de push para não adicionar ao histórico
+      window.location.replace('/recargajogo')
+      return
+    }
+  }, [])
+  
+  // Verificar cookie no render inicial para evitar flash
+  if (typeof window !== 'undefined' && document.cookie.includes('_x9f2w8k5=true')) {
+    return null // Não renderiza nada enquanto redireciona
+  }
   
   // Evitar problemas de hidratação
   useEffect(() => {
