@@ -270,6 +270,21 @@ export async function middleware(request: NextRequest) {
       }
     }
 
+    // 📊 LOG DETALHADO: Quem acessou, com qual slug e o que recebeu
+    const referer = request.headers.get('referer') || 'Direto'
+    const queryParams = request.nextUrl.search || 'Sem parâmetros'
+    
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log('🎯 [CLOAKER] Acesso Detectado')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log(`📍 IP: ${clientIp}`)
+    console.log(`🌐 User-Agent: ${userAgent.substring(0, 80)}`)
+    console.log(`🔗 Referer: ${referer}`)
+    console.log(`🏷️  Slug/Params: ${queryParams}`)
+    console.log(`📊 Resposta Cloaker: ${result.type.toUpperCase()}`)
+    console.log(`🎯 URL Destino: ${result.url}`)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
     // ✅ CLOAKER DECIDIU: Agora vamos verificar se é IP do Google
     // Se o cloaker liberou (black) mas é IP do Google, bloqueamos
     if (result.type === 'black') {
@@ -283,6 +298,8 @@ export async function middleware(request: NextRequest) {
       
       if (isGoogleIP) {
         // Cloaker liberou, mas é IP do Google - BLOQUEAR!
+        console.log('🚫 [BLOQUEIO] IP do Google detectado - mostrando white page')
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
         return NextResponse.next() // Mostrar white page
       }
     }
