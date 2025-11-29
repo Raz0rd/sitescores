@@ -297,8 +297,12 @@ export default function HomePage() {
     setShowCookieBanner(false)
   }
   
-  // Array de banners para carousel (5 banners diferentes)
+  // Array de banners para carousel (6 banners diferentes)
   const banners = [
+    {
+      src: "/images/blackfriday.png",
+      alt: "Black Friday - Promoções Especiais"
+    },
     {
       src: "/images/banner1.png",
       alt: "Banner 1 - Promoção Especial de Recarga"
@@ -364,7 +368,7 @@ export default function HomePage() {
       setCurrentBannerIndex((prevIndex) => 
         (prevIndex + 1) % banners.length
       )
-    }, 6000) // Troca a cada 4 segundos
+    }, 4000) // Troca a cada 4 segundos
 
     return () => clearInterval(interval)
   }, [banners.length])
