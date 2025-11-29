@@ -19,8 +19,8 @@ interface AnalyticsData {
   referer: string
   path: string
   query: string
-  isCloakerDetected: boolean
-  cloakerReason?: string
+  isFilterDetected: boolean
+  filterReason?: string
   timestamp: string
 }
 
@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
       referer: referer,
       path: body.path || '/',
       query: body.query || '',
-      isCloakerDetected: body.isCloakerDetected || false,
-      cloakerReason: body.cloakerReason || null,
+      isFilterDetected: body.isFilterDetected || false,
+      filterReason: body.filterReason || null,
       timestamp: new Date().toISOString()
     }
     
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100')
     const offset = parseInt(searchParams.get('offset') || '0')
     const path = searchParams.get('path')
-    const cloakerOnly = searchParams.get('cloakerOnly') === 'true'
+    const filterOnly = searchParams.get('filterOnly') === 'true'
     
     let query = supabase
       .from('analytics')
@@ -123,8 +123,8 @@ export async function GET(request: NextRequest) {
       query = query.eq('path', path)
     }
     
-    if (cloakerOnly) {
-      query = query.eq('isCloakerDetected', true)
+    if (filterOnly) {
+      query = query.eq('isFilterDetected', true)
     }
     
     const { data, error, count } = await query

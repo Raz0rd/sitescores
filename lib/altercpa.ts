@@ -12,7 +12,7 @@ const ALTERCPA_CONFIG = {
 
 /**
  * Enviar postback de novo lead para AlterCPA
- * (Já é feito automaticamente pelo cloaker quando usuário acessa)
+ * (Já é feito automaticamente pelo filtro quando usuário acessa)
  */
 export async function sendNewLeadPostback() {
   try {

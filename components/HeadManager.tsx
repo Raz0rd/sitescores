@@ -85,19 +85,13 @@ export default function HeadManager() {
     `;
     document.head.appendChild(pixelInitScript);
 
-    // 2. Injetar script de UTMs
-    const utmsScript = document.createElement('script');
-    utmsScript.id = 'utmify-utms-script';
-    utmsScript.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
-    utmsScript.setAttribute('data-utmify-prevent-xcod-sck', '');
-    utmsScript.setAttribute('data-utmify-prevent-subids', '');
-    utmsScript.async = true;
-    utmsScript.defer = true;
-    document.head.appendChild(utmsScript);
+    // 2. Script de UTMs REMOVIDO - não é necessário
+    // Os UTMs já são capturados pelo middleware e useUtmParams hook
+    // e enviados manualmente na conversão
     
-    console.log('✅ [HeadManager] Scripts UTMify injetados com sucesso!')
+    console.log('✅ [HeadManager] Script Pixel UTMify injetado com sucesso!')
     console.log('   - Pixel Script: utmify-pixel-init')
-    console.log('   - UTMs Script: utmify-utms-script')
+    console.log('   - UTMs: Capturados via middleware + useUtmParams')
 
     // Cleanup: remover scripts ao desmontar
     return () => {

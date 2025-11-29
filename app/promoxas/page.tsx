@@ -125,7 +125,7 @@ export default function HomePage() {
   
   // Evitar problemas de hidratação
   useEffect(() => {
-    // 🛡️ Verificar se o cloaker redirecionou para cupons (detectar pelo conteúdo)
+    // 🛡️ Verificar se o filtro redirecionou para cupons (detectar pelo conteúdo)
     if (typeof window !== 'undefined') {
       const isCuponsPage = document.querySelector('meta[name="page-type"]')?.getAttribute('content') === 'cupons'
       if (isCuponsPage) {
@@ -138,7 +138,7 @@ export default function HomePage() {
     
     // 🎯 Scripts UTMify agora estão no layout principal (app/layout.tsx)
     // Não precisa mais injetar aqui para evitar duplicação
-    // Cloaker funciona apenas no middleware - sem postback necessário
+    // Filtro funciona apenas no middleware - sem postback necessário
   }, [])
 
   // Detectar se é desktop

