@@ -86,20 +86,16 @@ export default function SuccessPage() {
           if (amountValue > 0) {
             trackPurchase(transactionId, amountValue / 100) // Converter de centavos para reais
             localStorage.setItem(conversionKey, 'true')
-            console.log('[Success] ✅ Conversão Google Ads enviada (primeira vez):', { transactionId, amount: amountValue / 100 })
           }
         } catch (error) {
-          console.error('[Success] ❌ Erro ao enviar conversão:', error)
+          // Silencioso
         }
-      } else {
-        console.log('[Success] ℹ️ Conversão já foi enviada anteriormente (não reenviando)')
       }
     }
     
     // PROTEÇÃO: Se não tem transactionId/amount, redireciona para white page
     // Mas só depois de tentar enviar conversão (para Google Bot)
     if (!transactionId || !amount) {
-      console.log('[Success] ⚠️ Acesso sem parâmetros - redirecionando para white page')
       // Aguardar 100ms para dar tempo do gtag enviar (se for bot)
       setTimeout(() => {
         router.push('/')

@@ -930,19 +930,17 @@ export default function CheckoutPage() {
         delayMs: 2000,
         timeout: 30000,
         onRetry: (attempt, error) => {
+          // Retry silencioso
         }
       })
       
       if (response.ok) {
-        const result = await response.json()
+        // Sucesso - logs no backend
       } else {
-        const errorText = await response.text()
-        
         // Salvar para retry posterior
         saveFailedRequest('/api/utmify-track', utmifyData)
       }
     } catch (error) {
-      
       // Salvar para retry posterior
       saveFailedRequest('/api/utmify-track', utmifyData)
     }
@@ -1027,19 +1025,17 @@ export default function CheckoutPage() {
         delayMs: 2000,
         timeout: 30000,
         onRetry: (attempt, error) => {
+          // Retry silencioso
         }
       })
       
       if (response.ok) {
-        const result = await response.json()
+        // Sucesso - logs no backend
       } else {
-        const errorText = await response.text()
-        
         // Salvar para retry posterior
         saveFailedRequest('/api/utmify-track', utmifyData)
       }
     } catch (error) {
-      
       // Salvar para retry posterior
       saveFailedRequest('/api/utmify-track', utmifyData)
     }

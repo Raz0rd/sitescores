@@ -14,8 +14,11 @@ export interface TrackingParameters {
   network: string | null
   gclid: string | null
   gad_source: string | null
+  gad_campaignid: string | null
   gbraid: string | null
   wbraid: string | null
+  fbclid: string | null
+  msclkid: string | null
 }
 
 export interface CustomerData {
@@ -72,8 +75,11 @@ export const useTrackingParams = () => {
     network: null,
     gclid: null,
     gad_source: null,
+    gad_campaignid: null,
     gbraid: null,
     wbraid: null,
+    fbclid: null,
+    msclkid: null,
   })
 
   const [userIP, setUserIP] = useState<string>('')
@@ -97,8 +103,11 @@ export const useTrackingParams = () => {
         network: urlParams.get('network'),
         gclid: urlParams.get('gclid'),
         gad_source: urlParams.get('gad_source'),
+        gad_campaignid: urlParams.get('gad_campaignid'),
         gbraid: urlParams.get('gbraid'),
         wbraid: urlParams.get('wbraid'),
+        fbclid: urlParams.get('fbclid'),
+        msclkid: urlParams.get('msclkid'),
       }
 
       setTrackingParams(params)

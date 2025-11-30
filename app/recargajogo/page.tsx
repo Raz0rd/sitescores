@@ -686,9 +686,6 @@ export default function HomePage() {
           params.set(key, value)
         }
       })
-
-      //console.log('[v0] UTM params being passed to checkout:', utmParams)
-      //console.log('[v0] Final checkout URL:', `/checkout?${params.toString()}`)
       
       router.push(`/checkout?${params.toString()}`)
     } else if (selectedSpecialOffer) {

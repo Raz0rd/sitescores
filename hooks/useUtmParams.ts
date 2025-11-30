@@ -56,8 +56,6 @@ export const useUtmParams = () => {
             sessionStorage.setItem(`utm_${param}`, value)
           }
         })
-        
-        console.log('✅ [UTM] Parâmetros salvos:', utmString)
       }
     }
   }, [])

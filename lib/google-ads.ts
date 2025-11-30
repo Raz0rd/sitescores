@@ -37,7 +37,6 @@ function isGoogleAdsEnabled(): boolean {
  */
 export function trackPurchase(transactionId: string, value: number) {
   if (!isGoogleAdsEnabled()) {
-    console.log('[Google Ads] Tracking desabilitado ou gtag não disponível');
     return;
   }
 
@@ -47,17 +46,9 @@ export function trackPurchase(transactionId: string, value: number) {
     const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL;
     
     if (!googleAdsId || !conversionLabel) {
-      console.warn('[Google Ads] ⚠️ ID ou Label não configurados no .env');
-      console.warn('[Google Ads] Google Ads ID:', googleAdsId);
-      console.warn('[Google Ads] Conversion Label:', conversionLabel);
       return;
     }
     const conversionId = `${googleAdsId}/${conversionLabel}`;
-    
-    console.log('[Google Ads] 🎯 Disparando conversão: Compra');
-    console.log('[Google Ads] Conversion ID:', conversionId);
-    console.log('[Google Ads] Transaction ID:', transactionId);
-    console.log('[Google Ads] Valor: R$', value.toFixed(2));
     
     // Objeto exato que será enviado para o Google Ads
     const conversionData = {
@@ -67,14 +58,9 @@ export function trackPurchase(transactionId: string, value: number) {
       'transaction_id': transactionId
     }
     
-    console.log('📊 [Google Ads] DADOS EXATOS ENVIADOS:', JSON.stringify(conversionData, null, 2));
-    console.log('💰 [Google Ads] VALOR EXATO:', value, '(tipo:', typeof value, ')');
-    
     window.gtag!('event', 'conversion', conversionData);
-    
-    console.log('[Google Ads] ✅ Conversão "Compra" enviada com sucesso');
   } catch (error) {
-    console.error('[Google Ads] ❌ Erro ao disparar conversão de compra:', error);
+    // Silencioso
   }
 }
 
