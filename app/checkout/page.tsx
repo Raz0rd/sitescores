@@ -785,7 +785,7 @@ export default function CheckoutPage() {
               const totalValue = getFinalPrice() + getPromoTotal()
               
               // Redirecionar para a página de sucesso
-              // O webhook já enviou UTMify PAID - aqui apenas redirecionamos
+              // Google Ads será disparado na página /success via gtag
               router.push(`/success?transactionId=${pixData.transactionId}&amount=${totalValue * 100}&playerName=${playerName}&itemType=${itemType}&itemValue=${itemValue}&game=${currentGame}`)
             }
           } else if (response.status === 404) {
