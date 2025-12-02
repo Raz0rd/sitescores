@@ -50,15 +50,32 @@ export async function middleware(request: NextRequest) {
     const referer = request.headers.get('referer') || 'direto'
     const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
     
-    console.log('')
-    console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
-    console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
-    console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
-    console.log(`📍 Rota: ${pathname}`)
-    console.log(`🔑 IP: ${clientIp}`)
-    console.log(`🔗 Referer: ${referer}`)
-    console.log(`🍪 Cookie válido: ${hasValidCookie ? 'SIM' : 'NÃO'}`)
-    console.log('')
+    // Não logar navegação interna repetida (quando referer é do próprio domínio)
+    const requestHost = request.headers.get('host') || ''
+    const isInternalNavigation = referer !== 'direto' && (
+      referer.includes(requestHost) || 
+      referer.includes('aprovarevolucaoweb.click') ||
+      referer.includes('suamelhorcompradoano.shop') ||
+      referer.includes('localhost')
+    )
+    
+    // Logar apenas:
+    // 1. Acesso externo (Google, direto, etc)
+    // 2. Primeira visita (/)
+    // 3. Checkout e Sucesso (sempre importante)
+    const isImportantRoute = pathname === '/' || pathname.startsWith('/checkout') || pathname.startsWith('/sucesso')
+    
+    if (!isInternalNavigation || isImportantRoute) {
+      console.log('')
+      console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+      console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
+      console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+      console.log(`📍 Rota: ${pathname}`)
+      console.log(`🔑 IP: ${clientIp}`)
+      console.log(`🔗 Referer: ${referer}`)
+      console.log(`🍪 Cookie válido: ${hasValidCookie ? 'SIM' : 'NÃO'}`)
+      console.log('')
+    }
   }
   
   // ============================================
