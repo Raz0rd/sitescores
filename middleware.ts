@@ -14,18 +14,35 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const referer = request.headers.get('referer') || ''
   
-  // Filtrar logs de assets estáticos para reduzir ruído
+  // Filtrar logs de assets estáticos e rotas irrelevantes
   const isStaticAsset = pathname.startsWith('/images/') || 
                         pathname.startsWith('/fonts/') || 
                         pathname.startsWith('/_next/') ||
                         pathname.includes('.png') ||
                         pathname.includes('.jpg') ||
+                        pathname.includes('.jpeg') ||
                         pathname.includes('.webp') ||
                         pathname.includes('.svg') ||
-                        pathname.includes('.woff')
+                        pathname.includes('.woff') ||
+                        pathname.includes('.woff2') ||
+                        pathname.includes('.ttf') ||
+                        pathname.includes('.ico') ||
+                        pathname === '/manifest.json' ||
+                        pathname === '/favicon.ico' ||
+                        pathname === '/robots.txt' ||
+                        pathname === '/sitemap.xml'
   
-  // 📊 LOG ORGANIZADO: Acesso do usuário
-  if (!isStaticAsset) {
+  // 📊 LOG ORGANIZADO: Apenas rotas importantes
+  // Logar apenas: /, /recargajogo, /checkout, /sucesso, /api/*
+  const shouldLog = !isStaticAsset && (
+    pathname === '/' ||
+    pathname === '/recargajogo' ||
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/sucesso') ||
+    pathname.startsWith('/api/')
+  )
+  
+  if (shouldLog) {
     const clientIp = request.headers.get('cf-connecting-ip') || 
                      request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
                      request.headers.get('x-real-ip') || 
@@ -174,21 +191,17 @@ export async function middleware(request: NextRequest) {
   const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
   
   if (hasValidCookie) {
-    console.log(`🍪 [Cookie] Cookie válido detectado - pathname: ${pathname}`)
-    console.log(`🍪 [Cookie] Valor do cookie: ${request.cookies.get('_x9f2w8k5')?.value}`)
-    
     // Se tem cookie e está na rota raiz (/), redirecionar para /recargajogo
     // EXCETO em localhost
-    
     if ((pathname === '/' || pathname === '') && !isLocalhost) {
-      console.log(`🔄 [Redirect] Redirecionando de ${pathname} para /recargajogo`)
+      if (shouldLog) {
+        console.log(`🔄 [Redirect] Redirecionando de ${pathname} para /recargajogo`)
+      }
       const redirectUrl = new URL('/recargajogo', request.url)
-      console.log(`🔄 [Redirect] URL completa: ${redirectUrl.toString()}`)
       return NextResponse.redirect(redirectUrl)
     }
     
-    console.log(`✅ [Cookie] Liberando acesso para: ${pathname}`)
-    console.log(`✅ [Cookie] Request URL: ${request.url}`)
+    // Para qualquer outra rota, liberar acesso (sem log excessivo)
     return NextResponse.next()
   }
   
