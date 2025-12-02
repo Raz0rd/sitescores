@@ -1,6 +1,8 @@
 // Deploy automático configurado via GitHub Actions
 import { NextRequest, NextResponse } from "next/server"
 import { orderStorageService } from "@/lib/order-storage"
+import { getBrazilTimestamp } from "@/lib/brazil-time"
+import { logConversion } from "@/lib/conversion-logger"
 import { getConfig, getEnvVar } from "./config"
 import { encodeGateway } from "@/lib/gateway-mapper"
 
@@ -831,8 +833,35 @@ export async function POST(request: NextRequest) {
       if (savedOrder) {
         console.log("✅ [STORAGE] Pedido salvo e VERIFICADO com sucesso!")
         console.log("✅ [STORAGE] Confirmação - ID encontrado:", savedOrder.transactionId)
+        
+        // Log estruturado
+        logConversion({
+          transactionId: validResult.transactionId,
+          step: 'PIX_GENERATED',
+          status: 'success',
+          message: 'PIX gerado com sucesso',
+          route: '/api/generate-pix',
+          userId: body.customer?.document?.number || 'unknown',
+          data: {
+            gateway: gateway,
+            amount: body.amount / 100,
+            customerName: body.customer?.name,
+            hasGclid: !!trackingParameters.gclid,
+            hasUtmSource: !!trackingParameters.utm_source
+          },
+          utmParams: trackingParameters
+        })
       } else {
         console.error("❌ [STORAGE] ERRO: Pedido NÃO foi salvo corretamente!")
+        
+        logConversion({
+          transactionId: validResult.transactionId,
+          step: 'PIX_GENERATED',
+          status: 'error',
+          message: 'Pedido não foi salvo no storage',
+          route: '/api/generate-pix',
+          userId: body.customer?.document?.number || 'unknown'
+        })
       }
     } catch (storageError) {
       console.error("❌ [STORAGE] Erro ao salvar:", storageError)

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
+import { logConversion } from "@/lib/conversion-logger"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -156,12 +157,20 @@ export async function POST(request: NextRequest) {
     const storedOrder = orderStorageService.getOrder(transactionId.toString())
     if (storedOrder && storedOrder.status === 'paid') {
       console.log(`[CHECK-STATUS] Transação ${transactionId} já processada como paid`)
-      return NextResponse.json({
+      
+      const response = NextResponse.json({
         success: true,
         status: 'paid',
         message: 'Transação já processada como paid',
         alreadyProcessed: true
       })
+      
+      // Headers anti-cache
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+      
+      return response
     }
 
     // Consultar API do gateway configurado
@@ -259,6 +268,20 @@ export async function POST(request: NextRequest) {
       }
       
       console.log(`[CHECK-STATUS] ✅ Processando PAID - enviando para UTMify...`)
+      
+      // Log estruturado
+      logConversion({
+        transactionId,
+        step: 'PAYMENT_CONFIRMED',
+        status: 'success',
+        message: 'Pagamento confirmado pelo polling',
+        route: '/api/check-transaction-status',
+        userId: storedOrder?.customerData?.document || 'unknown',
+        data: {
+          gateway: gateway,
+          amount: transactionData.amount / 100
+        }
+      })
 
       // Recuperar UTMs do storage ou usar fallback
       let trackingParameters: Record<string, any> = {}
@@ -395,6 +418,22 @@ export async function POST(request: NextRequest) {
             console.log(`[CHECK-STATUS] 📊 Resposta UTMify:`, JSON.stringify(utmifyResult, null, 2))
             utmifySuccess = true
             
+            // Log estruturado
+            logConversion({
+              transactionId,
+              step: 'UTMIFY_PAID_SENT',
+              status: 'success',
+              message: 'Conversão PAID enviada para UTMify',
+              route: '/api/check-transaction-status',
+              userId: storedOrder?.customerData?.document || 'unknown',
+              data: {
+                hasGclid: !!trackingParameters.gclid,
+                hasUtmSource: !!trackingParameters.utm_source,
+                amount: transactionData.amount / 100
+              },
+              utmParams: trackingParameters
+            })
+            
             // Marcar como enviado no storage para evitar duplicação futura
             if (storedOrder) {
               orderStorageService.saveOrder({
@@ -416,10 +455,10 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         success: true,
         status: 'paid',
-        message: 'Pagamento confirmado via fallback',
+        message: 'Pagamento confirmado',
         transactionData: {
           id: transactionData.id,
           status: transactionData.status,
@@ -430,6 +469,13 @@ export async function POST(request: NextRequest) {
         utmifySent: utmifySuccess,
         utmifyPaidSent: utmifySuccess
       })
+      
+      // Headers anti-cache
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+      
+      return response
     }
 
     // Se status é waiting_payment/pending, enviar para UTMify (primeira vez)
@@ -556,6 +602,22 @@ export async function POST(request: NextRequest) {
             })
             
             if (utmifyResponse.ok) {
+              // Log estruturado
+              logConversion({
+                transactionId,
+                step: 'UTMIFY_PENDING_SENT',
+                status: 'success',
+                message: 'Conversão WAITING_PAYMENT enviada para UTMify',
+                route: '/api/check-transaction-status',
+                userId: storedOrder?.customerData?.document || 'unknown',
+                data: {
+                  hasGclid: !!(utmTrackingParams as any)?.gclid,
+                  hasUtmSource: !!(utmTrackingParams as any)?.utm_source,
+                  amount: transactionData.amount / 100
+                },
+                utmParams: utmTrackingParams
+              })
+              
               // Marcar como enviado no storage
               if (storedOrder) {
                 orderStorageService.saveOrder({

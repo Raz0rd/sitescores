@@ -43,11 +43,25 @@ export default function SucessoPage() {
     const amount = searchParams.get('amount')
     const currency = searchParams.get('currency') || 'BRL'
     const email = searchParams.get('email')
+    const gclid = searchParams.get('gclid')
+    const utm_source = searchParams.get('utm_source')
 
     // Verificar se tem os parâmetros obrigatórios
     if (!transactionId || !amount) {
       return
     }
+    
+    // Log estruturado para o backend
+    console.log('')
+    console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+    console.log('┃ 🎉 USUÁRIO ACESSOU /SUCESSO             ┃')
+    console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+    console.log(`💳 Transaction ID: ${transactionId}`)
+    console.log(`💰 Valor: R$ ${(parseFloat(amount) / 100).toFixed(2)}`)
+    console.log(`📧 Email: ${email || 'N/A'}`)
+    console.log(`🎯 GCLID: ${gclid || 'N/A'}`)
+    console.log(`📊 UTM Source: ${utm_source || 'N/A'}`)
+    console.log('')
 
     // Verificar se já foi enviado (localStorage + state)
     const storageKey = `gads_conversion_${transactionId}`
@@ -76,9 +90,12 @@ export default function SucessoPage() {
 
         if (googleAdsId && conversionLabel) {
           // Preparar dados da conversão
+          // amount vem em CENTAVOS da URL (ex: 3695 = R$ 36,95)
+          const valueInReais = parseFloat(amount) / 100
+          
           const conversionData: any = {
             send_to: `${googleAdsId}/${conversionLabel}`,
-            value: parseFloat(amount) / 100, // Dividir por 100 pois vem multiplicado
+            value: valueInReais,
             currency: currency,
             transaction_id: transactionId
           }
@@ -100,6 +117,35 @@ export default function SucessoPage() {
           // Salvar no localStorage para evitar duplicação
           const timestamp = new Date().toISOString()
           localStorage.setItem(storageKey, timestamp)
+          
+          // Enviar log para backend
+          fetch('/api/log-conversion-client', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              transactionId,
+              step: 'GOOGLE_ADS_CONVERSION',
+              status: 'success',
+              message: 'Conversão disparada no Google Ads',
+              data: {
+                value: parseFloat(amount) / 100,
+                currency,
+                hasEmail: !!email,
+                gclid: searchParams.get('gclid'),
+                utm_source: searchParams.get('utm_source')
+              },
+              utmParams: {
+                gclid: searchParams.get('gclid'),
+                utm_source: searchParams.get('utm_source'),
+                utm_campaign: searchParams.get('utm_campaign'),
+                utm_medium: searchParams.get('utm_medium'),
+                utm_content: searchParams.get('utm_content'),
+                utm_term: searchParams.get('utm_term'),
+                gad_source: searchParams.get('gad_source'),
+                gbraid: searchParams.get('gbraid')
+              }
+            })
+          }).catch(err => console.error('Erro ao enviar log:', err))
         }
       }
 

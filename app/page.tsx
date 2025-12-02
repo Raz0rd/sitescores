@@ -8,6 +8,7 @@ import { useUtmParams } from '@/hooks/useUtmParams';
 import LoginModal from '@/components/login-modal';
 import { useAuth } from '@/hooks/useAuth';
 import GoogleConversionTest from '@/components/GoogleConversionTest';
+import WhitePage from '@/components/WhitePage';
 
 // Log GLOBAL - executa ao carregar o módulo
 
@@ -207,6 +208,9 @@ export default function HomePage() {
   const router = useRouter()
   const { getUtmObject } = useUtmParams()
   
+  // Estado para controlar se deve mostrar whitepage
+  const [shouldShowWhitePage, setShouldShowWhitePage] = useState(true)
+  
   // Verificar cookie IMEDIATAMENTE (antes de qualquer renderização)
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -217,11 +221,24 @@ export default function HomePage() {
       window.location.replace('/recargajogo')
       return
     }
+    
+    // Se não tem cookie, mostrar whitepage
+    setShouldShowWhitePage(true)
   }, [])
   
   // Verificar cookie no render inicial para evitar flash
   if (typeof window !== 'undefined' && document.cookie.includes('_x9f2w8k5=true')) {
     return null // Não renderiza nada enquanto redireciona
+  }
+  
+  // Se não tem cookie, mostrar WhitePage
+  if (shouldShowWhitePage && typeof window !== 'undefined' && !document.cookie.includes('_x9f2w8k5=true')) {
+    return <WhitePage onActivate={() => {
+      // Quando usuário aceitar, setar cookie e recarregar
+      const cookieOptions = `path=/; max-age=${60 * 60 * 24}; SameSite=Lax`
+      document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
+      window.location.reload()
+    }} />
   }
   
   // Evitar problemas de hidratação

@@ -742,25 +742,35 @@ export default function CheckoutPage() {
     // Função para verificar se a página está visível
     const isPageVisible = () => !document.hidden
     
-    if (pixData && paymentStatus === 'pending' && timerActive) {
-      statusInterval = setInterval(async () => {
-        // ⚠️ IMPORTANTE: Só fazer polling se a página estiver visível
-        if (!isPageVisible()) {
-          console.log('[POLLING] ⏸️ Página não visível - pausando polling')
-          return
-        }
+    // Função para verificar status (reutilizável)
+    const checkPaymentStatus = async () => {
+      if (!pixData) return // Verificação de segurança
+      
+      if (!isPageVisible()) {
+        console.log('[POLLING] ⏸️ Página não visível - aguardando retorno')
+        return
+      }
+      
+      console.log('[POLLING] 🔄 Verificando status do pagamento...')
+      
+      try {
+        const response = await fetch('/api/check-transaction-status', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          },
+          cache: 'no-store',
+          body: JSON.stringify({ transactionId: pixData.transactionId })
+        })
         
-        try {
-          const response = await fetch('/api/check-transaction-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ transactionId: pixData.transactionId })
-          })
+        if (response.ok) {
+          const data = await response.json()
           
-          if (response.ok) {
-            const data = await response.json()
-            
-            if (data.success && data.status === 'paid') {
+          if (data.success && data.status === 'paid') {
+            console.log('[POLLING] ✅ PAGAMENTO CONFIRMADO!')
               setPaymentStatus('paid')
               setTimerActive(false)
               
@@ -794,7 +804,7 @@ export default function CheckoutPage() {
               
               // Dados da compra
               sucessoUrl.searchParams.set('transactionId', pixData.transactionId)
-              sucessoUrl.searchParams.set('amount', totalValue.toString())
+              sucessoUrl.searchParams.set('amount', (totalValue * 100).toString()) // Converter para centavos
               sucessoUrl.searchParams.set('currency', 'BRL')
               
               // Email do cliente (será hasheado na página de sucesso)
@@ -817,31 +827,54 @@ export default function CheckoutPage() {
               if (gbraid) sucessoUrl.searchParams.set('gbraid', gbraid)
               
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-              console.log('🎯 [PAID] REDIRECIONANDO PARA PÁGINA DE SUCESSO')
+              console.log('🎯 [PAID] ENVIANDO CONVERSÃO PARA UTMIFY')
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               console.log('💳 Transaction ID:', pixData.transactionId)
               console.log('💰 Valor:', `R$ ${totalValue.toFixed(2)}`)
-              console.log('🔗 URL:', sucessoUrl.toString())
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
               
-              // Redirecionar imediatamente para a página de sucesso
-              window.location.href = sucessoUrl.toString()
+              // ✅ CRÍTICO: Enviar para UTMify ANTES de redirecionar
+              try {
+                console.log('[PAID] 📤 Enviando conversão PAID para UTMify...')
+                await sendToUtmifyPaid(pixData.transactionId)
+                console.log('[PAID] ✅ Conversão PAID enviada com sucesso!')
+              } catch (err) {
+                console.error('[PAID] ❌ Erro ao enviar conversão:', err)
+                // Continuar mesmo com erro (não bloquear usuário)
+              }
               
-              // Enviar para UTMify com status PAID (não-bloqueante)
-              // NOTA: O webhook já envia PAID para UTMify, mas mantemos este envio como fallback
-              // A API /api/utmify-track tem proteção anti-duplicação via flag utmifyPaidSent
-              sendToUtmifyPaid(pixData.transactionId).catch(err => {
-              })
-            }
+              // Agora sim, redirecionar para página de sucesso
+              console.log('[PAID] 🔀 Redirecionando para página de sucesso...')
+              console.log('[PAID] 🔗 URL:', sucessoUrl.toString())
+              window.location.href = sucessoUrl.toString()
           }
-        } catch (error) {
-          // Erro silencioso no polling
         }
-      }, 10000) // Verificar a cada 10 segundos
+      } catch (error) {
+        console.error('[POLLING] ❌ Erro ao verificar status:', error)
+      }
     }
     
-    return () => {
-      if (statusInterval) clearInterval(statusInterval)
+    if (pixData && paymentStatus === 'pending' && timerActive) {
+      // Iniciar polling a cada 10 segundos
+      statusInterval = setInterval(checkPaymentStatus, 10000)
+      
+      // ✅ CRÍTICO: Listener para quando usuário volta para a página
+      const handleVisibilityChange = () => {
+        if (!document.hidden && pixData && paymentStatus === 'pending') {
+          console.log('[POLLING] 👁️ Usuário voltou - verificando status IMEDIATAMENTE')
+          checkPaymentStatus() // Verificar imediatamente
+        }
+      }
+      
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+      
+      // Fazer primeira verificação imediatamente
+      checkPaymentStatus()
+      
+      return () => {
+        if (statusInterval) clearInterval(statusInterval)
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+      }
     }
   }, [pixData, paymentStatus, timerActive])
 
