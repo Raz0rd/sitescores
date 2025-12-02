@@ -33,14 +33,14 @@ export async function middleware(request: NextRequest) {
                         pathname === '/sitemap.xml'
   
   // 📊 LOG ORGANIZADO: Apenas rotas importantes
-  // Logar apenas: /, /recargajogo, /checkout, /sucesso, /api/*
+  // Logar apenas: /, /recargajogo, /checkout, /sucesso
+  // Excluir: /api/get-avatar (spam), /api/utmify-track (muito frequente)
   const shouldLog = !isStaticAsset && (
     pathname === '/' ||
     pathname === '/recargajogo' ||
     pathname.startsWith('/checkout') ||
-    pathname.startsWith('/sucesso') ||
-    pathname.startsWith('/api/')
-  )
+    pathname.startsWith('/sucesso')
+  ) && !pathname.includes('/api/get-avatar') && !pathname.includes('/api/utmify-track')
   
   if (shouldLog) {
     const clientIp = request.headers.get('cf-connecting-ip') || 
@@ -209,6 +209,13 @@ export async function middleware(request: NextRequest) {
   // 🔒 PROTEÇÃO ROTAS /recargajogo e /checkout - Apenas com cookie do cloaker
   // ============================================
   // Se chegou aqui, NÃO tem cookie válido
+  
+  // Log de acesso sem cookie em rotas protegidas
+  if (!hasValidCookie && (pathname === '/recargajogo' || pathname.startsWith('/checkout')) && shouldLog) {
+    console.log('⚠️ [Middleware] Acesso SEM COOKIE a rota protegida:', pathname)
+    console.log('⚠️ [Middleware] Isso deveria mostrar WhitePage ou redirecionar')
+  }
+  
   // EXCETO em localhost (permitir acesso livre para desenvolvimento)
   // 
   // IMPORTANTE: NÃO retornar 404 aqui!

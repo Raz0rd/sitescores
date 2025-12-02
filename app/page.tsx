@@ -441,14 +441,13 @@ export default function HomePage() {
     // Salvar cookie de quiz completado
     const currentHost = window.location.hostname
     
-    // Configurar cookie
+    // Configurar cookie de sessão interna
     const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
     document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
-    document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
+    // ⚠️ NÃO setar _x9f2w8k5 aqui - apenas o CLOAKER seta esse cookie
     
-    console.log('🍪 [SESSION] Cookies definidos')
+    console.log('🍪 [SESSION] Cookie de sessão definido')
     console.log('   - _s7k2m9p4=true')
-    console.log('   - _x9f2w8k5=true')
     console.log('🎁 [REWARD] Recompensa aceita - fechando quiz')
     
     // Fechar quiz e mostrar central de recargas
@@ -777,14 +776,13 @@ export default function HomePage() {
         setShowIllusoryLoading(false)
         setShowBlurOverlay(false) // Fecha o modal após login
         
-        // Salvar cookie de sessão
+        // Salvar cookie de sessão interna
         const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
         document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
-        document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
+        // ⚠️ NÃO setar _x9f2w8k5 aqui - apenas o CLOAKER seta esse cookie
         
-        console.log('🍪 [LOGIN] Cookies definidos')
+        console.log('🍪 [LOGIN] Cookie de sessão definido')
         console.log('   - _s7k2m9p4=true')
-        console.log('   - _x9f2w8k5=true')
       }, 1500)
       return
     }
@@ -811,14 +809,13 @@ export default function HomePage() {
               await fetchAvatarInfo(data.data.basicInfo.headPic)
             }
             
-            // Salvar cookie de sessão
+            // Salvar cookie de sessão interna
             const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
             document.cookie = `_s7k2m9p4=true; ${cookieOptions}`
-            document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
+            // ⚠️ NÃO setar _x9f2w8k5 aqui - apenas o CLOAKER seta esse cookie
             
-            console.log('🍪 [LOGIN] Cookies definidos')
+            console.log('🍪 [LOGIN] Cookie de sessão definido')
             console.log('   - _s7k2m9p4=true')
-            console.log('   - _x9f2w8k5=true')
           }
         } else {
           setIsLoggedIn(false)
