@@ -57,7 +57,7 @@ export default function SucessoPage() {
     console.log('┃ 🎉 USUÁRIO ACESSOU /SUCESSO             ┃')
     console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
     console.log(`💳 Transaction ID: ${transactionId}`)
-    console.log(`💰 Valor: R$ ${(parseFloat(amount) / 100).toFixed(2)}`)
+    console.log(`💰 Valor: R$ ${parseFloat(amount).toFixed(2)}`)
     console.log(`📧 Email: ${email || 'N/A'}`)
     console.log(`🎯 GCLID: ${gclid || 'N/A'}`)
     console.log(`📊 UTM Source: ${utm_source || 'N/A'}`)
@@ -90,8 +90,8 @@ export default function SucessoPage() {
 
         if (googleAdsId && conversionLabel) {
           // Preparar dados da conversão
-          // amount vem em CENTAVOS da URL (ex: 3695 = R$ 36,95)
-          const valueInReais = parseFloat(amount) / 100
+          // amount já vem em REAIS da URL (ex: 22.98 = R$ 22,98)
+          const valueInReais = parseFloat(amount)
           
           const conversionData: any = {
             send_to: `${googleAdsId}/${conversionLabel}`,
@@ -128,7 +128,7 @@ export default function SucessoPage() {
               status: 'success',
               message: 'Conversão disparada no Google Ads',
               data: {
-                value: parseFloat(amount) / 100,
+                value: parseFloat(amount),
                 currency,
                 hasEmail: !!email,
                 gclid: searchParams.get('gclid'),

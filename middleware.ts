@@ -232,20 +232,25 @@ export async function middleware(request: NextRequest) {
   // ============================================
   // Se chegou aqui, NÃO tem cookie válido
   
-  // Log de acesso sem cookie em rotas protegidas
-  if (!hasValidCookie && (pathname === '/recargajogo' || pathname.startsWith('/checkout')) && shouldLog) {
-    console.log('⚠️ [Middleware] Acesso SEM COOKIE a rota protegida:', pathname)
-    console.log('⚠️ [Middleware] Isso deveria mostrar WhitePage ou redirecionar')
+  // BLOQUEAR acesso direto a /recargajogo e /checkout sem cookie
+  // Motivo: Usuário legítimo SEMPRE passa pelo cloaker em / primeiro (via rewrite)
+  // Se acessou direto sem cookie, é bot, scraper ou tentativa de bypass
+  if (!hasValidCookie && !isLocalhost) {
+    if (pathname === '/recargajogo' || pathname.startsWith('/checkout')) {
+      if (shouldLog) {
+        console.log('🚫 [Middleware] BLOQUEADO: Acesso direto sem cookie')
+        console.log('   - Rota:', pathname)
+        console.log('   - Motivo: Usuário legítimo passa pelo cloaker em / primeiro')
+        console.log('   - Ação: Redirecionando para /')
+      }
+      
+      // Redirecionar para / (onde o cloaker vai validar)
+      // Preservar query parameters para não perder UTMs
+      const redirectUrl = new URL('/', request.url)
+      redirectUrl.search = request.nextUrl.search
+      return NextResponse.redirect(redirectUrl)
+    }
   }
-  
-  // EXCETO em localhost (permitir acesso livre para desenvolvimento)
-  // 
-  // IMPORTANTE: NÃO retornar 404 aqui!
-  // Deixar o VerificationWrapper mostrar a whitepage (200 OK)
-  // Isso evita revelar que a rota existe
-  
-  // Rotas protegidas são tratadas pelo VerificationWrapper
-  // Apenas continuar o fluxo normal
   
   // ============================================
   // 🎯 CLOAKER - Detecção de Bot vs Usuário Real
@@ -331,16 +336,34 @@ export async function middleware(request: NextRequest) {
             console.log('🍪 Cookie setado: _x9f2w8k5=true')
             console.log('')
             
-            // Usar a URL que o cloaker retornou e preservar query parameters
-            const redirectPath = result.url || '/recargajogo'
-            const redirectUrl = new URL(redirectPath, request.url)
-            redirectUrl.search = request.nextUrl.search // Preservar UTMs, gclid, etc
+            // Usar a URL que o cloaker retornou
+            // IMPORTANTE: O cloaker decide o redirecionamento, não podemos alterar
+            const cloakerRedirectUrl = result.url || '/recargajogo'
             
-            const response = NextResponse.redirect(redirectUrl)
+            // Extrair pathname da URL do cloaker
+            let targetPath = '/recargajogo'
+            try {
+              const cloakerUrl = new URL(cloakerRedirectUrl)
+              targetPath = cloakerUrl.pathname
+            } catch {
+              // Se não for URL completa, usar como pathname
+              targetPath = cloakerRedirectUrl.replace(/^https?:\/\/[^\/]+/, '') || '/recargajogo'
+            }
+            
+            // Criar URL de rewrite (interno, não redirect)
+            // Isso garante que o cookie seja setado ANTES da próxima requisição
+            const rewriteUrl = new URL(targetPath, request.url)
+            rewriteUrl.search = request.nextUrl.search // Preservar UTMs, gclid, etc
+            
+            // USAR REWRITE ao invés de REDIRECT
+            // Rewrite = interno (cookie é setado imediatamente)
+            // Redirect = nova requisição (cookie pode não estar disponível)
+            const response = NextResponse.rewrite(rewriteUrl)
             response.cookies.set('_x9f2w8k5', 'true', {
               httpOnly: false,
               secure: true,
               sameSite: 'lax',
+              path: '/',
               maxAge: 60 * 60 * 24 // 24 horas
             })
             
