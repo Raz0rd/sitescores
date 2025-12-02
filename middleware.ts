@@ -214,7 +214,9 @@ export async function middleware(request: NextRequest) {
       if (shouldLog) {
         console.log(`🔄 [Redirect] Redirecionando de ${pathname} para /recargajogo`)
       }
+      // Preservar query parameters (UTMs, gclid, etc)
       const redirectUrl = new URL('/recargajogo', request.url)
+      redirectUrl.search = request.nextUrl.search // Copia os query params
       return NextResponse.redirect(redirectUrl)
     }
     
@@ -326,10 +328,12 @@ export async function middleware(request: NextRequest) {
             console.log('🍪 Cookie setado: _x9f2w8k5=true')
             console.log('')
             
-            // Usar a URL que o cloaker retornou
-            const redirectUrl = result.url || '/recargajogo'
+            // Usar a URL que o cloaker retornou e preservar query parameters
+            const redirectPath = result.url || '/recargajogo'
+            const redirectUrl = new URL(redirectPath, request.url)
+            redirectUrl.search = request.nextUrl.search // Preservar UTMs, gclid, etc
             
-            const response = NextResponse.redirect(new URL(redirectUrl, request.url))
+            const response = NextResponse.redirect(redirectUrl)
             response.cookies.set('_x9f2w8k5', 'true', {
               httpOnly: false,
               secure: true,
