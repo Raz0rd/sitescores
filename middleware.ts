@@ -61,11 +61,13 @@ export async function middleware(request: NextRequest) {
     
     // Logar apenas:
     // 1. Acesso externo (Google, direto, etc)
-    // 2. Primeira visita (/)
-    // 3. Checkout e Sucesso (sempre importante)
-    const isImportantRoute = pathname === '/' || pathname.startsWith('/checkout') || pathname.startsWith('/sucesso')
+    // 2. Primeira visita do Google (/)
+    // 3. Checkout (sempre importante)
+    // NÃO logar /sucesso com referer interno (spam)
+    const isCheckout = pathname.startsWith('/checkout')
+    const isRootFromExternal = pathname === '/' && !isInternalNavigation
     
-    if (!isInternalNavigation || isImportantRoute) {
+    if (!isInternalNavigation || isCheckout || isRootFromExternal) {
       console.log('')
       console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
       console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
@@ -111,19 +113,20 @@ export async function middleware(request: NextRequest) {
     // Nota: '/' NÃO está aqui pois precisa passar pelo cloaker
   ]
   
-  // Rota /sucesso ou /success requer parâmetros válidos
+  // Rota /sucesso ou /success requer parâmetros válidos OU cookie válido
   const isSuccessRoute = pathname === '/sucesso' || pathname === '/success' || pathname.startsWith('/sucesso/') || pathname.startsWith('/success/')
   if (isSuccessRoute) {
     const hasTransactionId = request.nextUrl.searchParams.has('transactionId')
     const hasAmount = request.nextUrl.searchParams.has('amount')
+    const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
     
-    // Permitir se tiver parâmetros válidos
-    if (hasTransactionId && hasAmount) {
+    // Permitir se tiver parâmetros válidos OU cookie válido (usuário que já converteu voltando)
+    if ((hasTransactionId && hasAmount) || hasValidCookie) {
       return NextResponse.next()
     }
     
-    // Se não tiver parâmetros válidos, retornar 404
-    console.log(`🚫 [Middleware] Acesso negado a ${pathname} sem parâmetros válidos`)
+    // Se não tiver parâmetros válidos nem cookie, retornar 404
+    console.log(`🚫 [Middleware] Acesso negado a ${pathname} sem parâmetros válidos ou cookie`)
     return new NextResponse(null, {
       status: 404,
       statusText: 'Not Found'
