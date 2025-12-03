@@ -50,6 +50,10 @@ export async function middleware(request: NextRequest) {
     const referer = request.headers.get('referer') || 'direto'
     const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
     
+    // Capturar URL completa com query parameters
+    const fullUrl = request.nextUrl.pathname + (request.nextUrl.search || '')
+    const hasParams = request.nextUrl.search.length > 0
+    
     // Não logar navegação interna repetida (quando referer é do próprio domínio)
     const requestHost = request.headers.get('host') || ''
     const isInternalNavigation = referer !== 'direto' && (
@@ -72,7 +76,10 @@ export async function middleware(request: NextRequest) {
       console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
       console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
       console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
-      console.log(`📍 Rota: ${pathname}`)
+      console.log(`📍 Rota: ${fullUrl}`)
+      if (!hasParams && pathname === '/') {
+        console.log(`⚠️  SEM PARÂMETROS - Possível BOT`)
+      }
       console.log(`🔑 IP: ${clientIp}`)
       console.log(`🔗 Referer: ${referer}`)
       console.log(`🍪 Cookie válido: ${hasValidCookie ? 'SIM' : 'NÃO'}`)
@@ -81,7 +88,7 @@ export async function middleware(request: NextRequest) {
   }
   
   // ============================================
-  // ✅ WHITELIST DE IPs - BYPASS TOTAL
+  // WHITELIST DE IPs - BYPASS TOTAL
   // ============================================
   // IPs nesta lista pulam TODAS as verificações (cloaker, cookies, etc)
   const clientIp = request.headers.get('cf-connecting-ip') || 
@@ -211,16 +218,39 @@ export async function middleware(request: NextRequest) {
   const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
   
   if (hasValidCookie) {
-    // Se tem cookie e está na rota raiz (/), redirecionar para /recargajogo
+    // Se tem cookie e está na rota raiz (/), REWRITE para /recargajogo
     // EXCETO em localhost
     if ((pathname === '/' || pathname === '') && !isLocalhost) {
-      if (shouldLog) {
-        console.log(`🔄 [Redirect] Redirecionando de ${pathname} para /recargajogo`)
+      // Log detalhado para debug
+      const userAgent = request.headers.get('user-agent') || 'unknown'
+      const accept = request.headers.get('accept') || 'unknown'
+      const isUtmifyScript = userAgent.includes('utmify') || referer.includes('utmify')
+      const isBrowser = accept.includes('text/html')
+      const isAjax = accept.includes('application/json')
+      
+      // Só reescrever se for requisição de BROWSER (HTML)
+      // Ignorar requisições AJAX, scripts, imagens, etc
+      if (!isBrowser) {
+        console.log(`⚠️ [Middleware] Ignorando rewrite - não é browser`)
+        console.log(`   - Accept: ${accept}`)
+        console.log(`   - User-Agent: ${userAgent.substring(0, 50)}...`)
+        return NextResponse.next()
       }
+      
+      if (shouldLog) {
+        console.log(`🔄 [Rewrite] Reescrevendo de ${pathname} para /recargajogo (invisível - 200 OK)`)
+        console.log(`   - Accept: ${accept}`)
+        console.log(`   - User-Agent: ${userAgent.substring(0, 80)}...`)
+        if (isUtmifyScript) {
+          console.log(`   ⚠️ ATENÇÃO: Requisição do script UTMify detectada`)
+        }
+      }
+      
       // Preservar query parameters (UTMs, gclid, etc)
-      const redirectUrl = new URL('/recargajogo', request.url)
-      redirectUrl.search = request.nextUrl.search // Copia os query params
-      return NextResponse.redirect(redirectUrl)
+      // USAR REWRITE (200 OK) ao invés de REDIRECT (302)
+      const rewriteUrl = new URL('/recargajogo', request.url)
+      rewriteUrl.search = request.nextUrl.search // Copia os query params
+      return NextResponse.rewrite(rewriteUrl)
     }
     
     // Para qualquer outra rota, liberar acesso (sem log excessivo)
@@ -241,14 +271,15 @@ export async function middleware(request: NextRequest) {
         console.log('🚫 [Middleware] BLOQUEADO: Acesso direto sem cookie')
         console.log('   - Rota:', pathname)
         console.log('   - Motivo: Usuário legítimo passa pelo cloaker em / primeiro')
-        console.log('   - Ação: Redirecionando para /')
+        console.log('   - Ação: Reescrevendo para / (invisível - 200 OK)')
       }
       
-      // Redirecionar para / (onde o cloaker vai validar)
+      // REWRITE para / (onde o cloaker vai validar)
       // Preservar query parameters para não perder UTMs
-      const redirectUrl = new URL('/', request.url)
-      redirectUrl.search = request.nextUrl.search
-      return NextResponse.redirect(redirectUrl)
+      // IMPORTANTE: Usar REWRITE (200 OK) para não revelar que a rota existe
+      const rewriteUrl = new URL('/', request.url)
+      rewriteUrl.search = request.nextUrl.search
+      return NextResponse.rewrite(rewriteUrl)
     }
   }
   

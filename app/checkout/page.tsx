@@ -769,6 +769,12 @@ export default function CheckoutPage() {
         if (response.ok) {
           const data = await response.json()
           
+          // ✅ PARAR POLLING se backend solicitar (conversão já enviada)
+          if (data.stopPolling) {
+            console.log('[POLLING] 🛑 Backend solicitou parada do polling')
+            setTimerActive(false)
+          }
+          
           if (data.success && data.status === 'paid') {
             console.log('[POLLING] ✅ PAGAMENTO CONFIRMADO!')
               setPaymentStatus('paid')

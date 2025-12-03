@@ -252,6 +252,7 @@ export async function POST(request: NextRequest) {
           success: true,
           status: 'paid',
           message: 'Conversão duplicada - ignorada',
+          stopPolling: true, // ✅ PARAR POLLING - já foi processado
           alreadyProcessed: true,
           timeDiff: `${timeDiff}s`
         })
@@ -459,6 +460,7 @@ export async function POST(request: NextRequest) {
         success: true,
         status: 'paid',
         message: 'Pagamento confirmado',
+        stopPolling: true, // ✅ PARAR POLLING - conversão enviada
         transactionData: {
           id: transactionData.id,
           status: transactionData.status,
