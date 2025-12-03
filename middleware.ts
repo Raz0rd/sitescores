@@ -231,20 +231,14 @@ export async function middleware(request: NextRequest) {
       // Só reescrever se for requisição de BROWSER (HTML)
       // Ignorar requisições AJAX, scripts, imagens, etc
       if (!isBrowser) {
-        console.log(`⚠️ [Middleware] Ignorando rewrite - não é browser`)
-        console.log(`   - Accept: ${accept}`)
-        console.log(`   - User-Agent: ${userAgent.substring(0, 50)}...`)
         return NextResponse.next()
       }
       
-      if (shouldLog) {
-        console.log(`🔄 [Rewrite] Reescrevendo de ${pathname} para /recargajogo (invisível - 200 OK)`)
-        console.log(`   - Accept: ${accept}`)
-        console.log(`   - User-Agent: ${userAgent.substring(0, 80)}...`)
-        if (isUtmifyScript) {
-          console.log(`   ⚠️ ATENÇÃO: Requisição do script UTMify detectada`)
-        }
-      }
+      // Log APENAS uma vez por sessão (evitar spam)
+      // Não logar rewrites repetidos do mesmo usuário
+      // if (shouldLog) {
+      //   console.log(`🔄 [Rewrite] / → /recargajogo`)
+      // }
       
       // Preservar query parameters (UTMs, gclid, etc)
       // USAR REWRITE (200 OK) ao invés de REDIRECT (302)
@@ -345,27 +339,17 @@ export async function middleware(request: NextRequest) {
 
       const responseText = await cloakerResponse.text()
       
-      // LOG: Resposta RAW do cloaker
-      console.log('📡 [Cloaker] Status HTTP:', cloakerResponse.status)
-      console.log('📄 [Cloaker] Resposta RAW:', responseText)
-      console.log('📏 [Cloaker] Tamanho da resposta:', responseText.length, 'bytes')
-      
       if (responseText && responseText.trim()) {
         try {
           const result = JSON.parse(responseText)
-          console.log('📥 [Cloaker] JSON parseado:', JSON.stringify(result, null, 2))
-          console.log('🎯 [Cloaker] Tipo detectado:', result.type)
+          
+          // Log simplificado - apenas tipo e status
+          console.log(`🎯 [Cloaker] Tipo: ${result.type} | Status: ${cloakerResponse.status}`)
           
           // Se for "black" (usuário real), apenas setar cookie
           // O cloaker já retorna a URL de redirect no result.url
           if (result.type === 'black') {
-            console.log('')
-            console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
-            console.log('┃ ✅ CLOAKER: USUÁRIO REAL (BLACK)        ┃')
-            console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
-            console.log('🔄 URL do cloaker:', result.url || 'N/A')
-            console.log('🍪 Cookie setado: _x9f2w8k5=true')
-            console.log('')
+            console.log('✅ [Cloaker] Usuário REAL - Cookie setado')
             
             // Usar a URL que o cloaker retornou
             // IMPORTANTE: O cloaker decide o redirecionamento, não podemos alterar
@@ -400,13 +384,7 @@ export async function middleware(request: NextRequest) {
             
             return response
           } else {
-            console.log('')
-            console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
-            console.log('┃ 🤖 CLOAKER: BOT/WHITE DETECTADO        ┃')
-            console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
-            console.log('📍 Tipo:', result.type)
-            console.log('📄 Mostrando: Whitepage (página inicial)')
-            console.log('')
+            console.log('🤖 [Cloaker] BOT detectado - Whitepage')
           }
         } catch (parseError) {
           console.error('❌ [Cloaker] Erro ao parsear JSON:', parseError)

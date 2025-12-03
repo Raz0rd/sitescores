@@ -32,7 +32,7 @@ export default function HomePage() {
     
     const hasSessionCookie = document.cookie.includes('_x9f2w8k5=true')
     if (hasSessionCookie) {
-      document.title = 'Centro de Recarga Free Fire - Diamantes Oficiais'
+      document.title = 'Canal Oficial de Recarga - Free Fire'
     }
   }, [])
   const [leadMessageType, setLeadMessageType] = useState<"default" | "nao_quer_agora" | "nao_tem_interesse">("default")
@@ -97,8 +97,8 @@ export default function HomePage() {
       icon: '/images/icon.png',
       coinIcon: '/images/point.webp',
       userIcon: '/images/icon.png',
-      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600", "15.600"],
-      promotionalValues: ["1.060", "2.180", "5.600", "15.600"],
+      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600"],
+      promotionalValues: ["1.060", "2.180", "5.600"],
       specialOffers: [
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
@@ -459,10 +459,10 @@ export default function HomePage() {
       100: { price: 6.0, bonus: 20 },
       310: { price: 10.99, bonus: 62 },
       520: { price: 14.9, bonus: 104 },
-      1060: { price: 19.99, bonus: 1060 },   // DOBRO
-      2180: { price: 24.8, bonus: 2180 },    // DOBRO
-      5600: { price: 46.40, bonus: 5600 },    // DOBRO
-      15600: { price: 110.85, bonus: 15600 },  // DOBRO
+      1060: { price: 19.99, bonus: 240 },     // 1060 + 240 bônus
+      2180: { price: 27.30, bonus: 840 },     // 2180 + 840 bônus
+      5600: { price: 46.40, bonus: 1200 },    // 5600 + 1200 bônus
+      15600: { price: 110.85, bonus: 15600 }, // DOBRO
     }
 
     return priceMap[diamondCount] || { price: 0, bonus: 0 }
@@ -1571,11 +1571,11 @@ export default function HomePage() {
               )}
             </div>
             <div
-              className="relative p-3 sm:p-4 border rounded-md transition-all bg-[#f4f4f4] border-gray-200"
+              className="relative p-2 sm:p-3 border rounded-md transition-all bg-[#f4f4f4] border-gray-200"
             >
               {isLoggedIn && (
-                <div className="mb-3 sm:mb-4">
-                  <div className="relative flex items-center rounded-md p-3 bg-[#f4f4f4]">
+                <div className="mb-2">
+                  <div className="relative flex items-center rounded-md p-2 bg-[#f4f4f4]">
                     <div className="me-3 h-9 w-9 shrink-0 overflow-hidden rounded-full">
                       <img 
                         alt={`${currentConfig.name} Icon`}
@@ -1843,8 +1843,10 @@ export default function HomePage() {
         {/* Ofertas especiais Section */}
         <div className="relative mx-auto max-w-5xl px-4 sm:px-[22px] md:px-8 pb-4 sm:pb-6">
           <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-gray-600">Ofertas especiais</h3>
-          <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4 md:gap-4">
-            {currentConfig.specialOffers.map((offer) => (
+          <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-2 md:gap-4">
+            {currentConfig.specialOffers
+              .filter(offer => ['2.180 Diamantes', '5.600 Diamantes'].includes(offer.name))
+              .map((offer) => (
               <div
                 key={offer.id}
                 className="relative"

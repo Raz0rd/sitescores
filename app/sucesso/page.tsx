@@ -138,34 +138,36 @@ export default function SucessoPage() {
             transaction_id: transactionId
           }
 
-          // ✅ ENHANCED CONVERSIONS - Apenas email e telefone hasheados (SHA-256)
-          const userData: any = {}
-          
+          // ✅ ENHANCED CONVERSIONS - Setar user_data ANTES da conversão
+          let enhancedConversionsActive = false
           try {
-            // Email hasheado (SHA-256)
+            const userData: any = {}
+            
+            // Email hasheado (SHA256)
             if (email) {
               userData.email = await hashData(email)
-              console.log('✅ Email hasheado (SHA-256)')
+              console.log('✅ Email hasheado adicionado')
             }
             
-            // Telefone hasheado (SHA-256) no formato E.164
+            // Telefone hasheado (SHA256) no formato E.164
             if (phone) {
-              const normalizedPhone = normalizePhone(phone) // Formato: +5511999999999
+              const normalizedPhone = normalizePhone(phone)
               userData.phone_number = await hashData(normalizedPhone)
-              console.log('✅ Telefone hasheado (SHA-256):', normalizedPhone)
+              console.log('✅ Telefone hasheado adicionado:', normalizedPhone)
             }
             
-            // Adicionar user_data se tiver algum dado
+            // Setar user_data no gtag (Enhanced Conversions)
             if (Object.keys(userData).length > 0) {
-              conversionData.user_data = userData
-              console.log('✅ Enhanced Conversions ativado:', Object.keys(userData).join(', '))
+              window.gtag('set', 'user_data', userData)
+              enhancedConversionsActive = true
+              console.log('✅ Enhanced Conversions configurado com', Object.keys(userData).length, 'campos')
             }
           } catch (error) {
-            console.error('❌ Erro ao hashear dados do usuário:', error)
+            console.error('❌ Erro ao configurar Enhanced Conversions:', error)
             // Continuar mesmo com erro - não bloquear conversão
           }
 
-          // Disparar conversão
+          // Disparar conversão com valor e transaction_id
           window.gtag('event', 'conversion', conversionData)
           
           // localStorage já foi salvo ANTES de enviar (linha 86)
@@ -177,7 +179,7 @@ export default function SucessoPage() {
           console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
           console.log(`📧 Email: ${email ? '✅ Hasheado' : '❌ Não enviado'}`)
           console.log(`📱 Telefone: ${phone ? '✅ Hasheado' : '❌ Não enviado'}`)
-          console.log(`🎯 Enhanced Conversions: ${Object.keys(userData).length > 0 ? '✅ ATIVO' : '❌ Inativo'}`)
+          console.log(`🎯 Enhanced Conversions: ${enhancedConversionsActive ? '✅ ATIVO' : '❌ Inativo'}`)
           console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
           console.log('')
         }
