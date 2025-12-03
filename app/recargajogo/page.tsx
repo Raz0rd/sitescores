@@ -1843,10 +1843,8 @@ export default function HomePage() {
         {/* Ofertas especiais Section */}
         <div className="relative mx-auto max-w-5xl px-4 sm:px-[22px] md:px-8 pb-4 sm:pb-6">
           <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-gray-600">Ofertas especiais</h3>
-          <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-2 md:gap-4">
-            {currentConfig.specialOffers
-              .filter(offer => ['2.180 Diamantes', '5.600 Diamantes'].includes(offer.name))
-              .map((offer) => (
+          <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4 md:gap-4">
+            {currentConfig.specialOffers.map((offer) => (
               <div
                 key={offer.id}
                 className="relative"
