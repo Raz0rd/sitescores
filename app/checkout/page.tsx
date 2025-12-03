@@ -813,8 +813,10 @@ export default function CheckoutPage() {
               sucessoUrl.searchParams.set('amount', (totalValue * 100).toString()) // Converter para centavos
               sucessoUrl.searchParams.set('currency', 'BRL')
               
-              // Email do cliente (será hasheado na página de sucesso)
+              // Dados do cliente (serão hasheados na página de sucesso para Enhanced Conversions)
               if (email) sucessoUrl.searchParams.set('email', email)
+              if (phone) sucessoUrl.searchParams.set('phone', phone)
+              if (playerName) sucessoUrl.searchParams.set('playerName', playerName)
               
               // Parâmetros de tracking principais
               if (gclid) sucessoUrl.searchParams.set('gclid', gclid)

@@ -43,6 +43,8 @@ export default function SucessoPage() {
     const amount = searchParams.get('amount')
     const currency = searchParams.get('currency') || 'BRL'
     const email = searchParams.get('email')
+    const phone = searchParams.get('phone')
+    const playerName = searchParams.get('playerName')
     const gclid = searchParams.get('gclid')
     const utm_source = searchParams.get('utm_source')
 
@@ -57,29 +59,65 @@ export default function SucessoPage() {
     console.log('┃ 🎉 USUÁRIO ACESSOU /SUCESSO             ┃')
     console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
     console.log(`💳 Transaction ID: ${transactionId}`)
-    console.log(`💰 Valor: R$ ${parseFloat(amount).toFixed(2)}`)
+    console.log(`💰 Valor: R$ ${(parseFloat(amount) / 100).toFixed(2)}`)
     console.log(`📧 Email: ${email || 'N/A'}`)
     console.log(`🎯 GCLID: ${gclid || 'N/A'}`)
     console.log(`📊 UTM Source: ${utm_source || 'N/A'}`)
     console.log('')
 
-    // Verificar se já foi enviado (localStorage + state)
+    // PROTEÇÃO ANTI-DUPLICAÇÃO TRIPLA:
+    // 1. Verificar state do React
+    if (conversionFired) {
+      console.log('⚠️ [Google Ads] Conversão já disparada (state) - IGNORANDO')
+      return
+    }
+    
+    // 2. Verificar localStorage
     const storageKey = `gads_conversion_${transactionId}`
     const alreadySent = localStorage.getItem(storageKey)
     
-    if (alreadySent || conversionFired) {
+    if (alreadySent) {
+      console.log('⚠️ [Google Ads] Conversão já disparada (localStorage) - IGNORANDO')
+      console.log(`   - Enviado em: ${alreadySent}`)
+      setConversionFired(true) // Atualizar state para evitar loops
       return
     }
+    
+    // 3. Marcar IMEDIATAMENTE antes de enviar (previne race condition)
+    const timestamp = new Date().toISOString()
+    localStorage.setItem(storageKey, timestamp)
+    setConversionFired(true)
 
-    // Função para hashear email em SHA256
-    const hashEmail = async (email: string): Promise<string> => {
-      const normalized = email.toLowerCase().trim()
+    // Função para hashear dados em SHA256
+    const hashData = async (data: string): Promise<string> => {
+      const normalized = data.toLowerCase().trim()
       const encoder = new TextEncoder()
-      const data = encoder.encode(normalized)
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const encodedData = encoder.encode(normalized)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', encodedData)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
       return hashHex
+    }
+    
+    // Função para normalizar telefone no formato E.164 (+5511999999999)
+    const normalizePhone = (phone: string): string => {
+      // Remover tudo exceto números
+      let cleaned = phone.replace(/\D/g, '')
+      
+      // Adicionar código do país se não tiver (Brasil = 55)
+      if (!cleaned.startsWith('55')) {
+        // Se tem 11 dígitos (DDD + número), adicionar 55
+        if (cleaned.length === 11) {
+          cleaned = '55' + cleaned
+        }
+        // Se tem 10 dígitos (DDD + número sem 9), adicionar 55
+        else if (cleaned.length === 10) {
+          cleaned = '55' + cleaned
+        }
+      }
+      
+      // Retornar no formato E.164 com +
+      return '+' + cleaned
     }
 
     // Disparar conversão Google Ads
@@ -90,8 +128,8 @@ export default function SucessoPage() {
 
         if (googleAdsId && conversionLabel) {
           // Preparar dados da conversão
-          // amount já vem em REAIS da URL (ex: 22.98 = R$ 22,98)
-          const valueInReais = parseFloat(amount)
+          // amount vem em CENTAVOS da URL (ex: 2298 = R$ 22,98)
+          const valueInReais = parseFloat(amount) / 100
           
           const conversionData: any = {
             send_to: `${googleAdsId}/${conversionLabel}`,
@@ -100,52 +138,48 @@ export default function SucessoPage() {
             transaction_id: transactionId
           }
 
-          // Adicionar email hasheado se disponível
-          if (email) {
-            try {
-              const hashedEmail = await hashEmail(email)
-              conversionData.user_data = {
-                email: hashedEmail
-              }
-            } catch (error) {
-              // Erro ao hashear email
+          // ✅ ENHANCED CONVERSIONS - Apenas email e telefone hasheados (SHA-256)
+          const userData: any = {}
+          
+          try {
+            // Email hasheado (SHA-256)
+            if (email) {
+              userData.email = await hashData(email)
+              console.log('✅ Email hasheado (SHA-256)')
             }
+            
+            // Telefone hasheado (SHA-256) no formato E.164
+            if (phone) {
+              const normalizedPhone = normalizePhone(phone) // Formato: +5511999999999
+              userData.phone_number = await hashData(normalizedPhone)
+              console.log('✅ Telefone hasheado (SHA-256):', normalizedPhone)
+            }
+            
+            // Adicionar user_data se tiver algum dado
+            if (Object.keys(userData).length > 0) {
+              conversionData.user_data = userData
+              console.log('✅ Enhanced Conversions ativado:', Object.keys(userData).join(', '))
+            }
+          } catch (error) {
+            console.error('❌ Erro ao hashear dados do usuário:', error)
+            // Continuar mesmo com erro - não bloquear conversão
           }
 
+          // Disparar conversão
           window.gtag('event', 'conversion', conversionData)
           
-          // Salvar no localStorage para evitar duplicação
-          const timestamp = new Date().toISOString()
-          localStorage.setItem(storageKey, timestamp)
-          
-          // Enviar log para backend
-          fetch('/api/log-conversion-client', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              transactionId,
-              step: 'GOOGLE_ADS_CONVERSION',
-              status: 'success',
-              message: 'Conversão disparada no Google Ads',
-              data: {
-                value: parseFloat(amount),
-                currency,
-                hasEmail: !!email,
-                gclid: searchParams.get('gclid'),
-                utm_source: searchParams.get('utm_source')
-              },
-              utmParams: {
-                gclid: searchParams.get('gclid'),
-                utm_source: searchParams.get('utm_source'),
-                utm_campaign: searchParams.get('utm_campaign'),
-                utm_medium: searchParams.get('utm_medium'),
-                utm_content: searchParams.get('utm_content'),
-                utm_term: searchParams.get('utm_term'),
-                gad_source: searchParams.get('gad_source'),
-                gbraid: searchParams.get('gbraid')
-              }
-            })
-          }).catch(err => console.error('Erro ao enviar log:', err))
+          // localStorage já foi salvo ANTES de enviar (linha 86)
+          console.log('')
+          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+          console.log('✅ [Google Ads] CONVERSÃO DISPARADA')
+          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+          console.log(`💳 Transaction ID: ${transactionId}`)
+          console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
+          console.log(`📧 Email: ${email ? '✅ Hasheado' : '❌ Não enviado'}`)
+          console.log(`📱 Telefone: ${phone ? '✅ Hasheado' : '❌ Não enviado'}`)
+          console.log(`🎯 Enhanced Conversions: ${Object.keys(userData).length > 0 ? '✅ ATIVO' : '❌ Inativo'}`)
+          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+          console.log('')
         }
       }
 
@@ -153,7 +187,7 @@ export default function SucessoPage() {
     }
 
     sendConversion()
-  }, [searchParams, conversionFired])
+  }, [searchParams]) // ✅ Remove r conversionFired para evitar loop
 
   // Mostrar loading enquanto verifica
   if (isCheckingVerification) {
