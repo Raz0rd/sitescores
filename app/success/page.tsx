@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { trackPurchase } from "@/lib/google-ads"
-import TikTokPixel from "@/components/TikTokPixel"
 
 export default function SuccessPage() {
   const searchParams = useSearchParams()
@@ -110,11 +109,7 @@ export default function SuccessPage() {
   }, [transactionId, amount, router])
   
   return (
-    <>
-      {/* TikTok Pixel */}
-      <TikTokPixel />
-      
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-4">
       <div className="max-w-2xl w-full bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 shadow-2xl">
         <div className="text-center">
           {/* Ícone de sucesso */}
@@ -237,7 +232,6 @@ export default function SuccessPage() {
           </button>
         </div>
       </div>
-      </div>
-    </>
+    </div>
   )
 }

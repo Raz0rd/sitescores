@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation'
 import UrgencyBannerLoja from './UrgencyBannerLoja'
 import RankingTop3 from './RankingTop3'
 import LojaFooter from './LojaFooter'
-import TikTokPixel from '../TikTokPixel'
 
 interface LojaLayoutProps {
   children: React.ReactNode
@@ -78,11 +77,7 @@ export default function LojaLayout({ children, customBanner, hideRanking = false
   }
 
   return (
-    <>
-      {/* TikTok Pixel */}
-      <TikTokPixel />
-      
-      <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
         {/* Header Fixo */}
         <div className="sticky top-0 left-0 right-0 z-50 bg-white shadow-sm">
         {/* Fitinha Animada Customizada ou Padrão */}
@@ -244,9 +239,8 @@ export default function LojaLayout({ children, customBanner, hideRanking = false
       {/* Ranking Top 3 */}
       {!hideRanking && <RankingTop3 />}
 
-        {/* Footer */}
-        <LojaFooter />
-      </div>
-    </>
+      {/* Footer */}
+      <LojaFooter />
+    </div>
   )
 }

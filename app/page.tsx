@@ -2,7 +2,6 @@
 
 import { ArrowRight, Shield, Zap, CreditCard, CheckCircle } from "lucide-react"
 import { useState, useEffect } from "react"
-import TikTokPixel from "@/components/TikTokPixel"
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
@@ -36,9 +35,6 @@ export default function HomePage() {
   if (!mounted) {
     return (
       <>
-        {/* TikTok Pixel */}
-        <TikTokPixel />
-        
         {/* Navbar Fixo de Segurança */}
         <div className="fixed top-0 left-0 right-0 bg-blue-600 z-50 py-3 px-4 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-white">
@@ -155,9 +151,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* TikTok Pixel */}
-      <TikTokPixel />
-      
       {/* Navbar Fixo de Segurança */}
       <div className="fixed top-0 left-0 right-0 bg-blue-600 z-50 py-3 px-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-white">
