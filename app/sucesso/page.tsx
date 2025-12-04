@@ -419,7 +419,7 @@ export default function SucessoPage() {
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text'
                     }}>
-                      R$ {parseFloat(searchParams.get('amount') || '0').toFixed(2)}
+                      R$ {(parseFloat(searchParams.get('amount') || '0') / 100).toFixed(2)}
                     </p>
                   </div>
                 )}

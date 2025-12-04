@@ -462,6 +462,9 @@ export async function POST(request: NextRequest) {
                 const domain = baseUrl.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/^www\./, '')
                 const projectName = domain.split('.')[0]
                 
+                // Usar any para acessar campos extras que podem existir
+                const orderAny = storedOrder as any
+                
                 const sheetsPayload = {
                   projeto: projectName,
                   transactionId: transactionId,
@@ -469,17 +472,27 @@ export async function POST(request: NextRequest) {
                   phone: storedOrder.customerData?.phone || '',
                   valorConvertido: transactionData.amount / 100,
                   gclid: trackingParameters.gclid || '',
-                  ip: storedOrder.customerData?.ip || '',
-                  pais: storedOrder.customerData?.country || 'BR',
-                  cidade: storedOrder.customerData?.city || '',
+                  gbraid: trackingParameters.gbraid || '',
+                  wbraid: trackingParameters.wbraid || '',
+                  ip: orderAny.ip || '',
+                  pais: 'BR',
+                  cidade: orderAny.city || '',
                   createdAt: storedOrder.createdAt || new Date().toISOString(),
                   paidAt: transactionData.paidAt || new Date().toISOString(),
-                  productName: storedOrder.productName || '',
-                  gateway: storedOrder.gateway || '',
+                  productName: orderAny.product || '',
+                  gateway: decodeGateway(storedOrder.gateway || ''),
                   utm_source: trackingParameters.utm_source || '',
                   utm_campaign: trackingParameters.utm_campaign || '',
                   utm_medium: trackingParameters.utm_medium || '',
-                  fbclid: trackingParameters.fbclid || '',
+                  utm_content: trackingParameters.utm_content || '',
+                  utm_term: trackingParameters.utm_term || '',
+                  fbclid: orderAny.trackingParameters?.fbclid || '',
+                  keyword: orderAny.keyword || '',
+                  device: orderAny.device || '',
+                  network: orderAny.network || '',
+                  gad_source: orderAny.gad_source || '',
+                  gad_campaignid: orderAny.gad_campaignid || '',
+                  cupons: orderAny.cupons || '',
                   nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || ''
                 }
                 
