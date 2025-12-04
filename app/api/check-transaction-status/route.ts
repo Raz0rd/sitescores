@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { orderStorageService } from "@/lib/order-storage"
-import { customerStorageService, type CustomerData } from "@/lib/customer-storage"
 import { getUTCTimestamp } from "@/lib/brazil-time"
 
 // Cache para evitar processamento duplicado (em memória)
@@ -443,82 +442,53 @@ export async function POST(request: NextRequest) {
               console.log(`[CHECK-STATUS] 🔒 Marcado como enviado para UTMify no storage`)
             }
             
-            // 💾 SALVAR DADOS DO CLIENTE (Local + Google Sheets)
-            try {
-              const customerData: CustomerData = {
-                transactionId: transactionId.toString(),
-                email: utmifyData.customer.email,
-                phone: utmifyData.customer.phone,
-                valorConvertido: utmifyData.products[0].priceInCents,
-                gclid: utmifyData.trackingParameters.gclid,
-                ip: utmifyData.customer.ip,
-                pais: utmifyData.customer.country,
-                cidade: null, // Pode adicionar lógica de geolocalização depois
-                createdAt: utmifyData.createdAt,
-                paidAt: utmifyData.approvedDate || new Date().toISOString(),
-                productName: utmifyData.products[0].name,
-                gateway: gateway,
-                utm_source: utmifyData.trackingParameters.utm_source,
-                utm_campaign: utmifyData.trackingParameters.utm_campaign,
-                utm_medium: utmifyData.trackingParameters.utm_medium,
-                fbclid: utmifyData.trackingParameters.fbclid,
-                ttclid: utmifyData.trackingParameters.msclkid
-              }
-              
-              // Salvar localmente
-              customerStorageService.saveCustomer(customerData)
-              console.log(`💾 [CUSTOMER] Dados salvos localmente: ${customerData.email}`)
-              
-              // Enviar para Google Sheets
-              const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
-              if (googleSheetsUrl) {
-                try {
-                  const sheetsPayload = {
-                    projeto: 'RecarGames', // Nome da aba na planilha
-                    transactionId: customerData.transactionId,
-                    email: customerData.email,
-                    phone: customerData.phone,
-                    valorConvertido: customerData.valorConvertido,
-                    gclid: customerData.gclid,
-                    ip: customerData.ip,
-                    pais: customerData.pais,
-                    cidade: customerData.cidade,
-                    createdAt: customerData.createdAt,
-                    paidAt: customerData.paidAt,
-                    productName: customerData.productName,
-                    gateway: customerData.gateway,
-                    utm_source: customerData.utm_source,
-                    utm_campaign: customerData.utm_campaign,
-                    utm_medium: customerData.utm_medium,
-                    fbclid: customerData.fbclid,
-                    nomeCliente: utmifyData.customer.name
-                  }
-                  
-                  console.log(`📊 [GOOGLE SHEETS] Enviando dados para planilha...`)
-                  const sheetsResponse = await fetch(googleSheetsUrl, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(sheetsPayload)
-                  })
-                  
-                  if (sheetsResponse.ok) {
-                    const sheetsResult = await sheetsResponse.json()
-                    console.log(`✅ [GOOGLE SHEETS] Cliente salvo na planilha: ${customerData.email}`)
-                  } else {
-                    const errorText = await sheetsResponse.text()
-                    console.error(`❌ [GOOGLE SHEETS] Erro ao salvar: ${sheetsResponse.status}`)
-                    console.error(`   Resposta:`, errorText)
-                  }
-                } catch (sheetsError) {
-                  console.error(`❌ [GOOGLE SHEETS] Erro ao enviar:`, sheetsError)
+            // 📊 ENVIAR PARA GOOGLE SHEETS
+            const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+            if (googleSheetsUrl) {
+              try {
+                const sheetsPayload = {
+                  projeto: 'RecarGames', // Nome da aba na planilha
+                  transactionId: transactionId.toString(),
+                  email: utmifyData.customer.email,
+                  phone: utmifyData.customer.phone,
+                  valorConvertido: utmifyData.products[0].priceInCents / 100,
+                  gclid: utmifyData.trackingParameters.gclid,
+                  ip: utmifyData.customer.ip,
+                  pais: utmifyData.customer.country,
+                  cidade: null,
+                  createdAt: utmifyData.createdAt,
+                  paidAt: utmifyData.approvedDate || new Date().toISOString(),
+                  productName: utmifyData.products[0].name,
+                  gateway: gateway,
+                  utm_source: utmifyData.trackingParameters.utm_source,
+                  utm_campaign: utmifyData.trackingParameters.utm_campaign,
+                  utm_medium: utmifyData.trackingParameters.utm_medium,
+                  fbclid: utmifyData.trackingParameters.fbclid,
+                  nomeCliente: utmifyData.customer.name
                 }
-              } else {
-                console.warn(`⚠️ [GOOGLE SHEETS] URL não configurada no .env`)
+                
+                console.log(`📊 [GOOGLE SHEETS] Enviando dados para planilha...`)
+                const sheetsResponse = await fetch(googleSheetsUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(sheetsPayload)
+                })
+                
+                if (sheetsResponse.ok) {
+                  const sheetsResult = await sheetsResponse.json()
+                  console.log(`✅ [GOOGLE SHEETS] Cliente salvo na planilha: ${sheetsPayload.email}`)
+                } else {
+                  const errorText = await sheetsResponse.text()
+                  console.error(`❌ [GOOGLE SHEETS] Erro ao salvar: ${sheetsResponse.status}`)
+                  console.error(`   Resposta:`, errorText)
+                }
+              } catch (sheetsError) {
+                console.error(`❌ [GOOGLE SHEETS] Erro ao enviar:`, sheetsError)
               }
-            } catch (error) {
-              console.error(`❌ [CUSTOMER] Erro ao salvar dados:`, error)
+            } else {
+              console.warn(`⚠️ [GOOGLE SHEETS] URL não configurada no .env`)
             }
           } else {
             const errorText = await utmifyResponse.text()
