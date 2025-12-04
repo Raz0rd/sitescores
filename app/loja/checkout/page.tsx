@@ -15,7 +15,7 @@ export default function CheckoutPage() {
   const cart = useCart()
   
   // Pegar categoria da URL ou do carrinho
-  const categoryParam = searchParams.get('category') as 'freefire' | 'robux' | 'vbucks' | null
+  const categoryParam = searchParams.get('category') as 'freefire' | 'robux' | 'vbucks' | 'recarga' | null
   const category = categoryParam || cart.items[0]?.category || 'freefire'
   
   // Sempre começar no resumo do carrinho
@@ -57,6 +57,20 @@ export default function CheckoutPage() {
           text: 'text-blue-600',
           border: 'border-blue-500',
           bg: 'bg-blue-50'
+        }
+      case 'recarga':
+        return {
+          primary: 'bg-green-500 hover:bg-green-600',
+          text: 'text-green-600',
+          border: 'border-green-500',
+          bg: 'bg-green-50'
+        }
+      default:
+        return {
+          primary: 'bg-gray-500 hover:bg-gray-600',
+          text: 'text-gray-600',
+          border: 'border-gray-500',
+          bg: 'bg-gray-50'
         }
     }
   }
@@ -193,7 +207,7 @@ function CheckoutForm({
   colors,
   onBack 
 }: { 
-  category: 'freefire' | 'robux' | 'vbucks'
+  category: 'freefire' | 'robux' | 'vbucks' | 'recarga'
   colors: any
   onBack: () => void
 }) {
@@ -304,16 +318,20 @@ function CheckoutForm({
     }
   }
 
-  // Carregar pagamento pendente do localStorage
+  // Carregar pagamento pendente do localStorage (separado por categoria)
   useEffect(() => {
     const loadPendingPayment = async () => {
-      const savedPayment = localStorage.getItem('pendingPayment')
+      const storageKey = `pendingPayment_${category}`
+      const savedPayment = localStorage.getItem(storageKey)
+      
       if (savedPayment) {
         try {
           const payment = JSON.parse(savedPayment)
           // Verificar se não expirou (30 minutos)
           const expiresAt = new Date(payment.expiresAt).getTime()
           if (expiresAt > Date.now()) {
+            console.log(`📦 [LOJA] Carregando pagamento pendente de ${category}`)
+            
             // 🎨 Gerar QR Code se não existir
             if (!payment.qrCode && payment.qrCodeText) {
               console.log('🎨 [LOJA] Gerando QR Code do localStorage...')
@@ -338,17 +356,18 @@ function CheckoutForm({
             setStep('form')
             startPolling(payment.transactionId)
           } else {
-            localStorage.removeItem('pendingPayment')
+            console.log(`🗑️ [LOJA] Pagamento de ${category} expirado, removendo...`)
+            localStorage.removeItem(storageKey)
           }
         } catch (e) {
           console.error('Erro ao carregar pagamento:', e)
-          localStorage.removeItem('pendingPayment')
+          localStorage.removeItem(storageKey)
         }
       }
     }
     
     loadPendingPayment()
-  }, [])
+  }, [category])
 
   // Polling para verificar status do pagamento (MESMA ROTA DO RECARGAJOGO)
   const startPolling = (transactionId: string) => {
@@ -373,7 +392,11 @@ function CheckoutForm({
           if (pollingIntervalRef.current) {
             clearInterval(pollingIntervalRef.current)
           }
-          localStorage.removeItem('pendingPayment')
+          
+          // Remover pendingPayment da categoria atual
+          const storageKey = `pendingPayment_${category}`
+          localStorage.removeItem(storageKey)
+          console.log(`🗑️ [LOJA] Pagamento de ${category} removido após confirmação`)
           
           // Preparar dados para página de sucesso
           const itemNames = cart.items.map(item => item.name).join(', ')
@@ -504,8 +527,10 @@ function CheckoutForm({
         
         setPixData(pixDataWithQR)
         
-        // Salvar no localStorage
-        localStorage.setItem('pendingPayment', JSON.stringify(pixDataWithQR))
+        // Salvar no localStorage (separado por categoria)
+        const storageKey = `pendingPayment_${category}`
+        localStorage.setItem(storageKey, JSON.stringify(pixDataWithQR))
+        console.log(`💾 [LOJA] Pagamento salvo em ${storageKey}`)
         
         // Iniciar polling
         startPolling(result.data.transactionId)

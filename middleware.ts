@@ -191,6 +191,8 @@ export async function middleware(request: NextRequest) {
     '/loja/vbucks',
     '/loja/recarga-celular',
     '/loja/brainroots',
+    '/loja/checkout',
+    '/loja/carrinho',
     '/unsubscribe', 
     '/ativar-conversao-google', 
     '/meus-pedidos', 
@@ -199,7 +201,10 @@ export async function middleware(request: NextRequest) {
     '/termos',
     '/privacidade'
   ]
-  const isWhitePageRoute = whitePageRoutes.includes(pathname) || pathname.startsWith('/produto/') || pathname.startsWith('/blog/')
+  const isWhitePageRoute = whitePageRoutes.includes(pathname) || 
+                           pathname.startsWith('/produto/') || 
+                           pathname.startsWith('/blog/') ||
+                           pathname.startsWith('/loja/')
   
   // Verificar se o cloaker está habilitado
   const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'

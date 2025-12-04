@@ -1,10 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from 'next/navigation'
 import LojaLayout from '@/components/loja/LojaLayout'
 import RecargaBanner from '@/components/loja/RecargaBanner'
+import { useCart } from '@/contexts/CartContext'
 
 export default function RecargaCelularPage() {
+  const router = useRouter()
+  const cart = useCart()
   const [selectedOperadora, setSelectedOperadora] = useState<string | null>(null)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [selectedRechargeValue, setSelectedRechargeValue] = useState<string | null>(null)
@@ -19,6 +23,34 @@ export default function RecargaCelularPage() {
     { name: 'TIM', logo: '/images/recargacelular/TIM_logo_(2016-present).png' },
     { name: 'Oi', logo: '/images/recargacelular/Oi_logo_2022.png' }
   ]
+
+  const handleProsseguir = () => {
+    if (!phoneNumber || !selectedOperadora || !selectedRechargeValue) return
+
+    const rechargeItem = [
+      { value: '20', bonus: '+4GB GRÁTIS' },
+      { value: '30', bonus: '+6GB GRÁTIS' },
+      { value: '50', bonus: '+10GB GRÁTIS' },
+      { value: '70', bonus: '+14GB GRÁTIS' },
+      { value: '80', bonus: '+16GB GRÁTIS' },
+      { value: '100', bonus: '+20GB GRÁTIS' }
+    ].find(item => item.value === selectedRechargeValue)
+
+    cart.addItem({
+      id: `recarga-${selectedOperadora}-${selectedRechargeValue}`,
+      name: `Recarga ${selectedOperadora} R$ ${selectedRechargeValue}`,
+      image: operadoras.find(op => op.name === selectedOperadora)?.logo || '',
+      price: parseFloat(selectedRechargeValue),
+      category: 'recarga',
+      details: {
+        'Operadora': selectedOperadora,
+        'Valor': `R$ ${selectedRechargeValue}`,
+        'Bônus': rechargeItem?.bonus || '',
+        'Telefone': phoneNumber
+      }
+    })
+    router.push('/loja/checkout?category=recarga')
+  }
 
   return (
     <LojaLayout customBanner={<RecargaBanner />}>
@@ -131,6 +163,7 @@ export default function RecargaCelularPage() {
 
           {/* Botão de Prosseguir */}
           <button 
+            onClick={handleProsseguir}
             className="w-full bg-green-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!phoneNumber || !selectedOperadora || !selectedRechargeValue}
           >

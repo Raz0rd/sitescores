@@ -1,10 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from 'next/navigation'
 import LojaLayout from '@/components/loja/LojaLayout'
 import VBucksBanner from '@/components/loja/VBucksBanner'
+import { useCart } from '@/contexts/CartContext'
 
 export default function VBucksPage() {
+  const router = useRouter()
+  const cart = useCart()
   const [selectedRechargeValue, setSelectedRechargeValue] = useState<number | null>(null)
 
   useEffect(() => {
@@ -21,6 +25,24 @@ export default function VBucksPage() {
     { value: 27000, price: 405.37, originalPrice: 810.00, image: "/images/27000.jpeg", title: "Fortnite Account 27000 V-Bucks" },
     { value: 54000, price: 810.92, originalPrice: 1620.00, image: "/images/54000Vbucks.jpeg", title: "Fortnite Account 54000 V-Bucks" }
   ]
+
+  const handleAddToCart = (pkg: typeof vbucksPackages[0]) => {
+    cart.addItem({
+      id: `vbucks-${pkg.value}`,
+      name: `${pkg.value.toLocaleString()} V-Bucks`,
+      image: pkg.image,
+      price: pkg.price,
+      originalPrice: pkg.originalPrice,
+      category: 'vbucks',
+      details: {
+        'Quantidade': `${pkg.value.toLocaleString()} V-Bucks`,
+        'Plataforma': 'Epic Games',
+        'Região': 'Global',
+        'Entrega': 'Instantânea'
+      }
+    })
+    router.push('/loja/checkout?category=vbucks')
+  }
 
   return (
     <LojaLayout customBanner={<VBucksBanner />}>
@@ -97,7 +119,7 @@ export default function VBucksPage() {
                     <p className="text-sm font-bold text-gray-900 mb-1">
                       {pkg.value.toLocaleString()} V-Bucks
                     </p>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-2">
                       <div>
                         <div className="text-[10px] text-gray-400 line-through">
                           R$ {pkg.originalPrice.toFixed(2)}
@@ -108,6 +130,17 @@ export default function VBucksPage() {
                       </div>
                       <span className="text-[10px] text-gray-500">GLOBAL</span>
                     </div>
+                    
+                    {/* Botão Comprar */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAddToCart(pkg)
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1.5 rounded transition-colors"
+                    >
+                      Comprar
+                    </button>
                   </div>
                 </div>
 

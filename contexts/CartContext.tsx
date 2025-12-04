@@ -9,7 +9,7 @@ export interface CartItem {
   image: string
   price: number
   originalPrice?: number
-  category: 'freefire' | 'robux' | 'vbucks'
+  category: 'freefire' | 'robux' | 'vbucks' | 'recarga'
   details: {
     [key: string]: string
   }
@@ -32,6 +32,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
+  const [currentCategory, setCurrentCategory] = useState<'freefire' | 'robux' | 'vbucks' | 'recarga' | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
@@ -43,27 +44,51 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setModalOpen(true)
   }
 
-  // Carregar do localStorage ao montar
+  // Detectar categoria atual da URL
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
-      try {
-        const parsed = JSON.parse(savedCart)
-        setItems(parsed)
-        console.log('📦 [CartContext] Carrinho carregado:', parsed)
-      } catch (e) {
-        console.error('❌ [CartContext] Erro ao carregar carrinho:', e)
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname
+      if (path.includes('/freefire')) {
+        setCurrentCategory('freefire')
+      } else if (path.includes('/robux')) {
+        setCurrentCategory('robux')
+      } else if (path.includes('/vbucks')) {
+        setCurrentCategory('vbucks')
+      } else if (path.includes('/recarga-celular')) {
+        setCurrentCategory('recarga')
       }
     }
   }, [])
 
-  // Salvar no localStorage quando mudar
+  // Carregar do localStorage ao montar (apenas da categoria atual)
   useEffect(() => {
-    if (items.length > 0) {
-      localStorage.setItem('cart', JSON.stringify(items))
-      console.log('💾 [CartContext] Carrinho salvo:', items)
+    if (!currentCategory) return
+    
+    const savedCart = localStorage.getItem(`cart_${currentCategory}`)
+    if (savedCart) {
+      try {
+        const parsed = JSON.parse(savedCart)
+        setItems(parsed)
+        console.log(`📦 [CartContext] Carrinho ${currentCategory} carregado:`, parsed)
+      } catch (e) {
+        console.error('❌ [CartContext] Erro ao carregar carrinho:', e)
+      }
+    } else {
+      setItems([])
     }
-  }, [items])
+  }, [currentCategory])
+
+  // Salvar no localStorage quando mudar (separado por categoria)
+  useEffect(() => {
+    if (!currentCategory) return
+    
+    if (items.length > 0) {
+      localStorage.setItem(`cart_${currentCategory}`, JSON.stringify(items))
+      console.log(`💾 [CartContext] Carrinho ${currentCategory} salvo:`, items)
+    } else {
+      localStorage.removeItem(`cart_${currentCategory}`)
+    }
+  }, [items, currentCategory])
 
   const addItem = (item: CartItem) => {
     console.log('🛒 [CartContext] Tentando adicionar item:', item.name, 'Categoria:', item.category)
