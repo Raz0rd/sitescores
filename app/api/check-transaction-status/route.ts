@@ -446,6 +446,71 @@ export async function POST(request: NextRequest) {
               })
               console.log(`[CHECK-STATUS] 🔒 Marcado como enviado para UTMify no storage`)
             }
+            
+            // ============================================
+            // 📊 GOOGLE SHEETS - Salvar dados do cliente
+            // ============================================
+            const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+            if (googleSheetsUrl && storedOrder) {
+              try {
+                // Extrair nome do domínio para usar como projeto
+                const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+                if (!baseUrl) {
+                  throw new Error('NEXT_PUBLIC_BASE_URL não configurado')
+                }
+                // Ex: https://aprovarevolucaoweb.click/ → aprovarevolucaoweb
+                const domain = baseUrl.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/^www\./, '')
+                const projectName = domain.split('.')[0]
+                
+                const sheetsPayload = {
+                  projeto: projectName,
+                  transactionId: transactionId,
+                  email: storedOrder.customerData?.email || '',
+                  phone: storedOrder.customerData?.phone || '',
+                  valorConvertido: transactionData.amount / 100,
+                  gclid: trackingParameters.gclid || '',
+                  ip: storedOrder.customerData?.ip || '',
+                  pais: storedOrder.customerData?.country || 'BR',
+                  cidade: storedOrder.customerData?.city || '',
+                  createdAt: storedOrder.createdAt || new Date().toISOString(),
+                  paidAt: transactionData.paidAt || new Date().toISOString(),
+                  productName: storedOrder.productName || '',
+                  gateway: storedOrder.gateway || '',
+                  utm_source: trackingParameters.utm_source || '',
+                  utm_campaign: trackingParameters.utm_campaign || '',
+                  utm_medium: trackingParameters.utm_medium || '',
+                  fbclid: trackingParameters.fbclid || '',
+                  nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || ''
+                }
+                
+                console.log(`📊 [GOOGLE SHEETS] Enviando dados para planilha...`)
+                console.log(`   - Projeto: ${projectName}`)
+                console.log(`   - Email: ${sheetsPayload.email}`)
+                console.log(`   - Valor: R$ ${sheetsPayload.valorConvertido}`)
+                
+                const sheetsResponse = await fetch(googleSheetsUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(sheetsPayload)
+                })
+                
+                if (sheetsResponse.ok) {
+                  const sheetsResult = await sheetsResponse.json()
+                  console.log(`✅ [GOOGLE SHEETS] Cliente salvo na planilha: ${sheetsPayload.email}`)
+                  console.log(`   - Response:`, sheetsResult)
+                } else {
+                  const errorText = await sheetsResponse.text()
+                  console.error(`❌ [GOOGLE SHEETS] Erro ao salvar: ${sheetsResponse.status}`)
+                  console.error(`   - Resposta:`, errorText)
+                }
+              } catch (sheetsError) {
+                console.error(`❌ [GOOGLE SHEETS] Erro ao enviar:`, sheetsError)
+              }
+            } else if (!googleSheetsUrl) {
+              console.warn(`⚠️ [GOOGLE SHEETS] URL não configurada no .env (GOOGLE_SHEETS_WEBHOOK_URL)`)
+            }
           } else {
             const errorText = await utmifyResponse.text()
             console.error(`[CHECK-STATUS] ❌ Erro ao notificar UTMify:`, utmifyResponse.status)
