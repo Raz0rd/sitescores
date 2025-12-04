@@ -145,6 +145,67 @@ export async function POST(request: NextRequest) {
         if (updated) {
           console.log(`✅ [WEBHOOK] Status atualizado no orderStorage: PAID`)
         }
+        
+        // 📊 ENVIAR PARA GOOGLE SHEETS
+        const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+        if (googleSheetsUrl && storedOrder) {
+          try {
+            // Extrair nome do domínio para usar como projeto
+            const domain = process.env.NEXT_PUBLIC_DOMAIN || 'aprovarevolucaoweb-click'
+            const projectName = domain.replace(/^www\./, '').split('.')[0] // Ex: aprovarevolucaoweb-click → aprovarevolucaoweb
+            
+            // Recuperar tracking parameters
+            const trackingParams = storedOrder.trackingParameters || {}
+            
+            const sheetsPayload = {
+              projeto: projectName,
+              transactionId: transactionId,
+              email: (storedOrder.customerData as any)?.email || transaction.customer?.email || '',
+              phone: (storedOrder.customerData as any)?.phone || transaction.customer?.phone || '',
+              valorConvertido: transaction.amount / 100,
+              gclid: (trackingParams as any).gclid || '',
+              ip: (storedOrder.customerData as any)?.ip || transaction.ip || '',
+              pais: (storedOrder.customerData as any)?.country || 'BR',
+              cidade: (storedOrder.customerData as any)?.city || '',
+              createdAt: storedOrder.createdAt || transaction.createdAt || new Date().toISOString(),
+              paidAt: transaction.paidAt || new Date().toISOString(),
+              productName: storedOrder.productName || 'Recarga Free Fire',
+              gateway: storedOrder.gateway || origem,
+              utm_source: (trackingParams as any).utm_source || '',
+              utm_campaign: (trackingParams as any).utm_campaign || '',
+              utm_medium: (trackingParams as any).utm_medium || '',
+              fbclid: (trackingParams as any).fbclid || '',
+              nomeCliente: transaction.customer?.name || (storedOrder.customerData as any)?.name || ''
+            }
+            
+            console.log(`📊 [GOOGLE SHEETS] Enviando dados para planilha...`)
+            console.log(`   - Projeto: ${projectName}`)
+            console.log(`   - Email: ${sheetsPayload.email}`)
+            console.log(`   - Valor: R$ ${sheetsPayload.valorConvertido}`)
+            
+            const sheetsResponse = await fetch(googleSheetsUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(sheetsPayload)
+            })
+            
+            if (sheetsResponse.ok) {
+              const sheetsResult = await sheetsResponse.json()
+              console.log(`✅ [GOOGLE SHEETS] Cliente salvo na planilha: ${sheetsPayload.email}`)
+              console.log(`   - Response:`, sheetsResult)
+            } else {
+              const errorText = await sheetsResponse.text()
+              console.error(`❌ [GOOGLE SHEETS] Erro ao salvar: ${sheetsResponse.status}`)
+              console.error(`   - Resposta:`, errorText)
+            }
+          } catch (sheetsError) {
+            console.error(`❌ [GOOGLE SHEETS] Erro ao enviar:`, sheetsError)
+          }
+        } else if (!googleSheetsUrl) {
+          console.warn(`⚠️ [GOOGLE SHEETS] URL não configurada no .env (GOOGLE_SHEETS_WEBHOOK_URL)`)
+        }
       } else {
         console.log(`⚠️ [WEBHOOK] Pedido não encontrado no orderStorage para atualizar`)
       }
