@@ -58,3 +58,5 @@ vercel.json
 # Arquivos HTML temporários
 /*.html
 
+# Google Sheets credentials
+chavesheets.json

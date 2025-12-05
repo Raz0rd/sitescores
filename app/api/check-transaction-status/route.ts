@@ -3,6 +3,7 @@ import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
 import { logConversion } from "@/lib/conversion-logger"
+import { saveToGoogleSheets } from "@/lib/google-sheets"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -450,8 +451,7 @@ export async function POST(request: NextRequest) {
             // ============================================
             // 📊 GOOGLE SHEETS - Salvar dados do cliente
             // ============================================
-            const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
-            if (googleSheetsUrl && storedOrder) {
+            if (storedOrder) {
               try {
                 // Extrair nome do domínio para usar como projeto
                 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
@@ -465,7 +465,7 @@ export async function POST(request: NextRequest) {
                 // Usar any para acessar campos extras que podem existir
                 const orderAny = storedOrder as any
                 
-                const sheetsPayload = {
+                const sheetsData = {
                   projeto: projectName,
                   transactionId: transactionId,
                   email: storedOrder.customerData?.email || '',
@@ -493,36 +493,19 @@ export async function POST(request: NextRequest) {
                   gad_source: orderAny.gad_source || '',
                   gad_campaignid: orderAny.gad_campaignid || '',
                   cupons: orderAny.cupons || '',
-                  nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || ''
+                  nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || '',
+                  cpf: storedOrder.customerData?.document || ''
                 }
                 
-                console.log(`📊 [GOOGLE SHEETS] Enviando dados para planilha...`)
-                console.log(`   - Projeto: ${projectName}`)
-                console.log(`   - Email: ${sheetsPayload.email}`)
-                console.log(`   - Valor: R$ ${sheetsPayload.valorConvertido}`)
+                // Salvar usando Google Sheets API
+                const result = await saveToGoogleSheets(sheetsData)
+                console.log(`✅ [GOOGLE SHEETS] Cliente salvo: ${sheetsData.email}`)
+                console.log(`   - Aba: ${result.sheet}`)
+                console.log(`   - Linhas: ${result.rows}`)
                 
-                const sheetsResponse = await fetch(googleSheetsUrl, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(sheetsPayload)
-                })
-                
-                if (sheetsResponse.ok) {
-                  const sheetsResult = await sheetsResponse.json()
-                  console.log(`✅ [GOOGLE SHEETS] Cliente salvo na planilha: ${sheetsPayload.email}`)
-                  console.log(`   - Response:`, sheetsResult)
-                } else {
-                  const errorText = await sheetsResponse.text()
-                  console.error(`❌ [GOOGLE SHEETS] Erro ao salvar: ${sheetsResponse.status}`)
-                  console.error(`   - Resposta:`, errorText)
-                }
               } catch (sheetsError) {
-                console.error(`❌ [GOOGLE SHEETS] Erro ao enviar:`, sheetsError)
+                console.error(`❌ [GOOGLE SHEETS] Erro ao salvar:`, sheetsError)
               }
-            } else if (!googleSheetsUrl) {
-              console.warn(`⚠️ [GOOGLE SHEETS] URL não configurada no .env (GOOGLE_SHEETS_WEBHOOK_URL)`)
             }
           } else {
             const errorText = await utmifyResponse.text()
