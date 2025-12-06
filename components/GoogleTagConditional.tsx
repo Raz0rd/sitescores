@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
  * Sistema de páginas:
  * - INICIAL: WhitePage (antes de clicar) → MOSTRA tag
  * - LOJA: Página de recarga (depois de clicar) → NÃO MOSTRA tag
- * - SUCESSO: Página de conversão → MOSTRA tag
+ * - SUCESSO: Página de conversão → NÃO MOSTRA tag (evitar suspensão)
  * - NOSCRIPT: Sem JavaScript → MOSTRA iframe (no layout.tsx)
  */
 
@@ -19,7 +19,7 @@ export default function GoogleTagConditional() {
   
   // Determinar tipo de página
   useEffect(() => {
-    if (pathname === '/success') {
+    if (pathname === '/success' || pathname === '/sucesso') {
       setPageType('sucesso')
       return
     }
@@ -32,9 +32,9 @@ export default function GoogleTagConditional() {
     }
   }, [pathname])
   
-  // Remover scripts se estiver na LOJA
+  // Remover scripts se estiver na LOJA ou SUCESSO
   useEffect(() => {
-    if (pageType === 'loja') {
+    if (pageType === 'loja' || pageType === 'sucesso') {
       // Remover todos os scripts do Google
       const scripts = document.querySelectorAll('script[src*="googletagmanager.com"], script[id*="google-gtag"]')
       scripts.forEach(script => script.remove())
@@ -54,9 +54,9 @@ export default function GoogleTagConditional() {
     return null
   }
   
-  // Renderizar scripts APENAS se NÃO for LOJA
+  // Renderizar scripts APENAS se NÃO for LOJA ou SUCESSO
   // Isso faz os scripts aparecerem no source do HTML inicial
-  if (pageType === 'loja') {
+  if (pageType === 'loja' || pageType === 'sucesso') {
     return null
   }
 

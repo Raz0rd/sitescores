@@ -465,6 +465,18 @@ export async function POST(request: NextRequest) {
                 // Usar any para acessar campos extras que podem existir
                 const orderAny = storedOrder as any
                 
+                // LOG DEBUG - Ver o que tem no storedOrder
+                console.log('')
+                console.log('🔍 [DEBUG] storedOrder completo:')
+                console.log(JSON.stringify(storedOrder, null, 2))
+                console.log('')
+                console.log('🔍 [DEBUG] trackingParameters completo:')
+                console.log(JSON.stringify(trackingParameters, null, 2))
+                console.log('')
+                console.log('🔍 [DEBUG] transactionData completo:')
+                console.log(JSON.stringify(transactionData, null, 2))
+                console.log('')
+                
                 const sheetsData = {
                   projeto: projectName,
                   transactionId: transactionId,
@@ -496,6 +508,43 @@ export async function POST(request: NextRequest) {
                   nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || '',
                   cpf: storedOrder.customerData?.document || ''
                 }
+                
+                // LOG DETALHADO - Verificar TODOS os dados antes de enviar
+                console.log('')
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                console.log('📊 [GOOGLE SHEETS] DADOS PARA ENVIAR')
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                console.log(`📁 Projeto: ${sheetsData.projeto}`)
+                console.log(`🆔 Transaction ID: ${sheetsData.transactionId}`)
+                console.log(`📧 Email: ${sheetsData.email || '❌ VAZIO'}`)
+                console.log(`📱 Telefone: ${sheetsData.phone || '❌ VAZIO'}`)
+                console.log(`💰 Valor: R$ ${sheetsData.valorConvertido}`)
+                console.log(`🎯 GCLID: ${sheetsData.gclid || '❌ VAZIO'}`)
+                console.log(`🎯 GBraid: ${sheetsData.gbraid || '❌ VAZIO'}`)
+                console.log(`🎯 WBraid: ${sheetsData.wbraid || '❌ VAZIO'}`)
+                console.log(`🌐 IP: ${sheetsData.ip || '❌ VAZIO'}`)
+                console.log(`🌍 País: ${sheetsData.pais}`)
+                console.log(`🏙️  Cidade: ${sheetsData.cidade || '❌ VAZIO'}`)
+                console.log(`📅 Data Criação: ${sheetsData.createdAt}`)
+                console.log(`💳 Data Pagamento: ${sheetsData.paidAt}`)
+                console.log(`📦 Produto: ${sheetsData.productName || '❌ VAZIO'}`)
+                console.log(`🏦 Gateway: ${sheetsData.gateway}`)
+                console.log(`📊 UTM Source: ${sheetsData.utm_source || '❌ VAZIO'}`)
+                console.log(`📊 UTM Campaign: ${sheetsData.utm_campaign || '❌ VAZIO'}`)
+                console.log(`📊 UTM Medium: ${sheetsData.utm_medium || '❌ VAZIO'}`)
+                console.log(`📊 UTM Content: ${sheetsData.utm_content || '❌ VAZIO'}`)
+                console.log(`📊 UTM Term: ${sheetsData.utm_term || '❌ VAZIO'}`)
+                console.log(`📘 FBCLID: ${sheetsData.fbclid || '❌ VAZIO'}`)
+                console.log(`🔑 Keyword: ${sheetsData.keyword || '❌ VAZIO'}`)
+                console.log(`📱 Device: ${sheetsData.device || '❌ VAZIO'}`)
+                console.log(`🌐 Network: ${sheetsData.network || '❌ VAZIO'}`)
+                console.log(`🎯 GAD Source: ${sheetsData.gad_source || '❌ VAZIO'}`)
+                console.log(`🎯 GAD Campaign ID: ${sheetsData.gad_campaignid || '❌ VAZIO'}`)
+                console.log(`🎟️  Cupons: ${sheetsData.cupons || '❌ VAZIO'}`)
+                console.log(`👤 Nome Cliente: ${sheetsData.nomeCliente || '❌ VAZIO'}`)
+                console.log(`🆔 CPF: ${sheetsData.cpf || '❌ VAZIO'}`)
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                console.log('')
                 
                 // Salvar usando Google Sheets API
                 const result = await saveToGoogleSheets(sheetsData)

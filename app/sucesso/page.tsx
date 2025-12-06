@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import SuccessModal from '@/components/SuccessModal'
+import RefundModal from '@/components/RefundModal'
 
 export default function SucessoPage() {
   const searchParams = useSearchParams()
   const [conversionFired, setConversionFired] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
   const [isCheckingVerification, setIsCheckingVerification] = useState(true)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showRefundModal, setShowRefundModal] = useState(false)
+  const [showOrderBump, setShowOrderBump] = useState(false)
   
   // Verificar se tem os parâmetros necessários
   const transactionId = searchParams.get('transactionId')
@@ -120,87 +125,57 @@ export default function SucessoPage() {
       return '+' + cleaned
     }
 
-    // Disparar conversão Google Ads
-    const sendConversion = async () => {
-      if (typeof window !== 'undefined' && window.gtag) {
-        // Importar configuração de conversões
-        const { getConversionsForEvent } = await import('@/lib/google-ads-config')
-        const conversions = getConversionsForEvent('purchase')
-
-        if (conversions.length === 0) {
-          console.warn('⚠️ [Google Ads] Nenhuma conversão configurada')
-          setConversionFired(true)
-          return
-        }
-
-        // Preparar dados da conversão
-        // amount vem em CENTAVOS da URL (ex: 2298 = R$ 22,98)
-        const valueInReais = parseFloat(amount) / 100
-
-        // ✅ ENHANCED CONVERSIONS - Setar user_data ANTES da conversão
-        let enhancedConversionsActive = false
-        try {
-          const userData: any = {}
-          
-          // Email hasheado (SHA256)
-          if (email) {
-            userData.email = await hashData(email)
-            console.log('✅ Email hasheado adicionado')
-          }
-          
-          // Telefone hasheado (SHA256) no formato E.164
-          if (phone) {
-            const normalizedPhone = normalizePhone(phone)
-            userData.phone_number = await hashData(normalizedPhone)
-            console.log('✅ Telefone hasheado adicionado:', normalizedPhone)
-          }
-          
-          // Setar user_data no gtag (Enhanced Conversions)
-          if (Object.keys(userData).length > 0) {
-            window.gtag('set', 'user_data', userData)
-            enhancedConversionsActive = true
-            console.log('✅ Enhanced Conversions configurado com', Object.keys(userData).length, 'campos')
-          }
-        } catch (error) {
-          console.error('❌ Erro ao configurar Enhanced Conversions:', error)
-          // Continuar mesmo com erro - não bloquear conversão
-        }
-
-        // Disparar TODAS as conversões configuradas
-        console.log('')
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-        console.log(`✅ [Google Ads] DISPARANDO ${conversions.length} CONVERSÃO(ÕES)`)
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-        console.log(`💳 Transaction ID: ${transactionId}`)
-        console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
-        console.log(`📧 Email: ${email ? '✅ Hasheado' : '❌ Não enviado'}`)
-        console.log(`📱 Telefone: ${phone ? '✅ Hasheado' : '❌ Não enviado'}`)
-        console.log(`🎯 Enhanced Conversions: ${enhancedConversionsActive ? '✅ ATIVO' : '❌ Inativo'}`)
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-
-        for (const conversion of conversions) {
-          const conversionData: any = {
-            send_to: `${conversion.adsId}/${conversion.label}`,
-            value: valueInReais,
-            currency: currency,
-            transaction_id: transactionId
-          }
-
-          // Disparar conversão
-          window.gtag('event', 'conversion', conversionData)
-          
-          console.log(`✅ [${conversion.name}] ${conversion.adsId}/${conversion.label}`)
-        }
-
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-        console.log('')
-      }
-
+    // ⚠️ CONVERSÃO VIA GTAG DESABILITADA
+    // Conversões são enviadas via:
+    // 1. UTMify (server-side) ✅
+    // 2. Google Sheets → N8N/Cron → Google Ads API ✅
+    const logConversionInfo = () => {
+      const valueInReais = parseFloat(amount) / 100
+      
+      console.log('')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('ℹ️  [CONVERSÃO] Dados da compra')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log(`💳 Transaction ID: ${transactionId}`)
+      console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
+      console.log(`📧 Email: ${email || 'N/A'}`)
+      console.log(`📱 Telefone: ${phone || 'N/A'}`)
+      console.log('')
+      console.log('📊 Conversões enviadas via:')
+      console.log('   ✅ UTMify (server-side)')
+      console.log('   ✅ Google Sheets → N8N/Cron → Google Ads API')
+      console.log('')
+      console.log('⚠️  Conversão via gtag DESABILITADA (evitar suspensão)')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('')
+      
       setConversionFired(true)
     }
 
-    sendConversion()
+    logConversionInfo()
+    
+    // Mostrar modal de oferta após 2 segundos
+    setTimeout(() => {
+      setShowSuccessModal(true)
+    }, 2000)
   }, [searchParams]) // ✅ Remove r conversionFired para evitar loop
+  
+  // Handlers dos modais
+  const handleGetOffer = () => {
+    setShowSuccessModal(false)
+    setShowOrderBump(true)
+    // TODO: Implementar order bump
+    console.log('🎁 [ORDER BUMP] Usuário clicou em "Obter oferta"')
+  }
+  
+  const handleRequestRefund = () => {
+    setShowSuccessModal(false)
+    setShowRefundModal(true)
+  }
+  
+  const handleCloseRefund = () => {
+    setShowRefundModal(false)
+  }
 
   // Mostrar loading enquanto verifica
   if (isCheckingVerification) {
@@ -478,6 +453,20 @@ export default function SucessoPage() {
           </p>
         </div>
       </div>
+
+      {/* Modais */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        onGetOffer={handleGetOffer}
+        onRequestRefund={handleRequestRefund}
+      />
+
+      <RefundModal
+        isOpen={showRefundModal}
+        onClose={handleCloseRefund}
+        transactionId={transactionId || ''}
+      />
     </div>
   )
 }
