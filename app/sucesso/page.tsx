@@ -123,66 +123,77 @@ export default function SucessoPage() {
     // Disparar conversão Google Ads
     const sendConversion = async () => {
       if (typeof window !== 'undefined' && window.gtag) {
-        const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
-        const conversionLabel = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA
+        // Importar configuração de conversões
+        const { getConversionsForEvent } = await import('@/lib/google-ads-config')
+        const conversions = getConversionsForEvent('purchase')
 
-        if (googleAdsId && conversionLabel) {
-          // Preparar dados da conversão
-          // amount vem em CENTAVOS da URL (ex: 2298 = R$ 22,98)
-          const valueInReais = parseFloat(amount) / 100
+        if (conversions.length === 0) {
+          console.warn('⚠️ [Google Ads] Nenhuma conversão configurada')
+          setConversionFired(true)
+          return
+        }
+
+        // Preparar dados da conversão
+        // amount vem em CENTAVOS da URL (ex: 2298 = R$ 22,98)
+        const valueInReais = parseFloat(amount) / 100
+
+        // ✅ ENHANCED CONVERSIONS - Setar user_data ANTES da conversão
+        let enhancedConversionsActive = false
+        try {
+          const userData: any = {}
           
+          // Email hasheado (SHA256)
+          if (email) {
+            userData.email = await hashData(email)
+            console.log('✅ Email hasheado adicionado')
+          }
+          
+          // Telefone hasheado (SHA256) no formato E.164
+          if (phone) {
+            const normalizedPhone = normalizePhone(phone)
+            userData.phone_number = await hashData(normalizedPhone)
+            console.log('✅ Telefone hasheado adicionado:', normalizedPhone)
+          }
+          
+          // Setar user_data no gtag (Enhanced Conversions)
+          if (Object.keys(userData).length > 0) {
+            window.gtag('set', 'user_data', userData)
+            enhancedConversionsActive = true
+            console.log('✅ Enhanced Conversions configurado com', Object.keys(userData).length, 'campos')
+          }
+        } catch (error) {
+          console.error('❌ Erro ao configurar Enhanced Conversions:', error)
+          // Continuar mesmo com erro - não bloquear conversão
+        }
+
+        // Disparar TODAS as conversões configuradas
+        console.log('')
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+        console.log(`✅ [Google Ads] DISPARANDO ${conversions.length} CONVERSÃO(ÕES)`)
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+        console.log(`💳 Transaction ID: ${transactionId}`)
+        console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
+        console.log(`📧 Email: ${email ? '✅ Hasheado' : '❌ Não enviado'}`)
+        console.log(`📱 Telefone: ${phone ? '✅ Hasheado' : '❌ Não enviado'}`)
+        console.log(`🎯 Enhanced Conversions: ${enhancedConversionsActive ? '✅ ATIVO' : '❌ Inativo'}`)
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
+        for (const conversion of conversions) {
           const conversionData: any = {
-            send_to: `${googleAdsId}/${conversionLabel}`,
+            send_to: `${conversion.adsId}/${conversion.label}`,
             value: valueInReais,
             currency: currency,
             transaction_id: transactionId
           }
 
-          // ✅ ENHANCED CONVERSIONS - Setar user_data ANTES da conversão
-          let enhancedConversionsActive = false
-          try {
-            const userData: any = {}
-            
-            // Email hasheado (SHA256)
-            if (email) {
-              userData.email = await hashData(email)
-              console.log('✅ Email hasheado adicionado')
-            }
-            
-            // Telefone hasheado (SHA256) no formato E.164
-            if (phone) {
-              const normalizedPhone = normalizePhone(phone)
-              userData.phone_number = await hashData(normalizedPhone)
-              console.log('✅ Telefone hasheado adicionado:', normalizedPhone)
-            }
-            
-            // Setar user_data no gtag (Enhanced Conversions)
-            if (Object.keys(userData).length > 0) {
-              window.gtag('set', 'user_data', userData)
-              enhancedConversionsActive = true
-              console.log('✅ Enhanced Conversions configurado com', Object.keys(userData).length, 'campos')
-            }
-          } catch (error) {
-            console.error('❌ Erro ao configurar Enhanced Conversions:', error)
-            // Continuar mesmo com erro - não bloquear conversão
-          }
-
-          // Disparar conversão com valor e transaction_id
+          // Disparar conversão
           window.gtag('event', 'conversion', conversionData)
           
-          // localStorage já foi salvo ANTES de enviar (linha 86)
-          console.log('')
-          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-          console.log('✅ [Google Ads] CONVERSÃO DISPARADA')
-          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-          console.log(`💳 Transaction ID: ${transactionId}`)
-          console.log(`💰 Valor: R$ ${valueInReais.toFixed(2)}`)
-          console.log(`📧 Email: ${email ? '✅ Hasheado' : '❌ Não enviado'}`)
-          console.log(`📱 Telefone: ${phone ? '✅ Hasheado' : '❌ Não enviado'}`)
-          console.log(`🎯 Enhanced Conversions: ${enhancedConversionsActive ? '✅ ATIVO' : '❌ Inativo'}`)
-          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-          console.log('')
+          console.log(`✅ [${conversion.name}] ${conversion.adsId}/${conversion.label}`)
         }
+
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+        console.log('')
       }
 
       setConversionFired(true)
