@@ -182,3 +182,146 @@ export async function saveToGoogleSheets(data: {
     throw error;
   }
 }
+
+// Criar ou obter aba para Google Ads
+async function getOrCreateGoogleAdsSheet() {
+  const authClient = await getAuthClient();
+  const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+  const sheetName = 'Google Ads Conversões';
+  
+  try {
+    const spreadsheet = await sheets.spreadsheets.get({
+      spreadsheetId: SPREADSHEET_ID,
+    });
+    
+    const sheet = spreadsheet.data.sheets?.find(
+      (s) => s.properties?.title === sheetName
+    );
+    
+    if (sheet) {
+      console.log(`✅ [GOOGLE ADS SHEET] Aba "${sheetName}" já existe`);
+      return sheet.properties?.sheetId;
+    }
+    
+    // Criar nova aba
+    console.log(`🆕 [GOOGLE ADS SHEET] Criando aba "${sheetName}"`);
+    const response = await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      requestBody: {
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: sheetName,
+              },
+            },
+          },
+        ],
+      },
+    });
+    
+    const newSheetId = response.data.replies?.[0]?.addSheet?.properties?.sheetId;
+    
+    // Adicionar cabeçalho no formato Google Ads
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A1`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [[
+          'event_time',
+          'gclid',
+          'email',
+          'phone_number',
+          'gbraid',
+          'wbraid',
+          'conversion_value',
+          'currency_code',
+          'order_id',
+          'user_agent',
+          'ip_address',
+          'session_attributes'
+        ]],
+      },
+    });
+    
+    console.log(`✅ [GOOGLE ADS SHEET] Cabeçalho adicionado na aba "${sheetName}"`);
+    return newSheetId;
+    
+  } catch (error) {
+    console.error('❌ [GOOGLE ADS SHEET] Erro ao criar/obter aba:', error);
+    throw error;
+  }
+}
+
+// Salvar dados no formato Google Ads (SEM hash - você fará manualmente)
+export async function saveToGoogleAdsSheet(data: {
+  eventTime: string;
+  gclid: string;
+  email: string;
+  phoneNumber: string;
+  gbraid: string;
+  wbraid: string;
+  conversionValue: number;
+  currencyCode: string;
+  orderId: string;
+  userAgent: string;
+  ipAddress: string;
+  sessionAttributes: string;
+}) {
+  try {
+    const authClient = await getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+    const sheetName = 'Google Ads Conversões';
+    
+    // Criar ou obter aba
+    await getOrCreateGoogleAdsSheet();
+    
+    // Montar array de dados NA ORDEM EXATA
+    const values = [[
+      data.eventTime,           // 1. event_time (formato: 2024-12-07 14:30:00 America/Sao_Paulo)
+      data.gclid,               // 2. gclid
+      data.email,               // 3. email (normalizado: minúsculas, sem espaços - você fará hash depois)
+      data.phoneNumber,         // 4. phone_number (formato E.164: +5511999999999 - você fará hash depois)
+      data.gbraid,              // 5. gbraid
+      data.wbraid,              // 6. wbraid
+      data.conversionValue,     // 7. conversion_value
+      data.currencyCode,        // 8. currency_code (BRL)
+      data.orderId,             // 9. order_id
+      data.userAgent,           // 10. user_agent
+      data.ipAddress,           // 11. ip_address
+      data.sessionAttributes    // 12. session_attributes (gad_source, etc)
+    ]];
+    
+    console.log(`📊 [GOOGLE ADS SHEET] Salvando conversão`);
+    console.log(`   - Order ID: ${data.orderId}`);
+    console.log(`   - Email: ${data.email}`);
+    console.log(`   - Valor: ${data.currencyCode} ${data.conversionValue}`);
+    console.log(`   - GCLID: ${data.gclid || 'N/A'}`);
+    console.log(`   - IP: ${data.ipAddress}`);
+    console.log(`   - User Agent: ${data.userAgent.substring(0, 50)}...`);
+    
+    // Adicionar linha
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A2`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values,
+      },
+    });
+    
+    console.log(`✅ [GOOGLE ADS SHEET] Conversão salva com sucesso!`);
+    console.log(`   - Linhas adicionadas: ${response.data.updates?.updatedRows}`);
+    
+    return {
+      success: true,
+      sheet: sheetName,
+      rows: response.data.updates?.updatedRows || 0,
+    };
+    
+  } catch (error) {
+    console.error('❌ [GOOGLE ADS SHEET] Erro ao salvar conversão:', error);
+    throw error;
+  }
+}

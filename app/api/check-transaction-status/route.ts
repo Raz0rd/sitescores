@@ -3,7 +3,7 @@ import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
 import { logConversion } from "@/lib/conversion-logger"
-import { saveToGoogleSheets } from "@/lib/google-sheets"
+import { saveToGoogleSheets, saveToGoogleAdsSheet } from "@/lib/google-sheets"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -397,7 +397,7 @@ export async function POST(request: NextRequest) {
           console.log(`   - Valor: R$ ${(utmifyData.products[0].priceInCents / 100).toFixed(2)}`)
           console.log(`   - Cliente: ${utmifyData.customer.name}`)
           console.log(`   - Email: ${utmifyData.customer.email}`)
-          console.log(`   - GCLID: ${utmifyData.trackingParameters.gclid || 'N/A'}`)
+          console.log(`   - GCLID: ${utmifyData.trackingParameters.gclid || '❌ NÃO CAPTURADO'}`)
           console.log(`   - GAD Source: ${utmifyData.trackingParameters.gad_source || 'N/A'}`)
           console.log(`   - GBraid: ${utmifyData.trackingParameters.gbraid || 'N/A'}`)
 
@@ -551,6 +551,61 @@ export async function POST(request: NextRequest) {
                 console.log(`✅ [GOOGLE SHEETS] Cliente salvo: ${sheetsData.email}`)
                 console.log(`   - Aba: ${result.sheet}`)
                 console.log(`   - Linhas: ${result.rows}`)
+                
+                // ============================================
+                // 📊 GOOGLE ADS - Salvar conversão para importação
+                // ============================================
+                try {
+                  // Formatar data no padrão do Google Ads
+                  const eventDate = new Date(sheetsData.paidAt)
+                  const formatGoogleAdsDate = (date: Date) => {
+                    const year = date.getFullYear()
+                    const month = String(date.getMonth() + 1).padStart(2, '0')
+                    const day = String(date.getDate()).padStart(2, '0')
+                    const hours = String(date.getHours()).padStart(2, '0')
+                    const minutes = String(date.getMinutes()).padStart(2, '0')
+                    const seconds = String(date.getSeconds()).padStart(2, '0')
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} America/Sao_Paulo`
+                  }
+                  
+                  // Formatar telefone no formato E.164 (+55 + número)
+                  let phoneFormatted = sheetsData.phone.replace(/\D/g, '')
+                  // Adicionar +55 se não tiver código do país
+                  if (!phoneFormatted.startsWith('55')) {
+                    phoneFormatted = '55' + phoneFormatted
+                  }
+                  phoneFormatted = '+' + phoneFormatted
+                  
+                  // Criar session_attributes (parâmetros GAD)
+                  const sessionAttrs = JSON.stringify({
+                    gad_source: sheetsData.gad_source || null,
+                    gad_campaignid: sheetsData.gad_campaignid || null
+                  })
+                  
+                  const googleAdsData = {
+                    eventTime: formatGoogleAdsDate(eventDate),
+                    gclid: sheetsData.gclid || '',
+                    email: sheetsData.email.toLowerCase().trim(), // Normalizar (você fará hash depois)
+                    phoneNumber: phoneFormatted, // Apenas números (você fará hash depois)
+                    gbraid: sheetsData.gbraid || '',
+                    wbraid: sheetsData.wbraid || '',
+                    conversionValue: sheetsData.valorConvertido,
+                    currencyCode: 'BRL',
+                    orderId: sheetsData.transactionId,
+                    userAgent: orderAny.userAgent || '',
+                    ipAddress: sheetsData.ip || '',
+                    sessionAttributes: sessionAttrs
+                  }
+                  
+                  const adsResult = await saveToGoogleAdsSheet(googleAdsData)
+                  console.log(`✅ [GOOGLE ADS SHEET] Conversão salva para importação`)
+                  console.log(`   - Aba: ${adsResult.sheet}`)
+                  console.log(`   - Linhas: ${adsResult.rows}`)
+                  console.log(`   - Telefone E.164: ${phoneFormatted}`)
+                  
+                } catch (adsError) {
+                  console.error(`❌ [GOOGLE ADS SHEET] Erro ao salvar conversão:`, adsError)
+                }
                 
               } catch (sheetsError) {
                 console.error(`❌ [GOOGLE SHEETS] Erro ao salvar:`, sheetsError)

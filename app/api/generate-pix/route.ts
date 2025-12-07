@@ -805,6 +805,12 @@ export async function POST(request: NextRequest) {
       // Ofuscar nome do gateway antes de salvar
       const encodedGateway = encodeGateway(gateway)
       
+      // Capturar IP e User Agent do cliente
+      const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0] || 
+                       request.headers.get('x-real-ip') || 
+                       'unknown'
+      const userAgent = request.headers.get('user-agent') || 'unknown'
+      
       const orderData = {
         orderId: validResult.transactionId,
         transactionId: validResult.transactionId,
@@ -817,9 +823,14 @@ export async function POST(request: NextRequest) {
           document: body.customer?.document?.number || ''
         },
         trackingParameters,
+        ip: clientIp, // Adicionar IP
+        userAgent: userAgent, // Adicionar User Agent
         createdAt: new Date().toISOString(),
         status: 'pending' as const
       }
+      
+      console.log("🌐 [IP] Cliente IP:", clientIp)
+      console.log("🖥️  [USER AGENT] Cliente User Agent:", userAgent)
       
       console.log("🏦 [STORAGE] Gateway usado:", gateway, "→ Ofuscado:", encodedGateway)
       
