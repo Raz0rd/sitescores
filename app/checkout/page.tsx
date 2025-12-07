@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Toast from "../../components/toast"
 import PendingPaymentModal from "../../components/pending-payment-modal"
+import SuccessModal from "@/components/SuccessModal"
+import RefundModal from "@/components/RefundModal"
 import { useUtmParams } from "@/hooks/useUtmParams"
 import QRCode from "qrcode"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
@@ -99,6 +101,13 @@ export default function CheckoutPage() {
   const [showPendingPaymentModal, setShowPendingPaymentModal] = useState(false)
   const [hasPendingPayment, setHasPendingPayment] = useState(false)
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false) // Se usuário está logado
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showRefundModal, setShowRefundModal] = useState(false)
+  const [showOrderBump, setShowOrderBump] = useState(false)
+  const [showErrorModal, setShowErrorModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isOrderBumpPurchase, setIsOrderBumpPurchase] = useState(false)
+  const [orderBumpItemName, setOrderBumpItemName] = useState('')
 
   // ❌ VERIFICAÇÃO REMOVIDA - Usuário compra direto
   // useEffect(() => {
@@ -418,18 +427,24 @@ export default function CheckoutPage() {
   ]
 
   const togglePromoItem = (itemId: string) => {
-    setSelectedPromos(prev => 
-      prev.includes(itemId) 
+    console.log('🎯 [togglePromoItem] Clicou no item:', itemId)
+    setSelectedPromos(prev => {
+      const newSelection = prev.includes(itemId) 
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
-    )
+      console.log('🎯 [togglePromoItem] Nova seleção:', newSelection)
+      return newSelection
+    })
   }
 
   const getPromoTotal = () => {
-    return selectedPromos.reduce((total, itemId) => {
+    const total = selectedPromos.reduce((total, itemId) => {
       const item = promoItems.find(p => p.id === itemId)
+      console.log('💵 [getPromoTotal] itemId:', itemId, 'item:', item, 'price:', item?.price)
       return total + (item?.price || 0)
     }, 0)
+    console.log('💵 [getPromoTotal] TOTAL:', total)
+    return total
   }
 
   // Funções de formatação e validação
@@ -539,28 +554,44 @@ export default function CheckoutPage() {
       return
     }
 
-    // Mostrar modal de promoção apenas para Free Fire
-    if (config.showOrderBump) {
-      setShowPromoModal(true)
-    } else {
-      // Para Delta Force e Haikyu, ir direto para finalizar
-      handleFinalizeOrder()
-    }
+    // ❌ ORDER BUMP REMOVIDO - Agora só aparece APÓS pagamento
+    // Ir direto para finalizar pedido
+    handleFinalizeOrder()
   }
 
   const handleFinalizeOrder = async () => {
+    console.log('🚀 [INICIO] handleFinalizeOrder chamado')
+    console.log('🚀 [INICIO] paymentStatus:', paymentStatus)
+    console.log('🚀 [INICIO] selectedPromos:', selectedPromos)
+    console.log('🚀 [INICIO] selectedPromos.length:', selectedPromos.length)
+    
+    // Se já pagou e não selecionou nenhum order bump, mostrar erro e NÃO fechar modal
+    if (paymentStatus === 'paid' && selectedPromos.length === 0) {
+      console.log('⚠️ [ORDER BUMP] Nenhum item selecionado')
+      setErrorMessage('Por favor, selecione pelo menos uma oferta!')
+      setShowErrorModal(true)
+      return // NÃO fecha o modal de order bump
+    }
+    
+    // Verificar se é order bump após pagamento
+    const isOrderBumpAfterPayment = paymentStatus === 'paid'
+    
+    // Só fecha o modal se tiver selecionado algo ou se não for order bump
     setShowPromoModal(false)
+    
     setIsProcessingPayment(true)
     setShowPixInline(true)
     setPixError("")
     setEmailError("")
     
-    // Validar email (mínimo 3 caracteres antes do @)
-    const emailParts = email.split('@')
-    if (!email || emailParts.length !== 2 || emailParts[0].length < 3) {
-      setEmailError("Email inválido")
-      setIsProcessingPayment(false)
-      return
+    // Validar email APENAS se não for order bump (pois já foi validado antes)
+    if (!isOrderBumpAfterPayment) {
+      const emailParts = email.split('@')
+      if (!email || emailParts.length !== 2 || emailParts[0].length < 3) {
+        setEmailError("Email inválido")
+        setIsProcessingPayment(false)
+        return
+      }
     }
     
     // Garantir que o telefone foi gerado
@@ -570,10 +601,54 @@ export default function CheckoutPage() {
     }
     
     try {
+      
       // Calcular valor total com promoções
-      const basePrice = getFinalPrice()
+      const basePrice = isOrderBumpAfterPayment ? 0 : getFinalPrice()
       const promoTotal = getPromoTotal()
       const totalPrice = basePrice + promoTotal
+      
+      console.log('💰 [DEBUG] isOrderBumpAfterPayment:', isOrderBumpAfterPayment)
+      console.log('💰 [DEBUG] basePrice:', basePrice)
+      console.log('💰 [DEBUG] promoTotal:', promoTotal)
+      console.log('💰 [DEBUG] selectedPromos:', selectedPromos)
+      console.log('💰 [DEBUG] totalPrice:', totalPrice)
+      
+      // Validar se tem valor para cobrar
+      if (totalPrice <= 0) {
+        console.error('❌ [ERRO] Valor total é 0 ou negativo!')
+        setIsProcessingPayment(false)
+        return
+      }
+      
+      // Se é order bump após pagamento, resetar tudo
+      if (isOrderBumpAfterPayment && promoTotal > 0) {
+        console.log('🎁 [ORDER BUMP] Gerando novo PIX apenas para order bump')
+        console.log('🎁 [ORDER BUMP] Valor: R$', totalPrice.toFixed(2))
+        
+        // Marcar como compra de order bump
+        setIsOrderBumpPurchase(true)
+        
+        // Salvar nome dos itens selecionados
+        const selectedItemsNames = selectedPromos
+          .map(promoId => promoItems.find(item => item.id === promoId)?.name)
+          .filter(Boolean)
+          .join(' + ')
+        setOrderBumpItemName(selectedItemsNames)
+        console.log('🎁 [ORDER BUMP] Itens:', selectedItemsNames)
+        
+        // Limpar localStorage
+        localStorage.removeItem('pending_payment')
+        
+        // Resetar estados
+        setPaymentStatus('pending')
+        setPixData(null)
+        setQrCodeImage('')
+        setIsCopied(false)
+        setTimeLeft(15 * 60)
+        setTimerActive(false)
+      }
+      
+      console.log('📡 [DEBUG] Chamando API generate-pix com amount:', Math.round(totalPrice * 100))
       
       // Gerar PIX
       const response = await fetch('/api/generate-pix', {
@@ -780,10 +855,20 @@ export default function CheckoutPage() {
               setPaymentStatus('paid')
               setTimerActive(false)
               
+              // Resetar flag de order bump (novo ciclo de compra)
+              setIsOrderBumpPurchase(false)
+              setOrderBumpItemName('')
+              
               // Limpar pagamento pendente do localStorage
               localStorage.removeItem('pending_payment')
               
-              // Calcular valor total da compra
+              // Mostrar modal de oferta após 2 segundos
+              setTimeout(() => {
+                setShowSuccessModal(true)
+              }, 2000)
+              
+              // Calcular valor total da compra (o que realmente foi pago)
+              // Neste ponto, getFinalPrice() já retorna o valor correto
               const totalValue = getFinalPrice() + getPromoTotal()
               
               // Capturar TODOS os parâmetros de tracking da URL atual
@@ -926,11 +1011,18 @@ export default function CheckoutPage() {
     const clientIp = await getClientIP()
     
     // Calcular comissão real com orderbump
-    const basePrice = getFinalPrice()
+    // Se já pagou, não incluir o produto base (apenas order bump)
+    const isOrderBumpAfterPayment = paymentStatus === 'paid'
+    const basePrice = isOrderBumpAfterPayment ? 0 : getFinalPrice()
     const promoTotal = getPromoTotal()
     const totalPrice = basePrice + promoTotal
     const totalPriceInCents = Math.round(totalPrice * 100)
     const commission = calculateCommission(totalPriceInCents)
+    
+    console.log('💰 [sendToUtmify] isOrderBumpAfterPayment:', isOrderBumpAfterPayment)
+    console.log('💰 [sendToUtmify] basePrice:', basePrice)
+    console.log('💰 [sendToUtmify] promoTotal:', promoTotal)
+    console.log('💰 [sendToUtmify] totalPriceInCents:', totalPriceInCents)
     
     // Criar produto único com valor total
     const products = [
@@ -1039,11 +1131,18 @@ export default function CheckoutPage() {
     const clientIp = await getClientIP()
     
     // Calcular comissão real com orderbump
+    // IMPORTANTE: Aqui NÃO precisa verificar paymentStatus pois quando chama esta função
+    // é porque acabou de pagar, então deve enviar o valor REAL que foi pago
+    // (que pode ser produto + order bump OU apenas order bump)
     const basePrice = getFinalPrice()
     const promoTotal = getPromoTotal()
     const totalPrice = basePrice + promoTotal
     const totalPriceInCents = Math.round(totalPrice * 100)
     const commission = calculateCommission(totalPriceInCents)
+    
+    console.log('💰 [sendToUtmifyPaid] basePrice:', basePrice)
+    console.log('💰 [sendToUtmifyPaid] promoTotal:', promoTotal)
+    console.log('💰 [sendToUtmifyPaid] totalPriceInCents:', totalPriceInCents)
     
     // Criar produto único com valor total
     const products = [
@@ -1236,7 +1335,9 @@ export default function CheckoutPage() {
         }}>
           <img src={config.icon} alt={`${config.name} Icon`} className="w-full h-full object-contain" style={{ borderRadius: '8px' }} />
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 whitespace-pre-line text-center">{config.name}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 whitespace-pre-line text-center">
+          {isOrderBumpPurchase ? orderBumpItemName : config.name}
+        </h2>
         <div className="h-4"></div>
       </div>
 
@@ -1246,8 +1347,8 @@ export default function CheckoutPage() {
             {/* Total */}
             <dt className="py-3 text-sm/none md:text-base/none">Total</dt>
             <dd className="flex items-center justify-end gap-1 py-3 text-end text-sm/none font-medium md:text-base/none">
-              <img className="h-3.5 w-3.5" src={config.coinIcon} alt={config.coinName} />
-              {itemValue?.replace(/\./g, '').replace(/,/g, '')}
+              {!isOrderBumpPurchase && <img className="h-3.5 w-3.5" src={config.coinIcon} alt={config.coinName} />}
+              {isOrderBumpPurchase ? orderBumpItemName : itemValue?.replace(/\./g, '').replace(/,/g, '')}
             </dd>
 
             {/* Detalhes em Card */}
@@ -1289,7 +1390,14 @@ export default function CheckoutPage() {
             <dt className="py-3 text-sm/none md:text-base/none">Preço</dt>
             <dd className="flex items-center justify-end gap-1 py-3 text-end text-sm/none font-medium md:text-base/none">
               <span className="items-center [text-decoration:inherit] justify-end flex">
-                {formatPrice((getFinalPrice() + getPromoTotal()).toString())}
+                {(() => {
+                  // Se é order bump, mostrar apenas o valor do order bump
+                  const basePrice = isOrderBumpPurchase ? 0 : getFinalPrice()
+                  const promoTotal = getPromoTotal()
+                  const total = basePrice + promoTotal
+                  console.log('💵 [VISUAL PREÇO] isOrderBumpPurchase:', isOrderBumpPurchase, 'paymentStatus:', paymentStatus, 'basePrice:', basePrice, 'promoTotal:', promoTotal, 'total:', total)
+                  return formatPrice(total.toString())
+                })()}
               </span>
             </dd>
 
@@ -1479,30 +1587,31 @@ export default function CheckoutPage() {
                     <>
                       <div className="mb-6 p-6">
                         <div className="flex flex-col items-center text-center">
-                          <h3 className="text-1xl font-bold text-gray-500 mb-2">🎉 Pagamento Confirmado!</h3>
-                          <p className="text-sm text-gray-600 mb-4">
-                            Não se preocupe! Estamos com uma grande demanda no momento.
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">🎉 Pagamento Confirmado!</h3>
+                          <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                            Devido a grande demanda da promoção, sua compra será processada e enviada no correio do jogo em <span className="font-bold text-red-600">5-7 dias úteis</span>.
                           </p>
                           
-                          {/* Barra de Progresso */}
-                          <div className="w-full mb-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs text-gray-600">Processando sua recarga...</span>
-                              <span className="text-xs font-semibold text-red-600">{processingProgress}%</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                              <div 
-                                className="bg-gradient-to-r from-red-400 to-red-600 h-3 rounded-full transition-all duration-500 ease-out relative overflow-hidden"
-                                style={{ width: `${processingProgress}%` }}
-                              >
-                                <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
+                          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-4 w-full">
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 mt-0.5">
+                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </div>
+                              <div className="text-left">
+                                <p className="text-sm font-semibold text-blue-900 mb-1">
+                                  ⏰ Prazo de Entrega
+                                </p>
+                                <p className="text-xs text-blue-800 leading-relaxed">
+                                  Seus {itemType === "recharge" ? config.coinName.toLowerCase() : "itens"} serão enviados automaticamente para a conta vinculada ao ID informado dentro do prazo de 5-7 dias úteis.
+                                </p>
                               </div>
                             </div>
                           </div>
 
                           <p className="text-xs text-gray-600 leading-relaxed">
-                            Assim que a barra carregar completamente, {itemType === "recharge" ? `seus ${config.coinName.toLowerCase()} estarão na sua conta` : "seus itens estarão disponíveis"}! 🚀<br/>
-                            Você pode jogar um pouco enquanto aguarda, te avisaremos por aqui quando estiver pronto. 🎮
+                            Você receberá uma notificação assim que {itemType === "recharge" ? `seus ${config.coinName.toLowerCase()} estiverem disponíveis` : "seus itens estiverem disponíveis"} na sua conta! 🎮
                           </p>
                         </div>
                       </div>
@@ -1605,6 +1714,23 @@ export default function CheckoutPage() {
                                                 <p>Você receberá seus {config.coinName.toLowerCase()} após recebermos a confirmação do pagamento. Isso ocorre geralmente em alguns minutos após a realização do pagamento na sua instituição financeira.</p>
                         <p>Em caso de dúvidas entre em contato com o suporte.</p>
                       </div>
+
+                      {/* 🧪 BOTÃO DE TESTE - REMOVER EM PRODUÇÃO */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <button
+                          onClick={() => {
+                            console.log('🧪 [TESTE] Simulando pagamento aprovado...')
+                            setPaymentStatus('paid')
+                            setTimerActive(false)
+                            setTimeout(() => {
+                              setShowSuccessModal(true)
+                            }, 2000)
+                          }}
+                          className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-4 rounded-lg mt-4"
+                        >
+                          🧪 TESTE: Simular Pagamento Aprovado
+                        </button>
+                      )}
                     </>
                   )}
 
@@ -1749,19 +1875,38 @@ export default function CheckoutPage() {
             <div className="p-6 pt-4 flex flex-col gap-4 border-t border-gray-200 flex-shrink-0 bg-white">
               <div className="flex justify-between items-center font-bold text-lg text-gray-800">
                 <span>Total:</span>
-                <span>R$ {(getFinalPrice() + getPromoTotal()).toFixed(2).replace('.', ',')}</span>
+                <span>R$ {(paymentStatus === 'paid' ? getPromoTotal() : getFinalPrice() + getPromoTotal()).toFixed(2).replace('.', ',')}</span>
               </div>
               <button
-                onClick={handleFinalizeOrder}
-                className="w-full h-12 text-lg font-bold bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                onClick={() => {
+                  console.log('🔘 [BOTÃO] Clicou em Gerar Novo PIX')
+                  console.log('🔘 [BOTÃO] isProcessingPayment:', isProcessingPayment)
+                  console.log('🔘 [BOTÃO] paymentStatus:', paymentStatus)
+                  console.log('🔘 [BOTÃO] selectedPromos:', selectedPromos)
+                  handleFinalizeOrder()
+                }}
+                disabled={isProcessingPayment}
+                className={`w-full h-12 text-lg font-bold rounded-md transition-colors ${
+                  isProcessingPayment
+                    ? 'bg-gray-400 cursor-not-allowed text-white'
+                    : 'bg-red-600 text-white hover:bg-red-700'
+                }`}
               >
-                Finalizar Pedido
+                {isProcessingPayment 
+                  ? 'Gerando PIX...' 
+                  : paymentStatus === 'paid' 
+                    ? 'Gerar Novo PIX' 
+                    : 'Finalizar Pedido'
+                }
               </button>
               <button
                 onClick={() => {
                   setShowPromoModal(false)
                   setSelectedPromos([])
-                  handleFinalizeOrder()
+                  // Se já pagou e não quer order bump, apenas fecha o modal
+                  if (paymentStatus !== 'paid') {
+                    handleFinalizeOrder()
+                  }
                 }}
                 className="w-full h-10 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
               >
@@ -1803,7 +1948,61 @@ export default function CheckoutPage() {
         onStartNew={handleStartNewPayment}
       />
 
-      {/* Modal de Login removido - usuário é redirecionado para home */}
+      {/* Modais de Sucesso e Reembolso */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        onGetOffer={() => {
+          setShowSuccessModal(false)
+          setShowPromoModal(true) // Mostrar order bump
+          console.log(' [ORDER BUMP] Usuário clicou em "Obter oferta"')
+          // TODO: Implementar order bump
+        }}
+        onRequestRefund={() => {
+          setShowSuccessModal(false)
+          setShowRefundModal(true)
+        }}
+      />
+
+      <RefundModal
+        isOpen={showRefundModal}
+        onClose={() => setShowRefundModal(false)}
+        transactionId={pixData?.transactionId || ''}
+      />
+
+      {/* Modal de Erro */}
+      {showErrorModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-red-600 p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-white">
+                Atenção!
+              </h2>
+            </div>
+
+            {/* Conteúdo */}
+            <div className="p-6 text-center">
+              <p className="text-lg text-gray-800 mb-6">
+                {errorMessage}
+              </p>
+              <button
+                onClick={() => setShowErrorModal(false)}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
+                Entendi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )

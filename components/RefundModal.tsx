@@ -148,23 +148,23 @@ export default function RefundModal({ isOpen, onClose, transactionId }: RefundMo
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-2 sm:p-4">
+      <div className="relative w-full max-w-2xl bg-white rounded-xl sm:rounded-2xl shadow-2xl my-4 sm:my-8 max-h-[95vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-t-2xl">
+        <div className="bg-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl sticky top-0 z-10 border-b-2 border-gray-200">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <X size={24} />
+            <X size={20} className="sm:w-6 sm:h-6" />
           </button>
-          <h2 className="text-2xl font-bold text-white text-center">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 text-center pr-8">
             SOLICITAÇÃO DE REEMBOLSO
           </h2>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4">
           <p className="text-gray-600 text-center mb-6">
             Por favor, preencha os dados abaixo para processarmos o seu reembolso.
           </p>

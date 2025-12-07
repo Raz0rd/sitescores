@@ -16,9 +16,9 @@ export default function SuccessModal({ isOpen, onClose, onGetOffer, onRequestRef
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header com fundo escuro */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-900 p-6 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">
+        {/* Header */}
+        <div className="bg-white p-6 text-center border-b-2 border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
             OFERTA EXCLUSIVA DE SKINS
           </h2>
         </div>
