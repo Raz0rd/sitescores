@@ -304,6 +304,7 @@ export async function POST(request: NextRequest) {
           device: params.device || null,
           network: params.network || null,
           gad_source: params.gad_source || null,
+          gad_campaignid: params.gad_campaignid || null,
           src: params.src || null,
           sck: params.sck || null
         }
@@ -498,12 +499,12 @@ export async function POST(request: NextRequest) {
                   utm_medium: trackingParameters.utm_medium || '',
                   utm_content: trackingParameters.utm_content || '',
                   utm_term: trackingParameters.utm_term || '',
-                  fbclid: orderAny.trackingParameters?.fbclid || '',
-                  keyword: orderAny.keyword || '',
-                  device: orderAny.device || '',
-                  network: orderAny.network || '',
-                  gad_source: orderAny.gad_source || '',
-                  gad_campaignid: orderAny.gad_campaignid || '',
+                  fbclid: trackingParameters.fbclid || '',
+                  keyword: trackingParameters.keyword || '',
+                  device: trackingParameters.device || '',
+                  network: trackingParameters.network || '',
+                  gad_source: trackingParameters.gad_source || '',
+                  gad_campaignid: trackingParameters.gad_campaignid || '',
                   cupons: orderAny.cupons || '',
                   nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || '',
                   cpf: storedOrder.customerData?.document || ''
@@ -556,16 +557,16 @@ export async function POST(request: NextRequest) {
                 // 📊 GOOGLE ADS - Salvar conversão para importação
                 // ============================================
                 try {
-                  // Formatar data no padrão do Google Ads
+                  // Formatar data no padrão do Google Ads (UTC com Z)
                   const eventDate = new Date(sheetsData.paidAt)
                   const formatGoogleAdsDate = (date: Date) => {
-                    const year = date.getFullYear()
-                    const month = String(date.getMonth() + 1).padStart(2, '0')
-                    const day = String(date.getDate()).padStart(2, '0')
-                    const hours = String(date.getHours()).padStart(2, '0')
-                    const minutes = String(date.getMinutes()).padStart(2, '0')
-                    const seconds = String(date.getSeconds()).padStart(2, '0')
-                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} America/Sao_Paulo`
+                    const year = date.getUTCFullYear()
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+                    const day = String(date.getUTCDate()).padStart(2, '0')
+                    const hours = String(date.getUTCHours()).padStart(2, '0')
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+                    const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}Z`
                   }
                   
                   // Formatar telefone no formato E.164 (+55 + número)
@@ -576,11 +577,11 @@ export async function POST(request: NextRequest) {
                   }
                   phoneFormatted = '+' + phoneFormatted
                   
-                  // Criar session_attributes (parâmetros GAD)
-                  const sessionAttrs = JSON.stringify({
-                    gad_source: sheetsData.gad_source || null,
-                    gad_campaignid: sheetsData.gad_campaignid || null
-                  })
+                  // Criar session_attributes (parâmetros GAD) - omitir campos vazios/null
+                  const sessionData: Record<string, string> = {}
+                  if (sheetsData.gad_source) sessionData.gad_source = sheetsData.gad_source
+                  if (sheetsData.gad_campaignid) sessionData.gad_campaignid = sheetsData.gad_campaignid
+                  const sessionAttrs = Object.keys(sessionData).length > 0 ? JSON.stringify(sessionData) : ''
                   
                   const googleAdsData = {
                     eventTime: formatGoogleAdsDate(eventDate),
