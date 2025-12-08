@@ -503,8 +503,8 @@ export async function POST(request: NextRequest) {
                   keyword: trackingParameters.keyword || '',
                   device: trackingParameters.device || '',
                   network: trackingParameters.network || '',
-                  gad_source: trackingParameters.gad_source || '',
-                  gad_campaignid: trackingParameters.gad_campaignid || '',
+                  gad_source: trackingParameters.gad_source || trackingParameters.utm_source || '',
+                  gad_campaignid: trackingParameters.gad_campaignid || trackingParameters.utm_campaign || '',
                   cupons: orderAny.cupons || '',
                   nomeCliente: transactionData.customer?.name || storedOrder.customerData?.name || '',
                   cpf: storedOrder.customerData?.document || ''
