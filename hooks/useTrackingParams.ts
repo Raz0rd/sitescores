@@ -16,6 +16,7 @@ export interface TrackingParameters {
   gad_source: string | null
   gbraid: string | null
   wbraid: string | null
+  fbclid: string | null
 }
 
 export interface CustomerData {
@@ -74,6 +75,7 @@ export const useTrackingParams = () => {
     gad_source: null,
     gbraid: null,
     wbraid: null,
+    fbclid: null,
   })
 
   const [userIP, setUserIP] = useState<string>('')
@@ -99,6 +101,7 @@ export const useTrackingParams = () => {
         gad_source: urlParams.get('gad_source'),
         gbraid: urlParams.get('gbraid'),
         wbraid: urlParams.get('wbraid'),
+        fbclid: urlParams.get('fbclid'),
       }
 
       setTrackingParams(params)
