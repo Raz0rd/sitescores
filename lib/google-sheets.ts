@@ -254,7 +254,7 @@ async function getOrCreateGoogleAdsSheet() {
   }
 }
 
-// Salvar dados no formato Google Ads (SEM hash - você fará manualmente)
+// Salvar dados no formato Google Ads (SEM hash - mantém compatibilidade)
 export async function saveToGoogleAdsSheet(data: {
   eventTime: string;
   gclid: string;
@@ -279,10 +279,10 @@ export async function saveToGoogleAdsSheet(data: {
     
     // Montar array de dados NA ORDEM EXATA
     const values = [[
-      data.eventTime,           // 1. event_time (formato: 2024-12-07 14:30:00 America/Sao_Paulo)
+      data.eventTime,           // 1. event_time (formato: 2024-12-07 14:30:00Z - UTC)
       data.gclid,               // 2. gclid
-      data.email,               // 3. email (normalizado: minúsculas, sem espaços - você fará hash depois)
-      data.phoneNumber,         // 4. phone_number (formato E.164: +5511999999999 - você fará hash depois)
+      data.email,               // 3. email (normalizado: minúsculas, sem espaços)
+      data.phoneNumber,         // 4. phone_number (formato E.164: +5511999999999)
       data.gbraid,              // 5. gbraid
       data.wbraid,              // 6. wbraid
       data.conversionValue,     // 7. conversion_value
@@ -290,7 +290,7 @@ export async function saveToGoogleAdsSheet(data: {
       data.orderId,             // 9. order_id
       data.userAgent,           // 10. user_agent
       data.ipAddress,           // 11. ip_address
-      data.sessionAttributes    // 12. session_attributes (gad_source, etc)
+      data.sessionAttributes    // 12. session_attributes (JSON com gad_source, gad_campaignid)
     ]];
     
     console.log(`📊 [GOOGLE ADS SHEET] Salvando conversão`);
@@ -322,6 +322,153 @@ export async function saveToGoogleAdsSheet(data: {
     
   } catch (error) {
     console.error('❌ [GOOGLE ADS SHEET] Erro ao salvar conversão:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// NOVA FUNÇÃO: Aba Enhanced com dados prontos para Google Ads
+// ============================================
+
+// Criar ou obter aba Enhanced (formato: {domain}_enhanced_pronto)
+async function getOrCreateEnhancedSheet(domain: string) {
+  try {
+    const authClient = await getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+    const sheetName = `${domain}_enhanced_pronto`;
+    
+    // Verificar se a aba já existe
+    const spreadsheet = await sheets.spreadsheets.get({
+      spreadsheetId: SPREADSHEET_ID,
+    });
+    
+    const sheet = spreadsheet.data.sheets?.find(
+      (s) => s.properties?.title === sheetName
+    );
+    
+    if (sheet) {
+      console.log(`✅ [ENHANCED SHEET] Aba "${sheetName}" já existe`);
+      return sheet.properties?.sheetId;
+    }
+    
+    // Criar nova aba
+    console.log(`🆕 [ENHANCED SHEET] Criando aba "${sheetName}"`);
+    const response = await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      requestBody: {
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: sheetName,
+              },
+            },
+          },
+        ],
+      },
+    });
+    
+    const newSheetId = response.data.replies?.[0]?.addSheet?.properties?.sheetId;
+    
+    // Adicionar cabeçalho no formato Google Ads Enhanced Conversions
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A1`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [[
+          'conversion_event_time',
+          'gclid',
+          'hashed_email',
+          'hashed_phone_number',
+          'gbraid',
+          'wbraid',
+          'conversion_value',
+          'currency_code',
+          'order_id',
+          'user_agent',
+          'ip_address'
+        ]],
+      },
+    });
+    
+    console.log(`✅ [ENHANCED SHEET] Cabeçalho adicionado na aba "${sheetName}"`);
+    return newSheetId;
+    
+  } catch (error) {
+    console.error('❌ [ENHANCED SHEET] Erro ao criar/obter aba:', error);
+    throw error;
+  }
+}
+
+// Salvar dados no formato Enhanced Conversions (PRONTO para importar no Google Ads)
+export async function saveToEnhancedSheet(data: {
+  domain: string;
+  conversionEventTime: string;
+  gclid: string;
+  hashedEmail: string;
+  hashedPhoneNumber: string;
+  gbraid: string;
+  wbraid: string;
+  conversionValue: number;
+  currencyCode: string;
+  orderId: string;
+  userAgent: string;
+  ipAddress: string;
+}) {
+  try {
+    const authClient = await getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+    const sheetName = `${data.domain}_enhanced_pronto`;
+    
+    // Criar ou obter aba
+    await getOrCreateEnhancedSheet(data.domain);
+    
+    // Montar array de dados NO FORMATO GOOGLE ADS ENHANCED CONVERSIONS
+    const values = [[
+      data.conversionEventTime,    // 1. conversion_event_time (formato: 2025-12-07T19:14:10Z)
+      data.gclid,                   // 2. gclid
+      data.hashedEmail,             // 3. hashed_email (SHA-256)
+      data.hashedPhoneNumber,       // 4. hashed_phone_number (SHA-256)
+      data.gbraid,                  // 5. gbraid
+      data.wbraid,                  // 6. wbraid
+      data.conversionValue,         // 7. conversion_value
+      data.currencyCode,            // 8. currency_code (BRL)
+      data.orderId,                 // 9. order_id
+      data.userAgent,               // 10. user_agent
+      data.ipAddress                // 11. ip_address
+    ]];
+    
+    console.log(`📊 [ENHANCED SHEET] Salvando conversão`);
+    console.log(`   - Aba: ${sheetName}`);
+    console.log(`   - Order ID: ${data.orderId}`);
+    console.log(`   - Email Hash: ${data.hashedEmail.substring(0, 16)}...`);
+    console.log(`   - Phone Hash: ${data.hashedPhoneNumber.substring(0, 16)}...`);
+    console.log(`   - Valor: ${data.currencyCode} ${data.conversionValue}`);
+    console.log(`   - GCLID: ${data.gclid || 'N/A'}`);
+    
+    // Adicionar linha
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A2`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values,
+      },
+    });
+    
+    console.log(`✅ [ENHANCED SHEET] Conversão salva com sucesso!`);
+    console.log(`   - Linhas adicionadas: ${response.data.updates?.updatedRows}`);
+    console.log(`   ℹ️  Esta aba está PRONTA para importar no Google Ads com Enhanced Conversions`);
+    
+    return {
+      success: true,
+      sheet: sheetName,
+      rows: response.data.updates?.updatedRows || 0,
+    };
+    
+  } catch (error) {
+    console.error('❌ [ENHANCED SHEET] Erro ao salvar conversão:', error);
     throw error;
   }
 }

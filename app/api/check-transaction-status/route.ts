@@ -3,7 +3,8 @@ import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
 import { logConversion } from "@/lib/conversion-logger"
-import { saveToGoogleSheets, saveToGoogleAdsSheet } from "@/lib/google-sheets"
+import { saveToGoogleSheets, saveToGoogleAdsSheet, saveToEnhancedSheet } from "@/lib/google-sheets"
+import { hashEmail, hashPhone } from "@/lib/hash-utils"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -560,9 +561,14 @@ export async function POST(request: NextRequest) {
                 // 📊 GOOGLE ADS - Salvar conversão para importação
                 // ============================================
                 try {
-                  // Formatar data no padrão do Google Ads (UTC com Z)
+                  // Formatar data no padrão do Google Ads (ISO 8601: 2025-12-07T19:14:10Z)
                   const eventDate = new Date(sheetsData.paidAt)
                   const formatGoogleAdsDate = (date: Date) => {
+                    return date.toISOString() // Formato: 2025-12-07T19:14:10.000Z
+                  }
+                  
+                  // Formato antigo para aba antiga (compatibilidade)
+                  const formatGoogleAdsDateOld = (date: Date) => {
                     const year = date.getUTCFullYear()
                     const month = String(date.getUTCMonth() + 1).padStart(2, '0')
                     const day = String(date.getUTCDate()).padStart(2, '0')
@@ -586,11 +592,16 @@ export async function POST(request: NextRequest) {
                   if (sheetsData.gad_campaignid) sessionData.gad_campaignid = sheetsData.gad_campaignid
                   const sessionAttrs = Object.keys(sessionData).length > 0 ? JSON.stringify(sessionData) : ''
                   
+                  // Gerar hashes SHA-256 para Enhanced Conversions
+                  const emailNormalized = sheetsData.email.toLowerCase().trim()
+                  const emailHash = await hashEmail(emailNormalized)
+                  const phoneHash = await hashPhone(phoneFormatted)
+                  
                   const googleAdsData = {
-                    eventTime: formatGoogleAdsDate(eventDate),
+                    eventTime: formatGoogleAdsDateOld(eventDate), // Formato antigo para aba antiga
                     gclid: sheetsData.gclid || '',
-                    email: sheetsData.email.toLowerCase().trim(), // Normalizar (você fará hash depois)
-                    phoneNumber: phoneFormatted, // Apenas números (você fará hash depois)
+                    email: emailNormalized,
+                    phoneNumber: phoneFormatted,
                     gbraid: sheetsData.gbraid || '',
                     wbraid: sheetsData.wbraid || '',
                     conversionValue: sheetsData.valorConvertido,
@@ -606,6 +617,49 @@ export async function POST(request: NextRequest) {
                   console.log(`   - Aba: ${adsResult.sheet}`)
                   console.log(`   - Linhas: ${adsResult.rows}`)
                   console.log(`   - Telefone E.164: ${phoneFormatted}`)
+                  
+                  // ============================================
+                  // 📊 ENHANCED SHEET - Salvar com hashes SHA-256
+                  // IMPORTANTE: Salvar SEMPRE que tiver email/telefone, mesmo SEM GCLID
+                  // (conforme documentação do Google Ads)
+                  // ============================================
+                  try {
+                    // Verificar se temos dados do usuário (email OU telefone)
+                    const hasUserData = emailHash || phoneHash
+                    
+                    if (hasUserData) {
+                      // Extrair domínio do host
+                      const host = request.headers.get('host') || 'site'
+                      const domain = host.replace(/^www\./, '').split('.')[0]
+                      
+                      const enhancedData = {
+                        domain: domain,
+                        conversionEventTime: formatGoogleAdsDate(eventDate),
+                        gclid: sheetsData.gclid || '',
+                        hashedEmail: emailHash,
+                        hashedPhoneNumber: phoneHash,
+                        gbraid: sheetsData.gbraid || '',
+                        wbraid: sheetsData.wbraid || '',
+                        conversionValue: sheetsData.valorConvertido,
+                        currencyCode: 'BRL',
+                        orderId: sheetsData.transactionId,
+                        userAgent: orderAny.userAgent || '',
+                        ipAddress: sheetsData.ip || ''
+                      }
+                      
+                      const enhancedResult = await saveToEnhancedSheet(enhancedData)
+                      console.log(`✅ [ENHANCED SHEET] Conversão salva com Enhanced Conversions`)
+                      console.log(`   - Aba: ${enhancedResult.sheet}`)
+                      console.log(`   - Linhas: ${enhancedResult.rows}`)
+                      console.log(`   - GCLID: ${sheetsData.gclid || '❌ SEM GCLID (mas tem email/telefone)'}`)
+                      console.log(`   ℹ️  Pronto para importar no Google Ads!`)
+                    } else {
+                      console.log(`⚠️ [ENHANCED SHEET] Sem dados do usuário (email/telefone) - não salvando`)
+                    }
+                    
+                  } catch (enhancedError) {
+                    console.error(`❌ [ENHANCED SHEET] Erro ao salvar:`, enhancedError)
+                  }
                   
                 } catch (adsError) {
                   console.error(`❌ [GOOGLE ADS SHEET] Erro ao salvar conversão:`, adsError)
