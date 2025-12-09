@@ -381,8 +381,11 @@ export async function POST(request: NextRequest) {
               keyword: (trackingParameters as any)?.keyword || null,
               device: (trackingParameters as any)?.device || null,
               network: (trackingParameters as any)?.network || null,
-              gad_source: (trackingParameters as any)?.gad_source || null,
-              gbraid: (trackingParameters as any)?.gbraid || null
+              gad_source: (trackingParameters as any)?.gad_source || (trackingParameters as any)?.utm_source || null,
+              gad_campaignid: (trackingParameters as any)?.gad_campaignid || (trackingParameters as any)?.utm_campaign || null,
+              gbraid: (trackingParameters as any)?.gbraid || null,
+              wbraid: (trackingParameters as any)?.wbraid || null,
+              fbclid: (trackingParameters as any)?.fbclid || null
             },
             commission: {
               totalPriceInCents: transactionData.amount,
@@ -750,8 +753,11 @@ export async function POST(request: NextRequest) {
                 keyword: (utmTrackingParams as any)?.keyword || null,
                 device: (utmTrackingParams as any)?.device || null,
                 network: (utmTrackingParams as any)?.network || null,
-                gad_source: (utmTrackingParams as any)?.gad_source || null,
-                gbraid: (utmTrackingParams as any)?.gbraid || null
+                gad_source: (utmTrackingParams as any)?.gad_source || (utmTrackingParams as any)?.utm_source || null,
+                gad_campaignid: (utmTrackingParams as any)?.gad_campaignid || (utmTrackingParams as any)?.utm_campaign || null,
+                gbraid: (utmTrackingParams as any)?.gbraid || null,
+                wbraid: (utmTrackingParams as any)?.wbraid || null,
+                fbclid: (utmTrackingParams as any)?.fbclid || null
               },
               commission: {
                 totalPriceInCents: transactionData.amount,
