@@ -2,6 +2,8 @@
  * Utilitários para hash SHA-256 (Enhanced Conversions do Google Ads)
  */
 
+import crypto from 'crypto'
+
 /**
  * Gera hash SHA-256 de uma string
  * @param value - Valor para fazer hash
@@ -13,16 +15,10 @@ export async function sha256Hash(value: string): Promise<string> {
   // Normalizar: lowercase e remover espaços
   const normalized = value.toLowerCase().trim()
   
-  // Converter para Uint8Array
-  const encoder = new TextEncoder()
-  const data = encoder.encode(normalized)
-  
-  // Gerar hash SHA-256
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-  
-  // Converter para hexadecimal
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  // Gerar hash SHA-256 usando Node.js crypto
+  const hash = crypto.createHash('sha256')
+  hash.update(normalized)
+  const hashHex = hash.digest('hex')
   
   return hashHex
 }

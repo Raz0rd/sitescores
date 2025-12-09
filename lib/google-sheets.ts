@@ -5,6 +5,21 @@ const SPREADSHEET_ID = '19noK4HT3COT-r-dJU3ZE6WRZvZMmffdRo0DzJDr0cwI';
 
 // Autenticar com Service Account
 async function getAuthClient() {
+  // Tentar usar credenciais de variável de ambiente primeiro
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+    try {
+      const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
+      const auth = new google.auth.GoogleAuth({
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      });
+      return await auth.getClient();
+    } catch (error) {
+      console.error('❌ [GOOGLE SHEETS] Erro ao usar GOOGLE_SERVICE_ACCOUNT_KEY:', error)
+    }
+  }
+  
+  // Fallback para arquivo chavesheets.json
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(process.cwd(), 'chavesheets.json'),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
