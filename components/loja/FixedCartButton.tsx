@@ -27,23 +27,22 @@ export default function FixedCartButton() {
       return
     }
     
-    // Se apenas 1 item, redirecionar para página do produto com slug
+    const firstItem = cart.items[0]
+    const category = firstItem?.category || 'freefire'
+    
+    // Se apenas 1 item, usar slug no checkout
     if (cart.itemCount === 1) {
-      const firstItem = cart.items[0]
       const product = getProductById(firstItem.id)
       
       if (product?.slug) {
-        console.log('🛒 [FixedCartButton] 1 item - Redirecionando para slug:', product.slug)
-        router.push(`/produto/${product.slug}`)
+        console.log('🛒 [FixedCartButton] 1 item - Checkout com slug:', product.slug)
+        router.push(`/loja/checkout?slug=${product.slug}`)
         return
       }
     }
     
-    // Se 2+ itens, ir para checkout da loja
-    const firstItem = cart.items[0]
-    const category = firstItem?.category || 'freefire'
-    
-    console.log('🛒 [FixedCartButton] Múltiplos itens - Navegando para checkout com categoria:', category)
+    // Se 2+ itens, ir para checkout com categoria
+    console.log('🛒 [FixedCartButton] Múltiplos itens - Checkout com categoria:', category)
     router.push(`/loja/checkout?category=${category}`)
   }
 

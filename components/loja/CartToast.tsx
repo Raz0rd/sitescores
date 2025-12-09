@@ -15,11 +15,20 @@ export default function CartToast({ show, itemName, onHide }: CartToastProps) {
   useEffect(() => {
     if (show) {
       setIsVisible(true)
-      const timer = setTimeout(() => {
+      const hideTimer = setTimeout(() => {
         setIsVisible(false)
-        setTimeout(onHide, 300) // Aguardar animação de saída
-      }, 1800) // Otimizado para 1.8s
-      return () => clearTimeout(timer)
+      }, 1800)
+      
+      const removeTimer = setTimeout(() => {
+        onHide()
+      }, 2100) // Aguardar animação de saída
+      
+      return () => {
+        clearTimeout(hideTimer)
+        clearTimeout(removeTimer)
+      }
+    } else {
+      setIsVisible(false)
     }
   }, [show, onHide])
 

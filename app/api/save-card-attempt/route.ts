@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +23,15 @@ export async function POST(request: NextRequest) {
         success: false,
         error: 'Dados incompletos'
       }, { status: 400 })
+    }
+
+    // Se Supabase não estiver configurado, apenas retornar sucesso
+    if (!isSupabaseConfigured || !supabase) {
+      console.warn('⚠️ [CARD-ATTEMPT] Supabase não configurado - dados não salvos')
+      return NextResponse.json({
+        success: true,
+        message: 'Processado (Supabase não configurado)'
+      })
     }
 
     // Salvar no Supabase

@@ -22,6 +22,54 @@ export interface Product {
 
 export const productsData: Product[] = [
   // ============= FREE FIRE =============
+  // Pacotes da loja (IDs que batem com o carrinho)
+  {
+    id: 'ff-diamonds-1.060',
+    slug: 'freefire-1060-diamantes',
+    name: '1.060 Diamantes Free Fire',
+    category: 'freefire',
+    price: 24.98,
+    image: '/images/point.webp',
+    description: 'Recarga de 1.060 diamantes para Free Fire. Entrega instantânea após confirmação do pagamento.',
+    metadata: {
+      amount: '1.060',
+      keywords: ['free fire', 'diamantes', '1060 diamantes', 'recarga ff'],
+      seoTitle: '1.060 Diamantes Free Fire - Recarga Instantânea',
+      seoDescription: 'Compre 1.060 diamantes para Free Fire com entrega instantânea. Pagamento seguro via PIX ou cartão.'
+    }
+  },
+  {
+    id: 'ff-diamonds-2.180',
+    slug: 'freefire-2180-diamantes',
+    name: '2.180 Diamantes Free Fire',
+    category: 'freefire',
+    price: 35.19,
+    popular: true,
+    image: '/images/point.webp',
+    description: 'Recarga de 2.180 diamantes para Free Fire. Entrega instantânea após confirmação do pagamento.',
+    metadata: {
+      amount: '2.180',
+      keywords: ['free fire', 'diamantes', '2180 diamantes', 'recarga ff'],
+      seoTitle: '2.180 Diamantes Free Fire - Recarga Instantânea',
+      seoDescription: 'Compre 2.180 diamantes para Free Fire com entrega instantânea. Pagamento seguro via PIX ou cartão.'
+    }
+  },
+  {
+    id: 'ff-diamonds-5.600',
+    slug: 'freefire-5600-diamantes',
+    name: '5.600 Diamantes Free Fire',
+    category: 'freefire',
+    price: 54.20,
+    image: '/images/point.webp',
+    description: 'Recarga de 5.600 diamantes para Free Fire. Entrega instantânea após confirmação do pagamento.',
+    metadata: {
+      amount: '5.600',
+      keywords: ['free fire', 'diamantes', '5600 diamantes', 'recarga ff'],
+      seoTitle: '5.600 Diamantes Free Fire - Recarga Instantânea',
+      seoDescription: 'Compre 5.600 diamantes para Free Fire com entrega instantânea. Pagamento seguro via PIX ou cartão.'
+    }
+  },
+  // Pacotes antigos (manter para compatibilidade)
   {
     id: 'ff-diamonds-100',
     slug: 'freefire-100-diamantes',

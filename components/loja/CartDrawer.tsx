@@ -39,21 +39,31 @@ export default function CartDrawer({ isOpen, onClose, items, onRemoveItem, onChe
   }, [isOpen])
 
   const handleCheckout = () => {
-    // Se apenas 1 item, redirecionar para página do produto com slug
+    console.log('🛒 [CartDrawer] Iniciando checkout')
+    console.log('🛒 [CartDrawer] Items:', items)
+
+    if (items.length === 0) {
+      console.error('❌ [CartDrawer] Carrinho vazio!')
+      return
+    }
+
+    const firstItem = items[0]
+    const category = firstItem?.category || 'freefire'
+
+    // Se apenas 1 item, usar slug no checkout
     if (items.length === 1) {
-      const product = getProductById(items[0].id)
-      
+      const product = getProductById(firstItem.id)
+
       if (product?.slug) {
-        console.log('🛒 [CartDrawer] 1 item - Redirecionando para slug:', product.slug)
-        router.push(`/produto/${product.slug}`)
-        onClose()
+        console.log('🛒 [CartDrawer] 1 item - Checkout com slug:', product.slug)
+        router.push(`/loja/checkout?slug=${product.slug}`)
         return
       }
     }
-    
-    // Se 2+ itens, ir para checkout da loja
-    router.push('/loja/checkout')
-    onClose()
+
+    // Se 2+ itens, ir para checkout com categoria
+    console.log('🛒 [CartDrawer] Múltiplos itens - Checkout com categoria:', category)
+    router.push(`/loja/checkout?category=${category}`)
   }
 
   const getCategoryColor = (category: string) => {
