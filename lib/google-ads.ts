@@ -13,6 +13,27 @@ declare global {
 }
 
 /**
+ * Hashear dados do usuário com SHA-256 (para Enhanced Conversions)
+ */
+async function hashUserData(value: string): Promise<string> {
+  // Normalizar: minúsculas e sem espaços
+  const normalized = value.toLowerCase().trim();
+  
+  // Converter para ArrayBuffer
+  const encoder = new TextEncoder();
+  const data = encoder.encode(normalized);
+  
+  // Gerar hash SHA-256
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  
+  // Converter para hex
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  
+  return hashHex;
+}
+
+/**
  * Verifica se o Google Ads está habilitado e o gtag está disponível
  */
 function isGoogleAdsEnabled(): boolean {
@@ -30,12 +51,19 @@ function isGoogleAdsEnabled(): boolean {
 
 /**
  * Disparar conversão quando pagamento é confirmado (status PAID)
- * Evento: "Compra"
+ * Evento: "Compra" com Enhanced Conversions (dados hasheados)
  * 
  * @param transactionId - ID da transação
  * @param value - Valor da compra em reais (ex: 14.24)
+ * @param email - Email do cliente (opcional, para Enhanced Conversions)
+ * @param phone - Telefone do cliente (opcional, para Enhanced Conversions)
  */
-export function trackPurchase(transactionId: string, value: number) {
+export async function trackPurchase(
+  transactionId: string, 
+  value: number,
+  email?: string,
+  phone?: string
+) {
   if (!isGoogleAdsEnabled()) {
     console.log('[Google Ads] Tracking desabilitado ou gtag não disponível');
     return;
@@ -59,7 +87,38 @@ export function trackPurchase(transactionId: string, value: number) {
     console.log('[Google Ads] Transaction ID:', transactionId);
     console.log('[Google Ads] Valor: R$', value.toFixed(2));
     
-    // Objeto exato que será enviado para o Google Ads
+    // 1. ENHANCED CONVERSIONS: Enviar user_data ANTES
+    if (email || phone) {
+      console.log('[Google Ads] 🔐 Preparando Enhanced Conversions...');
+      
+      const userData: any = {};
+      
+      // Hashear email
+      if (email) {
+        const hashedEmail = await hashUserData(email);
+        userData.email = hashedEmail;
+        console.log('[Google Ads] Email hasheado:', hashedEmail.substring(0, 16) + '...');
+      }
+      
+      // Hashear telefone (formato E.164: +5511999999999)
+      if (phone) {
+        let cleanPhone = phone.replace(/\D/g, '');
+        if (!cleanPhone.startsWith('55')) {
+          cleanPhone = '55' + cleanPhone;
+        }
+        const e164Phone = '+' + cleanPhone;
+        const hashedPhone = await hashUserData(e164Phone);
+        userData.phone_number = hashedPhone;
+        console.log('[Google Ads] Telefone hasheado:', hashedPhone.substring(0, 16) + '...');
+      }
+      
+      // Enviar user_data ANTES
+      console.log('[Google Ads] 📤 Enviando user_data...');
+      window.gtag!('set', 'user_data', userData);
+      console.log('[Google Ads] ✅ user_data enviado');
+    }
+    
+    // 2. Enviar conversão (purchase)
     const conversionData = {
       'send_to': conversionId,
       'value': value,
@@ -67,12 +126,9 @@ export function trackPurchase(transactionId: string, value: number) {
       'transaction_id': transactionId
     }
     
-    console.log('📊 [Google Ads] DADOS EXATOS ENVIADOS:', JSON.stringify(conversionData, null, 2));
-    console.log('💰 [Google Ads] VALOR EXATO:', value, '(tipo:', typeof value, ')');
-    
+    console.log('📊 [Google Ads] Enviando conversão...');
     window.gtag!('event', 'conversion', conversionData);
-    
-    console.log('[Google Ads] ✅ Conversão "Compra" enviada com sucesso');
+    console.log('[Google Ads] ✅ Conversão enviada com sucesso');
   } catch (error) {
     console.error('[Google Ads] ❌ Erro ao disparar conversão de compra:', error);
   }

@@ -16,6 +16,8 @@ export default function SuccessPage() {
   const itemType = searchParams.get('itemType') || "recharge"
   const game = searchParams.get('game') || "freefire"
   const itemValue = searchParams.get('itemValue') || ""
+  const email = searchParams.get('email') || ""
+  const phone = searchParams.get('phone') || ""
   
   // Formatar tempo restante
   const formatTime = (seconds: number) => {
@@ -84,9 +86,21 @@ export default function SuccessPage() {
         try {
           const amountValue = parseFloat(amount)
           if (amountValue > 0) {
-            trackPurchase(transactionId, amountValue / 100) // Converter de centavos para reais
+            // Enviar com Enhanced Conversions (email e telefone hasheados)
+            trackPurchase(
+              transactionId, 
+              amountValue / 100, // Converter de centavos para reais
+              email || undefined, // Email para Enhanced Conversions
+              phone || undefined  // Telefone para Enhanced Conversions
+            )
             localStorage.setItem(conversionKey, 'true')
-            console.log('[Success] ✅ Conversão Google Ads enviada (primeira vez):', { transactionId, amount: amountValue / 100 })
+            console.log('[Success] ✅ Conversão Google Ads enviada (primeira vez):', { 
+              transactionId, 
+              amount: amountValue / 100,
+              hasEmail: !!email,
+              hasPhone: !!phone,
+              enhancedConversions: !!(email || phone)
+            })
           }
         } catch (error) {
           console.error('[Success] ❌ Erro ao enviar conversão:', error)

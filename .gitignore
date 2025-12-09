@@ -66,3 +66,7 @@ quiz-script-updated.js
 
 # Analytics data (arquivo local que muda constantemente)
 .analytics-data.json
+
+# Google Sheets credentials (NUNCA COMMITAR!)
+chavesheets.json
+**/chavesheets.json
