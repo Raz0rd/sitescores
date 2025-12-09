@@ -5,6 +5,10 @@ import { useRouter, usePathname } from 'next/navigation'
 import UrgencyBannerLoja from './UrgencyBannerLoja'
 import RankingTop3 from './RankingTop3'
 import LojaFooter from './LojaFooter'
+import FixedCartButton from './FixedCartButton'
+import CartToast from './CartToast'
+import { useCartToast } from '@/hooks/useCartToast'
+import { useCart } from '@/contexts/CartContext'
 
 interface LojaLayoutProps {
   children: React.ReactNode
@@ -15,9 +19,12 @@ interface LojaLayoutProps {
 export default function LojaLayout({ children, customBanner, hideRanking = false }: LojaLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const cart = useCart()
+  const { showToast, itemName, showCartToast, hideToast } = useCartToast()
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false)
   const [currentIcon, setCurrentIcon] = useState<React.ReactNode>(null)
   const [categoryText, setCategoryText] = useState('Recarga Rápida e Segura')
+  const [prevItemCount, setPrevItemCount] = useState(0)
 
   // Detectar categoria atual e definir ícone + texto
   useEffect(() => {
@@ -59,6 +66,21 @@ export default function LojaLayout({ children, customBanner, hideRanking = false
     }
   }, [pathname])
 
+  // Detectar quando um item é adicionado ao carrinho
+  useEffect(() => {
+    // Só mostrar toast se:
+    // 1. Aumentou o número de itens (não diminuiu)
+    // 2. Não é a primeira renderização (prevItemCount !== 0)
+    // 3. Não está na página de checkout
+    const isCheckoutPage = pathname?.includes('/checkout')
+    
+    if (cart.itemCount > prevItemCount && prevItemCount !== 0 && !isCheckoutPage && cart.items.length > 0) {
+      const lastItem = cart.items[cart.items.length - 1]
+      showCartToast(lastItem.name)
+    }
+    setPrevItemCount(cart.itemCount)
+  }, [cart.itemCount, cart.items, pathname])
+
   // Função para adicionar UTMs a qualquer URL interna
   const addUtmsToUrl = (url: string): string => {
     if (typeof window === 'undefined') return url
@@ -89,17 +111,27 @@ export default function LojaLayout({ children, customBanner, hideRanking = false
           <div className="flex items-center justify-between">
             {/* Logo e Nome do Site */}
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center shadow-inner border border-gray-200 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent rounded-xl"></div>
-                <div className="relative z-10">
-                  {currentIcon}
-                </div>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center relative overflow-hidden">
+                <img 
+                  src="/images/shipbuxlogo.png" 
+                  alt="Shipbux Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="flex flex-col">
                 <h1 className="text-sm sm:text-base font-bold text-gray-900 leading-tight">
-                  {process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME || 'DiamantesShop'}
+                  Shipbux
                 </h1>
-                <p className="text-xs text-gray-500">{categoryText}</p>
+                <p className="text-[10px] sm:text-xs text-gray-600 font-medium">Itens Digitais Instantâneos</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[9px] sm:text-[10px] text-green-600 font-semibold flex items-center gap-0.5">
+                    🛡️ Pagamento Seguro
+                  </span>
+                  <span className="text-gray-300">|</span>
+                  <span className="text-[9px] sm:text-[10px] text-blue-600 font-semibold flex items-center gap-0.5">
+                    ⚡ Entrega Automática
+                  </span>
+                </div>
               </div>
             </div>
             
@@ -241,6 +273,12 @@ export default function LojaLayout({ children, customBanner, hideRanking = false
 
       {/* Footer */}
       <LojaFooter />
+
+      {/* Botão Fixo do Carrinho */}
+      <FixedCartButton />
+
+      {/* Toast de Confirmação */}
+      <CartToast show={showToast} itemName={itemName} onHide={hideToast} />
     </div>
   )
 }

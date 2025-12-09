@@ -8,6 +8,8 @@ import ClickTracker from "@/components/ClickTracker"
 import DynamicTheme from "@/components/DynamicTheme"
 import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
+// import SidebarCart from "@/components/loja/SidebarCart" // DESABILITADO - Usando botão fixo otimizado
+import { CartProvider } from "@/contexts/CartContext"
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -73,8 +75,8 @@ export const metadata: Metadata = {
     images: ["/images/twitter-card.jpg"],
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: '/images/shipbux.ico',
+    apple: '/images/shipbuxlogo.png',
   },
   robots: {
     index: true,
@@ -124,11 +126,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         <HeadManager />
         <DynamicTheme />
         <DevToolsBlocker />
-        <VerificationWrapper>
-          <ClickTracker>
-            <Suspense fallback={null}>{children}</Suspense>
-          </ClickTracker>
-        </VerificationWrapper>
+        <CartProvider>
+          {/* SidebarCart REMOVIDO - Usando FixedCartButton no LojaLayout */}
+          <VerificationWrapper>
+            <ClickTracker>
+              <Suspense fallback={null}>{children}</Suspense>
+            </ClickTracker>
+          </VerificationWrapper>
+        </CartProvider>
       </body>
     </html>
   )

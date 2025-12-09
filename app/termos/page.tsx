@@ -1,18 +1,10 @@
-import type { Metadata } from 'next'
+"use client"
 
-export const metadata: Metadata = {
-  title: 'Termos de Uso - Centro de Recarga Oficial | Free Fire, Delta Force, Haikyu',
-  description: 'Termos de uso do centro oficial de recarga de jogos. Ofertas exclusivas para usuários verificados. Transações seguras e confiáveis.',
-  keywords: [
-    'termos de uso recarga',
-    'politica site recarga',
-    'termos free fire',
-    'recarga oficial termos',
-    'ofertas exclusivas jogos'
-  ]
-}
+import type { Metadata } from 'next'
+import { useRouter } from 'next/navigation'
 
 export default function TermosPage() {
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
@@ -117,12 +109,12 @@ export default function TermosPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <a 
-              href="/" 
-              className="inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            <button 
+              onClick={() => router.back()}
+              className="inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors cursor-pointer"
             >
-              Voltar ao Site
-            </a>
+              ← Voltar
+            </button>
           </div>
         </div>
       </div>

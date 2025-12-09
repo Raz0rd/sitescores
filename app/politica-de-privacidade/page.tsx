@@ -1,12 +1,11 @@
+"use client"
+
 import ComplianceFooter from '@/components/ComplianceFooter'
 import { companyConfig } from '@/lib/company-config'
-
-export const metadata = {
-  title: `Política de Privacidade - ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME || 'DeltaForce'}`,
-  description: `Política de privacidade da plataforma ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME || 'DeltaForce'}`
-}
+import { useRouter } from 'next/navigation'
 
 export default function PoliticaDePrivacidade() {
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col">
       <div className="container mx-auto px-4 py-12 flex-1">
@@ -99,22 +98,25 @@ export default function PoliticaDePrivacidade() {
 
             <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">8. Contato</h2>
             <div className="bg-slate-100 rounded-lg p-4 text-slate-700">
-              <p className="mb-2"><strong>VALTER OPITZ JUNIOR</strong></p>
-              <p className="mb-1">CNPJ: 42.047.382/0001-51</p>
-              <p className="mb-1">Email: {companyConfig.email}</p>
-              <p className="mb-1">Telefone: {companyConfig.phone}</p>
-              <p className="mb-1">Endereço: {companyConfig.address.street} - {companyConfig.address.neighborhood}</p>
-              <p>{companyConfig.address.city} - {companyConfig.address.state}, CEP: {companyConfig.address.zipCode}</p>
+              <p className="mb-2"><strong>WANESSA DE NOVAES VASCO</strong></p>
+              <p className="mb-1">CNPJ: 33.010.705/0001-49</p>
+              <p className="mb-1">Email: contato@techhubz.sbs</p>
+              <p className="mb-2"><strong>Localização:</strong></p>
+              <p className="mb-1">Logradouro: Rua De Fora, 10</p>
+              <p className="mb-1">Bairro: Santa Rita</p>
+              <p className="mb-1">CEP: 57160-000</p>
+              <p className="mb-1">Município: Marechal Deodoro</p>
+              <p>Estado: Alagoas</p>
             </div>
           </div>
 
           <div className="mt-8 text-center">
-            <a 
-              href="/" 
-              className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors"
+            <button 
+              onClick={() => router.back()}
+              className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors cursor-pointer"
             >
-              Voltar para o Início
-            </a>
+              ← Voltar
+            </button>
           </div>
         </div>
       </div>

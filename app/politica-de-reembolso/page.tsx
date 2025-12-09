@@ -1,9 +1,9 @@
-export const metadata = {
-  title: `Política de Reembolso - ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME}`,
-  description: `Política de reembolso da ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME}`
-}
+"use client"
+
+import { useRouter } from 'next/navigation'
 
 export default function PoliticaDeReembolso() {
+  const router = useRouter()
   const companyName = process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME
   const companyEmail = process.env.NEXT_PUBLIC_COMPANY_EMAIL
   const companyCNPJ = process.env.NEXT_PUBLIC_COMPANY_CNPJ
@@ -64,7 +64,7 @@ export default function PoliticaDeReembolso() {
           </div>
 
           <div className="mt-6 text-center">
-            <a href="/" className="text-blue-600 hover:underline text-sm">← Voltar para o início</a>
+            <button onClick={() => router.back()} className="text-blue-600 hover:underline text-sm cursor-pointer">← Voltar</button>
           </div>
         </div>
       </div>

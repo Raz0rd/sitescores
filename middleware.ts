@@ -89,95 +89,70 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
   
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('🌐 [ACESSO] Usuário acessou rota:', pathname)
-  console.log('   📍 Host:', hostname)
-  console.log('   🔗 URL completa:', request.url)
-  console.log('   📅 Timestamp:', new Date().toISOString())
+  // 📊 CAPTURAR GCLID/GBRAID E SALVAR NO GOOGLE SHEETS
+  const url = new URL(request.url)
+  const gclid = url.searchParams.get('gclid')
+  const gbraid = url.searchParams.get('gbraid')
+  const wbraid = url.searchParams.get('wbraid')
+  const utm_source = url.searchParams.get('utm_source')
+  const utm_campaign = url.searchParams.get('utm_campaign')
+  const utm_medium = url.searchParams.get('utm_medium')
+  const fbclid = url.searchParams.get('fbclid')
+  
+  // Se tiver gclid, gbraid ou fbclid, salvar no Google Sheets
+  if (gclid || gbraid || wbraid || fbclid) {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const userAgent = request.headers.get('user-agent') || 'unknown'
+    
+    console.log(`🎯 [TRACKING] ${pathname} - GCLID: ${gclid || gbraid || wbraid || fbclid}`)
+    
+    // Salvar no Google Sheets (não bloquear o request)
+    const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+    if (googleSheetsUrl) {
+      // Fazer request assíncrono sem await (não bloquear)
+      fetch(googleSheetsUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projeto: 'Tracking_Inicial',
+          timestamp: new Date().toISOString(),
+          gclid: gclid || '',
+          gbraid: gbraid || '',
+          wbraid: wbraid || '',
+          fbclid: fbclid || '',
+          utm_source: utm_source || '',
+          utm_campaign: utm_campaign || '',
+          utm_medium: utm_medium || '',
+          ip: ip,
+          user_agent: userAgent,
+          landing_page: pathname,
+          full_url: request.url
+        })
+      }).then(() => {
+        console.log('✅ [TRACKING] Salvo no Sheets')
+      }).catch(() => {
+        // Silencioso
+      })
+    }
+  }
   
   // Pegar base URL do .env
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://localhost:3000'
   
   // 🛡️ SEGURANÇA: Bloquear acesso via IP
   if (/^\d+\.\d+\.\d+\.\d+/.test(hostname)) {
-    console.log('🚫 [SEGURANÇA] Acesso via IP bloqueado:', hostname)
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     return NextResponse.redirect(new URL(baseUrl, request.url))
   }
   
-  // Função para obter IP real do cliente
-  const getClientIp = (): string => {
-    // Prioridade de headers para pegar IP real
-    const headers = [
-      'cf-connecting-ip',        // Cloudflare (mais confiável)
-      'x-real-ip',              // Nginx
-      'x-forwarded-for',        // Proxy padrão (pode ter múltiplos IPs)
-      'x-client-ip',            // Apache
-      'true-client-ip',         // Cloudflare alternativo
-    ]
-    
-    for (const header of headers) {
-      const value = request.headers.get(header)
-      if (value) {
-        // x-forwarded-for pode ter múltiplos IPs separados por vírgula
-        // Pegar o primeiro (IP original do cliente)
-        const ip = value.split(',')[0].trim()
-        
-        // Validar se é um IP válido (não vazio, não 0.0.0.0, não localhost)
-        if (ip && 
-            ip !== 'unknown' && 
-            ip !== '0.0.0.0' &&
-            ip !== '::1' &&
-            ip !== '127.0.0.1' &&
-            !ip.startsWith('::') &&
-            !ip.startsWith('0.0.0')) {
-          console.log(`   ✅ IP encontrado via ${header}:`, ip)
-          return ip
-        }
-      }
-    }
-    
-    // Fallback para request.ip (Next.js)
-    let fallbackIp = request.ip || 'unknown'
-    
-    // Validar fallback - se for IP local/inválido, usar IP do seu provedor
-    if (fallbackIp === '::1' || 
-        fallbackIp === '127.0.0.1' || 
-        fallbackIp === '0.0.0.0' ||
-        fallbackIp === 'unknown' ||
-        fallbackIp.startsWith('::') ||
-        fallbackIp.startsWith('0.0.0')) {
-      
-      // Em localhost, usar o IP real do desenvolvedor
-      if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-        console.log('   ⚠️  Localhost detectado - usando IP real do desenvolvedor')
-        fallbackIp = '191.7.55.145' // SEU IP REAL
-      } else {
-        console.log('   ⚠️  IP inválido detectado, usando IP padrão')
-        fallbackIp = '177.44.248.122' // IP de exemplo do Brasil
-      }
-    }
-    
-    console.log('   📍 IP final:', fallbackIp)
-    return fallbackIp
-  }
+  // 🔍 Pegar IP do usuário
+  const clientIp = 
+    request.headers.get('cf-connecting-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0] ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
   
-  // Pegar informações do cliente
-  const clientIp = getClientIp()
   const referer = request.headers.get('referer') || 'direto'
   const userAgent = request.headers.get('user-agent') || 'unknown'
-  
-  console.log('   🌍 IP:', clientIp)
-  console.log('   🔙 Referer:', referer)
-  console.log('   🖥️  User-Agent:', userAgent.substring(0, 80) + '...')
-  
-  // ⚠️ MONITORAMENTO: Logar acessos sem Cloudflare (mas não bloquear)
-  const cfRay = request.headers.get('cf-ray')
-  if (!cfRay && !hostname.includes('localhost')) {
-    console.log('   ⚠️  Sem Cloudflare (CF-Ray ausente)')
-  }
-  
   
   // Rotas da whitepage que NUNCA devem passar pelo cloaker
   // IMPORTANTE: "/" NÃO está aqui - deve passar pelo cloaker!
@@ -199,6 +174,7 @@ export async function middleware(request: NextRequest) {
     '/blog',
     '/politica-privacidade',
     '/termos',
+    '/termos-de-uso',
     '/privacidade'
   ]
   const isWhitePageRoute = whitePageRoutes.includes(pathname) || 
@@ -221,47 +197,18 @@ export async function middleware(request: NextRequest) {
   const bearerToken = request.cookies.get('bearer')
   const isWhitelisted = validateBearer(bearerToken?.value, clientIp)
   
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('🔐 [BEARER] Verificação de autenticação')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  
   if (bearerToken?.value) {
-    console.log('   📋 Bearer encontrado:', bearerToken.value.substring(0, 16) + '...')
-    console.log('   🌍 IP do request:', clientIp)
-    console.log('   📍 Rota acessada:', pathname)
     
     if (isWhitelisted) {
-      const whitelistEntry = ipWhitelist.get(clientIp)
-      const timeInWhitelist = whitelistEntry ? Math.floor((Date.now() - whitelistEntry.timestamp) / 1000 / 60) : 0
-      
-      console.log('   ✅ STATUS: AUTENTICADO')
-      console.log('   ⏱️  Na whitelist há:', timeInWhitelist, 'minutos')
-      console.log('   🎯 Ação:', pathname === '/' ? 'Redirecionar para /recargajogo' : 'Liberar acesso')
-      
       // Se tem bearer válido e está tentando acessar a presell (/), redirecionar para /recargajogo
       if (pathname === '/') {
-        console.log('   ↪️  Redirecionando usuário autenticado para /recargajogo')
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
         const redirectUrl = new URL('/recargajogo', request.url)
-        redirectUrl.search = request.nextUrl.search // Manter UTMs
+        redirectUrl.search = request.nextUrl.search
         return NextResponse.redirect(redirectUrl)
       }
-      
-      // Para outras rotas, liberar acesso normalmente
-      console.log('   ✅ Acesso liberado sem verificação de cloaker')
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
       return NextResponse.next()
-    } else {
-      console.log('   ❌ STATUS: NÃO AUTENTICADO')
-      console.log('   ⚠️  Motivo: Bearer não corresponde ao IP ou expirou')
-      console.log('   🔄 Ação: Revalidar pelo cloaker')
     }
-  } else {
-    console.log('   ❌ Bearer: NÃO ENCONTRADO')
-    console.log('   👤 Tipo: Primeira visita ou cookie expirado')
-    console.log('   🔄 Ação: Verificar pelo cloaker')
   }
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
   // Rotas da whitepage sempre acessíveis (sem verificação de cloaker)
   if (isWhitePageRoute) {

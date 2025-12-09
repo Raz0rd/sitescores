@@ -16,7 +16,7 @@ export default function LojaFooter() {
             </div>
           </div>
           <p className="text-xs text-gray-500 text-center md:text-left">
-            Plataforma independente. Não afiliada a Garena ou Free Fire.
+            Plataforma independente.
           </p>
         </div>
       </div>

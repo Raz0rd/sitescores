@@ -218,48 +218,78 @@ export default function BrainrootsPage() {
   return (
     <LojaLayout customBanner={<BrainrotBanner />}>
       <div className="max-w-7xl mx-auto p-4 py-8">
-        {/* Cabeçalho */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            Steal a Brainrot - Items
-          </h1>
-          <p className="text-sm text-gray-600">Encontre os melhores brainrots com os melhores preços</p>
+        {/* Breadcrumb */}
+        <div className="mb-6">
+          <p className="text-xs text-gray-400">
+            <span>Início</span>
+            <span className="mx-2">›</span>
+            <span className="text-gray-600 font-medium">Brainroots</span>
+          </p>
         </div>
 
-        {/* Barra de Pesquisa */}
-        <div className="mb-6">
-          <div className="relative max-w-2xl mx-auto">
-            <input
-              type="text"
-              placeholder="Pesquisar por nome do brainrot..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 pl-12 pr-4 text-gray-900 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-            />
-            <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+        {/* Hero - Título + Subtítulo + Trust Icons */}
+        <div className="text-center mb-10">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+            Steal a Brainrot — Itens
+          </h1>
+          <p className="text-sm text-gray-700 mb-4 max-w-2xl mx-auto">
+            Encontre os melhores brainrots com segurança e entrega imediata.
+          </p>
+          <p className="text-xs text-gray-500 mb-4">
+            Marketplace líder em venda de brainrots — preços atualizados em tempo real.
+          </p>
+          
+          {/* Trust Icons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="text-base">🔒</span>
+              <span className="text-gray-700 font-medium">Itens verificados</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-base">⚡</span>
+              <span className="text-gray-700 font-medium">Entrega rápida</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-base">📦</span>
+              <span className="text-gray-700 font-medium">Estoque atualizado</span>
+            </div>
           </div>
         </div>
 
-        {/* Filtros */}
-        <div className="mb-8 bg-white rounded-xl shadow-lg p-6">
+        {/* Barra de Pesquisa - Compacta */}
+        <div className="mb-6">
+          <div className="relative max-w-2xl mx-auto">
+            <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Pesquisar brainrot por nome…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2.5 pl-10 pr-4 text-sm text-gray-900 border border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Filtros - Compactos e Refinados */}
+        <div className="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Filtros</h2>
+            <h2 className="text-sm font-bold text-gray-900">Filtros</h2>
             <button
               onClick={clearFilters}
-              className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+              className="text-xs text-purple-600 hover:text-purple-700 font-medium"
             >
               Limpar filtros
             </button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {/* Raridade */}
             <select
               value={filterRarity}
               onChange={(e) => setFilterRarity(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="px-3 py-2 text-sm border border-[#D9D9D9] rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none h-[42px]"
             >
               <option value="">Todas Raridades</option>
               {brainrotData.filterOptions.rarities.map(rarity => (
@@ -271,7 +301,7 @@ export default function BrainrootsPage() {
             <select
               value={filterBrainrot}
               onChange={(e) => setFilterBrainrot(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="px-3 py-2 text-sm border border-[#D9D9D9] rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none h-[42px]"
             >
               <option value="">Todos Brainrots</option>
               {brainrotData.filterOptions.brainrots.map(brainrot => (
@@ -283,7 +313,7 @@ export default function BrainrootsPage() {
             <select
               value={filterMs}
               onChange={(e) => setFilterMs(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="px-3 py-2 text-sm border border-[#D9D9D9] rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none h-[42px]"
             >
               <option value="">Todos M/s</option>
               {brainrotData.filterOptions.msRanges.map(ms => (
@@ -295,7 +325,7 @@ export default function BrainrootsPage() {
             <select
               value={filterMutation}
               onChange={(e) => setFilterMutation(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="px-3 py-2 text-sm border border-[#D9D9D9] rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none h-[42px]"
             >
               <option value="">Todas Mutações</option>
               {brainrotData.filterOptions.mutations.map(mutation => (
@@ -307,7 +337,7 @@ export default function BrainrootsPage() {
             <select
               value={filterPrice}
               onChange={(e) => setFilterPrice(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="px-3 py-2 text-sm border border-[#D9D9D9] rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 outline-none h-[42px]"
             >
               <option value="">Ordenar por</option>
               <option value="low">Menor Preço</option>
@@ -315,8 +345,8 @@ export default function BrainrootsPage() {
             </select>
           </div>
 
-          {/* Contador de resultados */}
-          <div className="mt-4 text-sm text-gray-600 text-center">
+          {/* Contador de resultados - Menor e centralizado */}
+          <div className="mt-3 text-xs text-[#888888] text-center">
             Mostrando {startIndex + 1}-{Math.min(endIndex, filteredItems.length)} de {filteredItems.length} itens
             {filteredItems.length !== items.length && ` (${items.length} no total)`}
           </div>
@@ -421,14 +451,11 @@ export default function BrainrootsPage() {
         `}</style>
 
         {/* Grid de Thumbnails com Paginação */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900">
+        <div className="mb-10">
+          <div className="mb-6 text-center">
+            <h3 className="text-lg font-bold text-gray-900">
               Todos os Itens ({filteredItems.length})
             </h3>
-            <div className="text-sm text-gray-600">
-              Página {currentPage} de {totalPages}
-            </div>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
@@ -474,7 +501,7 @@ export default function BrainrootsPage() {
                       {item.rarity === 'Brainrot Deus' ? '🔥' : item.rarity === 'Secreto' ? '💎' : '⭐'}
                     </div>
                     {item.hasDiscount && (
-                      <div className="absolute top-1 left-1 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                      <div className="absolute top-1 left-1 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">
                         -{item.discountPercentage}%
                       </div>
                     )}
@@ -483,46 +510,47 @@ export default function BrainrootsPage() {
                     <div className="flex items-center gap-1 mb-1">
                       <p className="text-xs font-semibold text-gray-900 truncate flex-1">{item.brainrotName}</p>
                       {item.hasMutation && item.mutations !== 'None' && (
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-md whitespace-nowrap">
                           {item.mutations}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-600">{item.ms}</p>
-                    {item.hasDiscount && item.originalPrice && (
-                      <p className="text-[10px] text-gray-400 line-through">R$ {item.originalPrice.toFixed(2)}</p>
-                    )}
-                    <p className="text-sm font-bold text-purple-600">R$ {item.priceAmount.toFixed(2)}</p>
+                    <p className="text-xs text-gray-600 mb-1">{item.ms}</p>
+                    <div className="flex items-baseline gap-1.5">
+                      {item.hasDiscount && item.originalPrice && (
+                        <span className="text-xs text-gray-400 line-through">R$ {item.originalPrice.toFixed(2)}</span>
+                      )}
+                      <span className="text-base font-bold text-[#0CAF60]">R$ {item.priceAmount.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
               )
             })}
           </div>
 
-          {/* Controles de Paginação */}
+          {/* Controles de Paginação - Minimalista */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed text-sm"
               >
-                ← Anterior
+                ‹
               </button>
               
               <div className="flex gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
-                  // Mostrar apenas algumas páginas ao redor da atual
                   if (
                     page === 1 ||
                     page === totalPages ||
-                    (page >= currentPage - 2 && page <= currentPage + 2)
+                    (page >= currentPage - 1 && page <= currentPage + 1)
                   ) {
                     return (
                       <button
                         key={page}
                         onClick={() => goToPage(page)}
-                        className={`px-3 py-2 rounded-lg transition-all ${
+                        className={`w-8 h-8 flex items-center justify-center rounded text-sm ${
                           page === currentPage
                             ? 'bg-purple-600 text-white font-bold'
                             : 'bg-white border border-gray-300 hover:bg-gray-50'
@@ -532,10 +560,10 @@ export default function BrainrootsPage() {
                       </button>
                     )
                   } else if (
-                    page === currentPage - 3 ||
-                    page === currentPage + 3
+                    page === currentPage - 2 ||
+                    page === currentPage + 2
                   ) {
-                    return <span key={page} className="px-2 py-2">...</span>
+                    return <span key={page} className="w-8 h-8 flex items-center justify-center text-gray-400">...</span>
                   }
                   return null
                 })}
@@ -544,26 +572,29 @@ export default function BrainrootsPage() {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed text-sm"
               >
-                Próxima →
+                ›
               </button>
             </div>
           )}
         </div>
 
-        {/* Info */}
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
-          <div className="flex items-start gap-4">
-            <svg className="w-8 h-8 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
+        {/* Itens Verificados e Seguros */}
+        <div className="max-w-4xl mx-auto bg-purple-50 border border-purple-100 rounded-xl p-5 mb-6">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">💎</span>
             <div className="text-sm text-gray-900">
-              <p className="font-bold text-lg mb-2">💎 Itens Verificados e Seguros</p>
-              <p className="mb-2">Todos os itens são autênticos e verificados por vendedores confiáveis. Entrega rápida garantida em até 20 minutos!</p>
+              <p className="font-bold text-base mb-1.5">Itens Verificados e Seguros</p>
+              <p className="mb-1.5 leading-relaxed">Todos os itens são autênticos e verificados por vendedores confiáveis. Entrega rápida garantida em até 20 minutos!</p>
               <p className="text-xs text-gray-600">Os preços são atualizados em tempo real</p>
             </div>
           </div>
+        </div>
+
+        {/* SEO Footer */}
+        <div className="max-w-4xl mx-auto text-center text-xs text-gray-500 mt-6">
+          <p>Itens entregues automaticamente em poucos minutos após pagamento.</p>
         </div>
       </div>
     </LojaLayout>

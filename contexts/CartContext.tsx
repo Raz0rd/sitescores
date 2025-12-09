@@ -9,7 +9,7 @@ export interface CartItem {
   image: string
   price: number
   originalPrice?: number
-  category: 'freefire' | 'robux' | 'vbucks' | 'recarga'
+  category: 'freefire' | 'robux' | 'vbucks' | 'recarga' | 'brainroots'
   details: {
     [key: string]: string
   }
@@ -32,7 +32,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
-  const [currentCategory, setCurrentCategory] = useState<'freefire' | 'robux' | 'vbucks' | 'recarga' | null>(null)
+  const [currentCategory, setCurrentCategory] = useState<'freefire' | 'robux' | 'vbucks' | 'recarga' | 'brainroots' | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
@@ -56,6 +56,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCurrentCategory('vbucks')
       } else if (path.includes('/recarga-celular')) {
         setCurrentCategory('recarga')
+      } else if (path.includes('/brainroots')) {
+        setCurrentCategory('brainroots')
       }
     }
   }, [])

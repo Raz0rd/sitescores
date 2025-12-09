@@ -1,15 +1,9 @@
-export const metadata = {
-  title: `Quem Somos - ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME}`,
-  description: `Conheça a ${process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME}`
-}
+"use client"
+
+import { useRouter } from 'next/navigation'
 
 export default function QuemSomos() {
-  const companyName = process.env.NEXT_PUBLIC_COMPANY_TRADE_NAME
-  const companyEmail = process.env.NEXT_PUBLIC_COMPANY_EMAIL
-  const companyCNPJ = process.env.NEXT_PUBLIC_COMPANY_CNPJ
-  const companyLegalName = process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME
-  const companyPhone = process.env.NEXT_PUBLIC_COMPANY_PHONE
-
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4">
@@ -37,21 +31,25 @@ export default function QuemSomos() {
 
             <section className="bg-slate-50 rounded-lg p-4">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Dados da Empresa</h2>
-              <p className="text-sm mb-1"><strong>{companyLegalName}</strong></p>
-              <p className="text-sm mb-1">CNPJ: {companyCNPJ}</p>
-              <p className="text-sm mb-1">Email: {companyEmail}</p>
-              <p className="text-sm">Telefone: {companyPhone}</p>
+              <p className="text-sm mb-1"><strong>WANESSA DE NOVAES VASCO</strong></p>
+              <p className="text-sm mb-1">CNPJ: 33.010.705/0001-49</p>
+              <p className="text-sm mb-1">Email: contato@techhubz.sbs</p>
+              <p className="text-sm mb-2"><strong>Localização:</strong></p>
+              <p className="text-sm mb-1">Logradouro: Rua De Fora, 10</p>
+              <p className="text-sm mb-1">Bairro: Santa Rita</p>
+              <p className="text-sm mb-1">CEP: 57160-000</p>
+              <p className="text-sm mb-1">Município: Marechal Deodoro</p>
+              <p className="text-sm">Estado: Alagoas</p>
             </section>
 
             <section className="bg-blue-50 rounded-lg p-4">
               <h3 className="font-semibold text-slate-900 mb-2">Entre em Contato</h3>
-              <p className="text-sm mb-1">📧 <a href={`mailto:${companyEmail}`} className="text-blue-600 hover:underline">{companyEmail}</a></p>
-              <p className="text-sm">📞 <a href={`tel:${companyPhone}`} className="text-blue-600 hover:underline">{companyPhone}</a></p>
+              <p className="text-sm mb-1">📧 <a href="mailto:contato@techhubz.sbs" className="text-blue-600 hover:underline">contato@techhubz.sbs</a></p>
             </section>
           </div>
 
           <div className="mt-6 text-center">
-            <a href="/" className="text-blue-600 hover:underline text-sm">← Voltar para o início</a>
+            <button onClick={() => router.back()} className="text-blue-600 hover:underline text-sm cursor-pointer">← Voltar</button>
           </div>
         </div>
       </div>

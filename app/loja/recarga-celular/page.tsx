@@ -12,9 +12,18 @@ export default function RecargaCelularPage() {
   const [selectedOperadora, setSelectedOperadora] = useState<string | null>(null)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [selectedRechargeValue, setSelectedRechargeValue] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+  
+  // Gerar número aleatório apenas no cliente
+  const recentRecharges = mounted ? Math.floor(35 + Math.random() * 40) : 48
 
   useEffect(() => {
-    document.title = 'Recarga Celular - Todas as Operadoras'
+    document.title = 'Recarga de Celular Online – Crédito Instantâneo + Bônus | Shipbux'
+  }, [])
+  
+  // Detectar montagem no cliente
+  useEffect(() => {
+    setMounted(true)
   }, [])
 
   const operadoras = [
@@ -54,6 +63,30 @@ export default function RecargaCelularPage() {
 
   return (
     <LojaLayout customBanner={<RecargaBanner />}>
+      {/* 1️⃣ Bloco de Valor - Logo após o banner */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-4 mb-4">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-center">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🔒</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Pagamento Seguro</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">⚡</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Recarga na Hora</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📱</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Todas Operadoras</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🎁</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Bônus Exclusivo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="max-w-5xl mx-auto p-4 py-8">
         {/* Banner de Bônus */}
         <div className="mb-6">
@@ -63,14 +96,15 @@ export default function RecargaCelularPage() {
             className="w-full rounded-lg shadow-lg"
           />
         </div>
-
-        {/* Logo das Operadoras */}
-        <div className="mb-8 flex justify-center">
-          <img 
-            src="/images/recargacelular/logoOperadoras.png" 
-            alt="Operadoras Parceiras" 
-            className="max-w-md w-full"
-          />
+        
+        {/* 2️⃣ Título Otimizado */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            ⭐ Ganhe até 10GB de bônus imediato na sua recarga digital!
+          </h1>
+          <p className="text-sm text-gray-600 font-medium">
+            Recarga rápida, segura e creditada em segundos.
+          </p>
         </div>
 
         <div className="max-w-md mx-auto">
@@ -103,7 +137,8 @@ export default function RecargaCelularPage() {
 
           {/* Seleção de Operadora */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Qual sua operadora?</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">Qual sua operadora?</h3>
+            <p className="text-xs text-gray-500 mb-3">Escolha sua operadora — descontos e bônus exclusivos disponíveis.</p>
             <div className="grid grid-cols-2 gap-3">
               {operadoras.map((operadora) => (
                 <button
@@ -144,33 +179,68 @@ export default function RecargaCelularPage() {
                     onClick={() => setSelectedRechargeValue(item.value)}
                     className={`relative py-4 px-6 rounded-lg border-2 transition-all ${
                       isSelected
-                        ? 'border-green-500 bg-green-50'
+                        ? 'border-green-500 bg-green-50 ring-2 ring-green-200'
+                        : item.highlight
+                        ? 'border-orange-300 bg-orange-50 hover:border-orange-400'
                         : 'border-gray-200 bg-white hover:border-gray-300'
+                    } ${
+                      item.highlight ? 'transform scale-105' : ''
                     }`}
                   >
                     {item.highlight && (
-                      <div className="absolute -top-2 right-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">
-                        MAIS ESCOLHIDO
+                      <div className="absolute -top-2 right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg animate-pulse">
+                        🔥 MAIS ESCOLHIDO
                       </div>
                     )}
                     <div className="text-xl font-bold text-gray-900">R$ {item.value}</div>
                     <div className="text-xs font-semibold text-green-600 mt-1">{item.bonus}</div>
+                    <div className="text-[9px] text-gray-500 mt-1.5 space-y-0.5">
+                      <div>✔ Bônus garantido</div>
+                      <div>✔ Liberação instantânea</div>
+                    </div>
                   </button>
                 );
               })}
             </div>
           </div>
+          
+          {/* 3️⃣ Bloco de Prova Social */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="text-center space-y-2">
+              <p className="text-sm font-semibold text-gray-800">
+                ⭐ <strong>4.9</strong> de avaliação — mais de <strong>8.200 clientes</strong> satisfeitos
+              </p>
+              <p className="text-xs text-gray-600">
+                ⚡ Crédito liberado em média em <strong>8 segundos</strong>
+              </p>
+              <p className="text-xs text-orange-600 font-semibold">
+                🔥 {recentRecharges} pessoas recarregaram nos últimos 20 minutos
+              </p>
+            </div>
+          </div>
 
-          {/* Botão de Prosseguir */}
+          {/* Botão de Prosseguir - Desktop */}
           <button 
             onClick={handleProsseguir}
-            className="w-full bg-green-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="hidden sm:block w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 rounded-lg font-bold text-lg transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-400 disabled:to-gray-500"
             disabled={!phoneNumber || !selectedOperadora || !selectedRechargeValue}
           >
-            PROSSEGUIR
+            PROSSEGUIR →
           </button>
         </div>
       </div>
+      
+      {/* 4️⃣ Botão Fixo - Mobile */}
+      {phoneNumber && selectedOperadora && selectedRechargeValue && (
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
+          <button 
+            onClick={handleProsseguir}
+            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 rounded-full font-bold text-lg transition-all shadow-2xl pointer-events-auto"
+          >
+            PROSSEGUIR →
+          </button>
+        </div>
+      )}
     </LojaLayout>
   )
 }

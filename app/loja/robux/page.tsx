@@ -3,14 +3,24 @@
 import { useState, useEffect } from "react"
 import LojaLayout from '@/components/loja/LojaLayout'
 import RobuxBanner from '@/components/loja/RobuxBanner'
+import CompactSocialProof from '@/components/loja/CompactSocialProof'
+import CompactHowItWorks from '@/components/loja/CompactHowItWorks'
 import { useCart } from '@/contexts/CartContext'
 
 export default function RobuxPage() {
   const cart = useCart()
   const [selectedRechargeValue, setSelectedRechargeValue] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const [buyersToday, setBuyersToday] = useState(48)
 
   useEffect(() => {
     document.title = 'Robux - Roblox Recarga Rápida'
+  }, [])
+  
+  // Gerar número aleatório apenas uma vez no cliente
+  useEffect(() => {
+    setMounted(true)
+    setBuyersToday(Math.floor(35 + Math.random() * 40))
   }, [])
 
   const config = {
@@ -40,22 +50,41 @@ export default function RobuxPage() {
 
   return (
     <LojaLayout customBanner={<RobuxBanner />}>
+      {/* 1️⃣ Prova Social - Logo após o banner */}
+      <CompactSocialProof />
+      
+      {/* 2️⃣ Como Funciona - Compacto */}
+      <CompactHowItWorks />
+      
       <div className="max-w-5xl mx-auto p-4 py-8">
-        {/* Título da Promoção */}
+        {/* 3️⃣ Chamada de Impacto */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-normal text-gray-900 mb-2">
-            Aproveite até 25% a mais de Robux
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            💰 Aproveite até 25% a mais de Robux
           </h2>
-          <p className="text-sm text-gray-600">
-            Receba mais Robux no computador, web, com cartões-presente e em plataformas selecionadas
+          <p className="text-sm text-gray-600 font-medium">
+            Receba Robux automaticamente após o pagamento via Pix.
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Válido para PC, Web e Cartões-Presente.
           </p>
         </div>
 
-        {/* Lista de Valores */}
+        {/* 4️⃣ Lista de Pacotes - Otimizada */}
         <div className="space-y-3 max-w-md mx-auto mb-8">
-          {config.rechargeValues.map((value: string) => {
+          {config.rechargeValues.map((value: string, index: number) => {
             const isSelected = selectedRechargeValue === value
             const priceInfo = calculatePrice(value)
+            
+            // Gatilhos de urgência/social proof
+            const urgencyMessages = [
+              `🔥 ${buyersToday} pessoas compraram hoje`,
+              '📦 Estoque atualizado agora',
+              '⚡ Entrega em segundos',
+              `🔥 ${buyersToday} pessoas compraram hoje`,
+              '⚡ Entrega em segundos'
+            ]
+            const urgencyMessage = urgencyMessages[index]
             
             return (
               <div
@@ -86,18 +115,25 @@ export default function RobuxPage() {
                   setSelectedRechargeValue(value)
                 }}
               >
-                {/* Badge de Desconto */}
-                <div className="absolute -top-2 -right-2 bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                {/* Badge de Desconto - Pequeno e discreto */}
+                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-gray-700 to-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md">
                   -{priceInfo.discount}%
                 </div>
 
                 {/* Preços em Reais */}
                 <div className="flex flex-col">
                   <div className="text-sm text-gray-400 line-through">
-                    R$ {priceInfo.originalPrice.toFixed(2).replace('.', ',')}
+                    a partir de R$ {priceInfo.originalPrice.toFixed(2).replace('.', ',')}
                   </div>
                   <div className="text-xl font-bold text-gray-900">
                     R$ {priceInfo.realPrice.toFixed(2).replace('.', ',')}
+                  </div>
+                  <div className="text-[10px] text-green-600 font-semibold mt-0.5">
+                    ✔ Entrega automática
+                  </div>
+                  {/* Selo de escassez */}
+                  <div className="text-[10px] text-orange-600 font-semibold mt-1">
+                    {urgencyMessage}
                   </div>
                 </div>
 
@@ -121,61 +157,72 @@ export default function RobuxPage() {
           })}
         </div>
 
-        {/* Informação sobre outras plataformas */}
+        {/* 5️⃣ CTA Intermediário */}
         <div className="text-center mb-8">
-          <p className="text-sm text-gray-600 flex items-center justify-center gap-1">
-            Computador, web e cartões presente
-          </p>
+          <button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
+            🛒 Escolher minha recarga →
+          </button>
         </div>
 
-        {/* Roblox Premium Section */}
+        {/* 6️⃣ Roblox Premium - Otimizado */}
         <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none">
                 <rect x="6" y="6" width="12" height="12" stroke="currentColor" strokeWidth="2" fill="none"/>
                 <rect x="9" y="9" width="6" height="6" fill="currentColor"/>
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Roblox Premium</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">🎁 Roblox Premium</h3>
+              <p className="text-xs text-orange-600 font-semibold mb-2">(melhor custo-benefício)</p>
               <p className="text-sm text-gray-600">
-                Assinantes podem obter até <strong>35% a mais</strong> em valor em compras de Robux no computador, na web e com cartões presente.
+                Ganhe até <strong>35% a mais</strong> em Robux e receba recompensas mensais.
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Ideal para quem compra com frequência.
               </p>
             </div>
           </div>
 
-          <button className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-            Assine Premium
-          </button>
-
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <h4 className="text-base font-bold text-gray-900 mb-3">R$ 59,00 / mês</h4>
-            
-            <div className="space-y-3 text-sm text-gray-700">
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M12 8v4m0 4h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                <span>1000 Robux por mês</span>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/>
-                </svg>
-                <span>Até 35% a mais nas compras de Robux</span>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke="currentColor" strokeWidth="2" fill="none"/>
-                </svg>
-                <span>Negocie, revenda e publique itens de avatar</span>
-              </div>
+          <div className="mb-4 space-y-2 text-sm text-gray-700">
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✔</span>
+              <span>1000 Robux por mês</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✔</span>
+              <span>35% bônus em compras</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✔</span>
+              <span>Publique e revenda itens de avatar</span>
             </div>
           </div>
+
+          <button 
+            onClick={() => {
+              console.log('🖱️ [Robux] Roblox Premium clicado')
+              cart.addItem({
+                id: 'robux-premium',
+                name: 'Roblox Premium',
+                image: config.coinIcon,
+                price: 29.90,
+                category: 'robux',
+                details: {
+                  tipo: 'Assinatura Mensal',
+                  beneficios: '1000 Robux/mês + 35% bônus em compras'
+                }
+              })
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg font-semibold transition-all shadow-md"
+          >
+            Assinar Agora →
+          </button>
+          
+          <p className="text-center text-sm text-gray-500 mt-3">
+            R$ 29,90 / mês
+          </p>
         </div>
       </div>
     </LojaLayout>

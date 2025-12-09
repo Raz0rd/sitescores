@@ -3,8 +3,9 @@
 import type { Metadata } from 'next'
 import { useRouter } from 'next/navigation'
 
-export default function TermosPage() {
+export default function TermosDeUsoPage() {
   const router = useRouter()
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">

@@ -60,9 +60,9 @@ export default function CartButton({ itemCount, totalPrice, onClick, category = 
 
   return (
     <>
-      {/* Indicador Lateral com Onda - ISOLADO */}
+      {/* Indicador Lateral com Onda - ISOLADO - APENAS MOBILE */}
       <div 
-        className="fixed right-0 top-0 h-full pointer-events-none z-40"
+        className="lg:hidden fixed right-0 top-0 h-full pointer-events-none z-40"
         style={{ width: 'auto' }}
       >
         {/* Eclipse - Altura TOTAL da Tela */}

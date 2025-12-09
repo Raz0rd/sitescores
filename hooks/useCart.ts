@@ -8,8 +8,9 @@ export interface CartItem {
   image: string
   price: number
   originalPrice?: number
-  category: 'freefire' | 'robux' | 'vbucks'
-  details: {
+  category?: 'freefire' | 'robux' | 'vbucks' | 'recarga' | 'brainroots'
+  quantity?: number
+  details?: {
     [key: string]: string
   }
 }
@@ -47,7 +48,8 @@ export function useCart() {
       console.log('✅ [useCart] Item adicionado com sucesso')
       return [...prev, item]
     })
-    setIsOpen(true) // Abrir drawer automaticamente
+    // NÃO abrir drawer - usar botão fixo ao invés
+    // setIsOpen(true)
   }
 
   const removeItem = (id: string) => {
@@ -70,9 +72,15 @@ export function useCart() {
     setIsOpen(true)
   }
 
+  const totalPrice = items.reduce((sum, item) => {
+    const quantity = item.quantity || 1
+    return sum + (item.price * quantity)
+  }, 0)
+
   return {
     items,
     itemCount: items.length,
+    totalPrice,
     isOpen,
     addItem,
     removeItem,

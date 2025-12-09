@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from "react"
 import LojaLayout from '@/components/loja/LojaLayout'
 import { useCart } from '@/contexts/CartContext'
+import CompactSocialProof from '@/components/loja/CompactSocialProof'
+import CompactHowItWorks from '@/components/loja/CompactHowItWorks'
+import FAQ from '@/components/loja/FAQ'
 
 export default function FreeFirePage() {
   const cart = useCart()
@@ -10,10 +13,18 @@ export default function FreeFirePage() {
   const [selectedSpecialOffer, setSelectedSpecialOffer] = useState<string | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
+  const [mounted, setMounted] = useState(false)
+  const [buyersToday, setBuyersToday] = useState(48)
 
   // Configurar título da página
   useEffect(() => {
     document.title = 'Free Fire - Recarga de Diamantes Rápida e Segura'
+  }, [])
+  
+  // Gerar número aleatório apenas uma vez no cliente
+  useEffect(() => {
+    setMounted(true)
+    setBuyersToday(Math.floor(35 + Math.random() * 40))
   }, [])
 
   // Configuração do Free Fire
@@ -80,17 +91,67 @@ export default function FreeFirePage() {
     scrollToItem(newIndex)
   }
 
+  // Detectar scroll manual e atualizar indicadores
+  useEffect(() => {
+    const carousel = carouselRef.current
+    if (!carousel) return
+
+    const handleScroll = () => {
+      const scrollLeft = carousel.scrollLeft
+      const itemWidth = carousel.scrollWidth / config.specialOffers.length
+      const newIndex = Math.round(scrollLeft / itemWidth)
+      
+      if (newIndex !== currentIndex && newIndex >= 0 && newIndex < config.specialOffers.length) {
+        setCurrentIndex(newIndex)
+      }
+    }
+
+    carousel.addEventListener('scroll', handleScroll)
+    return () => carousel.removeEventListener('scroll', handleScroll)
+  }, [currentIndex, config.specialOffers.length])
+
   return (
     <LojaLayout>
-      <div className="max-w-5xl mx-auto p-4 py-8">
-        {/* Título Centralizado */}
-        <h1 className="text-3xl font-bold mb-2 text-gray-900 text-center">Packs de Dimas</h1>
+      {/* Prova Social Compacta */}
+      <CompactSocialProof />
+
+      {/* Como Funciona Compacto */}
+      <CompactHowItWorks />
+
+      <div className="max-w-5xl mx-auto px-4 pb-8">
+        {/* Título dos Pacotes - ULTRA COMPACTO */}
+        <div id="pacotes" className="text-center mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-900">Escolha seu Pacote de Diamantes</h1>
+          {/* Selo único colado no título */}
+          <div className="flex items-center justify-center gap-2 text-[10px] font-semibold text-gray-600">
+            <span>✔️ Entrega automática</span>
+            <span>•</span>
+            <span>✔️ Disponível 24h</span>
+            <span>•</span>
+            <span>✔️ Pix instantâneo</span>
+          </div>
+        </div>
         
         {/* Grid de valores */}
         <div className="grid grid-cols-3 gap-2 sm:gap-2.5 md:gap-4 mb-12">
-          {config.rechargeValues.map((value) => {
+          {config.rechargeValues.map((value, index) => {
             const isPromotional = config.promotionalValues.includes(value)
             const isSelected = selectedRechargeValue === value
+            const price = config.diamondPrices[value] || 0
+            
+            // Labels para cada pacote
+            const labels = ['Mais Vendido', 'Melhor Custo-Benefício', 'Recomendado']
+            const labelColors = ['bg-gradient-to-r from-orange-500 to-red-500', 'bg-gradient-to-r from-green-500 to-emerald-500', 'bg-gradient-to-r from-purple-500 to-indigo-500']
+            const label = labels[index]
+            const labelColor = labelColors[index]
+            
+            // Gatilhos de urgência/social proof (dinâmico apenas no cliente)
+            const urgencyMessages = [
+              `🔥 ${buyersToday} pessoas compraram hoje`,
+              '⏳ Estoque atualizado agora',
+              '⚡ Entrega em segundos'
+            ]
+            const urgencyMessage = urgencyMessages[index]
             
             return (
               <div
@@ -106,28 +167,30 @@ export default function FreeFirePage() {
                 onClick={() => {
                   console.log('🖱️ [FreeFire] Diamantes clicado:', value)
                   const price = config.diamondPrices[value] || 0
-                  cart.addItem({
+                  const itemToAdd = {
                     id: `ff-diamonds-${value}`,
                     name: `${value} Diamantes`,
                     image: config.coinIcon,
                     price: price,
-                    category: 'freefire',
+                    category: 'freefire' as const,
                     details: {
                       'Tipo': 'Diamantes',
                       'Quantidade': value,
                       'Promocional': isPromotional ? 'Sim' : 'Não'
                     }
-                  })
+                  }
+                  console.log('📦 [FreeFire] Item a adicionar:', itemToAdd)
+                  console.log('📦 [FreeFire] Cart object:', cart)
+                  cart.addItem(itemToAdd)
                   setSelectedRechargeValue(value)
                 }}
               >
-                {isPromotional && (
-                  <div className="absolute top-0 right-0 left-0 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[9px] sm:text-[10px] font-bold px-1 py-0.5 text-center">
-                    PROMO
-                  </div>
-                )}
+                {/* Label do pacote */}
+                <div className={`absolute top-0 right-0 left-0 ${labelColor} text-white text-[9px] sm:text-[10px] font-bold px-1 py-0.5 text-center`}>
+                  {label}
+                </div>
                 
-                <div className={`flex flex-1 flex-col items-center justify-center gap-1 ${isPromotional ? 'pt-3' : 'pt-1'}`}>
+                <div className="flex flex-1 flex-col items-center justify-center gap-1 pt-4">
                   <img
                     alt="Diamante"
                     loading="lazy"
@@ -139,6 +202,13 @@ export default function FreeFirePage() {
                   />
                   <span className="text-sm sm:text-base font-bold text-gray-900 text-center leading-tight">
                     {value}
+                  </span>
+                  <span className="text-xs text-gray-600 font-semibold mt-1">
+                    a partir de R$ {price.toFixed(2)}
+                  </span>
+                  {/* Gatilho de urgência */}
+                  <span className="text-[9px] text-orange-600 font-bold mt-1 text-center leading-tight">
+                    {urgencyMessage}
                   </span>
                 </div>
                 
@@ -157,8 +227,8 @@ export default function FreeFirePage() {
         {/* Itens e Skins - Carrossel */}
         <div className="mb-8">
           {/* Títulos Centralizados */}
-          <h2 className="text-2xl font-bold mb-1 text-gray-900 text-center">Itens e Skins</h2>
-          <p className="text-sm text-gray-600 mb-6 text-center">preparamos alguns itens especiais pensando em você</p>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 text-center">Itens e Skins Exclusivas</h2>
+          <p className="text-sm text-gray-600 mb-6 text-center">Ganhe vantagens e personalize sua conta!</p>
           
           {/* Carrossel */}
           <div className="relative">
@@ -199,17 +269,20 @@ export default function FreeFirePage() {
                   onClick={() => {
                     console.log('🖱️ [FreeFire] Item clicado:', offer.name)
                     const price = config.itemPrices[offer.id] || 0
-                    cart.addItem({
+                    const itemToAdd = {
                       id: offer.id,
                       name: offer.name,
                       image: offer.image,
                       price: price,
-                      category: 'freefire',
+                      category: 'freefire' as const,
                       details: {
                         'Tipo': 'Item/Skin',
                         'Descrição': offer.description
                       }
-                    })
+                    }
+                    console.log('📦 [FreeFire] Item a adicionar:', itemToAdd)
+                    console.log('📦 [FreeFire] Cart object:', cart)
+                    cart.addItem(itemToAdd)
                     setSelectedSpecialOffer(offer.name)
                     setCurrentIndex(index)
                   }}
@@ -234,8 +307,19 @@ export default function FreeFirePage() {
                       <p className="text-[10px] font-bold text-gray-900 mb-0.5 line-clamp-1">
                         {offer.name}
                       </p>
-                      <p className="text-[9px] text-gray-600 line-clamp-1">
+                      <p className="text-[9px] text-gray-600 line-clamp-1 mb-1">
                         {offer.description}
+                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs font-bold text-orange-600">
+                          R$ {(config.itemPrices[offer.id] || 0).toFixed(2)}
+                        </span>
+                        <button className="text-[9px] text-blue-600 font-semibold hover:underline">
+                          Ver detalhes →
+                        </button>
+                      </div>
+                      <p className="text-[8px] text-green-600 font-semibold mt-1">
+                        ✓ Entrega automática após pagamento
                       </p>
                     </div>
                   </div>
@@ -281,6 +365,9 @@ export default function FreeFirePage() {
             ))}
           </div>
         </div>
+
+        {/* FAQ - Perguntas Frequentes */}
+        <FAQ />
       </div>
     </LojaLayout>
   )

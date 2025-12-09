@@ -110,14 +110,16 @@ const products = {
 }
 
 const testimonials = [
-  { name: 'Lucas M.', text: 'Recebi em 2 minutos! Super rápido', rating: 5, time: '1 hora atrás' },
-  { name: 'Beatriz S.', text: 'Melhor preço que achei', rating: 5, time: '3 horas atrás' },
-  { name: 'Rafael P.', text: 'Já comprei 5x, sempre funciona', rating: 5, time: '5 horas atrás' },
-  { name: 'Camila R.', text: 'Atendimento nota 10', rating: 5, time: '8 horas atrás' },
-  { name: 'Pedro H.', text: 'Entrega instantânea, recomendo', rating: 5, time: '12 horas atrás' },
-  { name: 'Julia F.', text: 'Muito seguro e confiável', rating: 5, time: '1 dia atrás' },
-  { name: 'Thiago L.', text: 'Preço justo e entrega rápida', rating: 5, time: '1 dia atrás' },
-  { name: 'Amanda K.', text: 'Comprei e já recebi, perfeito!', rating: 5, time: '2 dias atrás' }
+  { name: 'Mago**Csx', text: 'Recebi em 2 minutos! Super rápido', rating: 5, time: '1 hora atrás', value: 1733 },
+  { name: 'Ju**pets', text: 'Melhor preço que achei', rating: 5, time: '3 horas atrás', value: 892 },
+  { name: 'KewF**x0', text: 'Já comprei 5x, sempre funciona', rating: 5, time: '5 horas atrás', value: 1456 },
+  { name: 'Dark**Pro', text: 'Atendimento nota 10', rating: 5, time: '8 horas atrás', value: 678 },
+  { name: 'Sn**per99', text: 'Entrega instantânea, recomendo', rating: 5, time: '12 horas atrás', value: 1289 },
+  { name: 'Lun**Star', text: 'Muito seguro e confiável', rating: 5, time: '1 dia atrás', value: 543 },
+  { name: 'Fire**King', text: 'Preço justo e entrega rápida', rating: 5, time: '1 dia atrás', value: 1621 },
+  { name: 'Nit**roX', text: 'Comprei e já recebi, perfeito!', rating: 5, time: '2 dias atrás', value: 345 },
+  { name: 'Sky**Gamer', text: 'Melhor site de recarga!', rating: 5, time: '3 horas atrás', value: 987 },
+  { name: 'Vip**er77', text: 'Confiável demais', rating: 5, time: '6 horas atrás', value: 1134 }
 ]
 
 export default function ProductPage() {

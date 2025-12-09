@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { X, ShoppingCart, Trash2 } from 'lucide-react'
 import RobuxIcon from './RobuxIcon'
+import { getProductById } from '@/lib/products-data'
 
 interface CartItem {
   id: string
@@ -38,6 +39,19 @@ export default function CartDrawer({ isOpen, onClose, items, onRemoveItem, onChe
   }, [isOpen])
 
   const handleCheckout = () => {
+    // Se apenas 1 item, redirecionar para página do produto com slug
+    if (items.length === 1) {
+      const product = getProductById(items[0].id)
+      
+      if (product?.slug) {
+        console.log('🛒 [CartDrawer] 1 item - Redirecionando para slug:', product.slug)
+        router.push(`/produto/${product.slug}`)
+        onClose()
+        return
+      }
+    }
+    
+    // Se 2+ itens, ir para checkout da loja
     router.push('/loja/checkout')
     onClose()
   }
