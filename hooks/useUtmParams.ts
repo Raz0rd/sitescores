@@ -82,6 +82,33 @@ export const useUtmParams = () => {
 
   // Função para criar objeto de parâmetros para router.push
   const getUtmObject = (): Record<string, string> => {
+    // SEMPRE tentar recuperar do localStorage primeiro
+    if (typeof window !== 'undefined') {
+      const obj: Record<string, string> = {}
+      
+      // Lista de parâmetros para recuperar
+      const utmParameters = [
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+        'gclid', 'gbraid', 'wbraid', 'fbclid', 'keyword', 'device', 'network',
+        'gad_source', 'gad_campaignid', 'src', 'sck', 'ttclid', 'xcod', 'msclkid'
+      ]
+      
+      // Recuperar cada parâmetro do localStorage
+      utmParameters.forEach(param => {
+        const value = localStorage.getItem(param)
+        if (value) {
+          obj[param] = value
+        }
+      })
+      
+      // Se encontrou algo no localStorage, retornar
+      if (Object.keys(obj).length > 0) {
+        console.log('✅ [UTM] Recuperado do localStorage:', obj)
+        return obj
+      }
+    }
+    
+    // Fallback: tentar do estado
     if (!utmParams) return {}
     
     const params = new URLSearchParams(utmParams)

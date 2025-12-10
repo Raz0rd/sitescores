@@ -44,9 +44,11 @@ export default function UtmifyScripts() {
         dangerouslySetInnerHTML={{
           __html: `
             (function() {
-              // Capturar UTMs da URL apenas 1x
-              if (typeof window !== 'undefined' && !sessionStorage.getItem('utms_captured')) {
+              // Capturar UTMs da URL SEMPRE que houver parâmetros
+              if (typeof window !== 'undefined') {
                 var params = new URLSearchParams(window.location.search);
+                var hasParams = false;
+                
                 var utmParams = {
                   utm_source: params.get('utm_source') || '',
                   utm_campaign: params.get('utm_campaign') || '',
@@ -64,16 +66,18 @@ export default function UtmifyScripts() {
                   gad_campaignid: params.get('gad_campaignid') || ''
                 };
                 
-                // Salvar no localStorage
+                // Salvar CADA parâmetro individualmente no localStorage
                 Object.keys(utmParams).forEach(function(key) {
                   if (utmParams[key]) {
                     localStorage.setItem(key, utmParams[key]);
+                    hasParams = true;
                   }
                 });
                 
-                // Marcar como capturado nesta sessão
-                sessionStorage.setItem('utms_captured', 'true');
-                console.log('✅ UTMs capturadas e salvas no localStorage');
+                if (hasParams && !sessionStorage.getItem('utms_captured')) {
+                  sessionStorage.setItem('utms_captured', 'true');
+                  console.log('✅ UTMs capturadas e salvas no localStorage:', utmParams);
+                }
               }
             })();
           `
