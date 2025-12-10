@@ -185,13 +185,21 @@ export async function middleware(request: NextRequest) {
   // Verificar se o cloaker está habilitado
   const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
   
-  console.log('   ⚙️  Cloaker:', cloakerEnabled ? 'ATIVADO' : 'DESATIVADO')
-  
   if (!cloakerEnabled) {
-    console.log('   ✅ Cloaker desativado - liberando acesso')
+    // Log bonito mesmo com cloaker desativado
+    console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+    console.log('┃ 🌐 ACESSO DO USUÁRIO                    ┃')
+    console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+    console.log(`📍 Rota: ${pathname}${request.nextUrl.search}`)
+    console.log(`🔑 IP: ${clientIp}`)
+    console.log(`🔗 Referer: ${referer}`)
+    console.log(`⚙️  Cloaker: DESATIVADO`)
+    console.log(`✅ Acesso liberado`)
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     return NextResponse.next()
   }
+  
+  console.log('   ⚙️  Cloaker:', cloakerEnabled ? 'ATIVADO' : 'DESATIVADO')
   
   // ✅ VERIFICAR BEARER TOKEN E WHITELIST - Se IP está na whitelist, libera TUDO
   const bearerToken = request.cookies.get('bearer')
