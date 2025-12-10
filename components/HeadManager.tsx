@@ -120,11 +120,11 @@ export default function HeadManager() {
 
   // Google Ads Conversion Tracking - Injeção Direta no DOM
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true';
-  const googleAdsIds = process.env.NEXT_PUBLIC_GOOGLE_ADS_IDS || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002';
+  const googleAdsIds = process.env.NEXT_PUBLIC_GOOGLE_ADS_IDS || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
   const adsIndividual = process.env.NEXT_PUBLIC_ADS_INDIVIDUAL === 'true';
   
   useEffect(() => {
-    if (!mounted || typeof window === 'undefined' || !googleAdsEnabled) return;
+    if (!mounted || typeof window === 'undefined' || !googleAdsEnabled || !googleAdsIds) return;
 
     // Desabilitar no desenvolvimento
     if (isDevelopment) {

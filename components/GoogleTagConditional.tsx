@@ -48,9 +48,9 @@ export default function GoogleTagConditional() {
   }, [pageType])
 
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true'
-  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002'
+  const googleAdsIds = process.env.NEXT_PUBLIC_GOOGLE_ADS_IDS || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
   
-  if (!googleAdsEnabled) {
+  if (!googleAdsEnabled || !googleAdsIds) {
     return null
   }
   
@@ -60,12 +60,16 @@ export default function GoogleTagConditional() {
     return null
   }
 
+  // Separar múltiplas tags (suporta vírgula ou apenas uma tag)
+  const adsIdArray = googleAdsIds.split(',').map(id => id.trim()).filter(id => id)
+  const primaryAdsId = adsIdArray[0] // Primeira tag para carregar o script
+
   return (
     <>
       <script
         id="google-gtag-ssr"
         defer
-        src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${primaryAdsId}`}
       />
       <script
         id="google-gtag-init-ssr"
@@ -75,7 +79,7 @@ export default function GoogleTagConditional() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${googleAdsId}');
+            ${adsIdArray.map(id => `gtag('config', '${id}');`).join('\n            ')}
           `
         }}
       />

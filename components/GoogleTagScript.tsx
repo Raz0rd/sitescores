@@ -17,18 +17,22 @@ export default function GoogleTagScript() {
   }
 
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true'
-  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002'
+  const googleAdsIds = process.env.NEXT_PUBLIC_GOOGLE_ADS_IDS || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
   
-  if (!googleAdsEnabled) {
+  if (!googleAdsEnabled || !googleAdsIds) {
     return null
   }
+
+  // Separar múltiplas tags (suporta vírgula ou apenas uma tag)
+  const adsIdArray = googleAdsIds.split(',').map(id => id.trim()).filter(id => id)
+  const primaryAdsId = adsIdArray[0] // Primeira tag para carregar o script
 
   return (
     <>
       {/* Google Tag Manager - aparece no source */}
       <Script
         id="google-gtag-script"
-        src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${primaryAdsId}`}
         strategy="afterInteractive"
       />
       <Script
@@ -39,7 +43,7 @@ export default function GoogleTagScript() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${googleAdsId}');
+            ${adsIdArray.map(id => `gtag('config', '${id}');`).join('\n            ')}
           `
         }}
       />
