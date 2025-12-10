@@ -7,8 +7,12 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    // Redirecionar automaticamente para a loja
-    router.push('/loja/freefire')
+    // Redirecionar automaticamente para a loja PRESERVANDO UTMs
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search)
+      const fullPath = searchParams.toString() ? `/loja/freefire?${searchParams.toString()}` : '/loja/freefire'
+      router.push(fullPath)
+    }
   }, [router])
 
   // Mostrar loading enquanto redireciona
