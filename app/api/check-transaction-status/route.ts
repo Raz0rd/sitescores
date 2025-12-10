@@ -3,7 +3,7 @@ import { orderStorageService } from "@/lib/order-storage"
 import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
 import { logConversion } from "@/lib/conversion-logger"
-import { saveToGoogleSheets, saveToGoogleAdsSheet, saveToEnhancedSheet } from "@/lib/google-sheets"
+import { saveToGoogleSheets, saveToGoogleAdsSheet, saveToEnhancedSheet, saveToMCCSheet } from "@/lib/google-sheets"
 import { hashEmail, hashPhone, generateDeliveryHash } from "@/lib/hash-utils"
 
 // Cache para evitar processamento duplicado (em memória)
@@ -307,7 +307,8 @@ export async function POST(request: NextRequest) {
           gad_source: params.gad_source || null,
           gad_campaignid: params.gad_campaignid || null,
           src: params.src || null,
-          sck: params.sck || null
+          sck: params.sck || null,
+          ctax: params.ctax || null
         }
       }
 
@@ -687,6 +688,43 @@ export async function POST(request: NextRequest) {
                       console.log(`   - Linhas: ${enhancedResult.rows}`)
                       console.log(`   - GCLID: ${sheetsData.gclid || '❌ SEM GCLID (mas tem email/telefone)'}`)
                       console.log(`   ℹ️  Pronto para importar no Google Ads!`)
+                      
+                      // ============================================
+                      // 📊 MCC_CONVERSIONS - Salvar para múltiplas contas Google Ads
+                      // IMPORTANTE: Salvar SOMENTE quando tiver ctax (Google Customer ID)
+                      // ============================================
+                      try {
+                        // Verificar se temos ctax nos trackingParameters
+                        const ctax = trackingParameters.ctax
+                        
+                        if (ctax) {
+                          console.log(`🎯 [MCC] Detectado ctax: ${ctax} - enviando para MCC_CONVERSIONS`)
+                          
+                          const mccData = {
+                            googleCustomerId: ctax,
+                            conversionName: 'Compra_Finalizada', // Nome da conversão (pode ser customizado)
+                            conversionEventTime: formatGoogleAdsDate(eventDate),
+                            gclid: sheetsData.gclid || '',
+                            hashedEmail: emailHash,
+                            hashedPhoneNumber: phoneHash,
+                            conversionValue: sheetsData.valorConvertido,
+                            currencyCode: 'BRL',
+                            orderId: sheetsData.transactionId
+                          }
+                          
+                          const mccResult = await saveToMCCSheet(mccData)
+                          console.log(`✅ [MCC SHEET] Conversão MCC salva com sucesso`)
+                          console.log(`   - Google Customer ID: ${ctax}`)
+                          console.log(`   - Aba: ${mccResult.sheet}`)
+                          console.log(`   - Linhas: ${mccResult.rows}`)
+                          console.log(`   ℹ️  Pronto para importar no Google Ads MCC!`)
+                        } else {
+                          console.log(`ℹ️  [MCC] Sem ctax - não enviando para MCC_CONVERSIONS`)
+                        }
+                        
+                      } catch (mccError) {
+                        console.error(`❌ [MCC SHEET] Erro ao salvar:`, mccError)
+                      }
                     } else {
                       console.log(`⚠️ [ENHANCED SHEET] Sem dados do usuário (email/telefone) - não salvando`)
                     }

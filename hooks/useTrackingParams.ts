@@ -18,6 +18,7 @@ export interface TrackingParameters {
   gbraid: string | null
   wbraid: string | null
   fbclid: string | null
+  ctax: string | null // Google Ads Customer ID (para MCC)
 }
 
 export interface CustomerData {
@@ -78,6 +79,7 @@ export const useTrackingParams = () => {
     gbraid: null,
     wbraid: null,
     fbclid: null,
+    ctax: null,
   })
 
   const [userIP, setUserIP] = useState<string>('')
@@ -105,6 +107,7 @@ export const useTrackingParams = () => {
         gbraid: urlParams.get('gbraid'),
         wbraid: urlParams.get('wbraid'),
         fbclid: urlParams.get('fbclid'),
+        ctax: urlParams.get('ctax'),
       }
 
       setTrackingParams(params)

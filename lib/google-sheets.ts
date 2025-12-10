@@ -507,3 +507,144 @@ export async function saveToEnhancedSheet(data: {
     throw error;
   }
 }
+
+// ============================================
+// NOVA FUNÇÃO: Aba MCC_CONVERSIONS para múltiplas contas Google Ads
+// ============================================
+
+// Criar ou obter aba MCC_CONVERSIONS
+async function getOrCreateMCCSheet() {
+  try {
+    const authClient = await getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+    const sheetName = 'MCC_CONVERSIONS';
+    
+    // Verificar se a aba já existe
+    const spreadsheet = await sheets.spreadsheets.get({
+      spreadsheetId: SPREADSHEET_ID,
+    });
+    
+    const sheet = spreadsheet.data.sheets?.find(
+      (s) => s.properties?.title === sheetName
+    );
+    
+    if (sheet) {
+      console.log(`✅ [MCC SHEET] Aba "${sheetName}" já existe`);
+      return sheet.properties?.sheetId;
+    }
+    
+    // Criar nova aba
+    console.log(`🆕 [MCC SHEET] Criando aba "${sheetName}"`);
+    const response = await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      requestBody: {
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: sheetName,
+              },
+            },
+          },
+        ],
+      },
+    });
+    
+    const newSheetId = response.data.replies?.[0]?.addSheet?.properties?.sheetId;
+    
+    // Adicionar cabeçalho no formato MCC (múltiplas contas)
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A1`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [[
+          'Google Customer ID',
+          'Conversion Name',
+          'conversion_event_time',
+          'gclid',
+          'hashed_email',
+          'hashed_phone_number',
+          'conversion_value',
+          'currency_code',
+          'order_id'
+        ]],
+      },
+    });
+    
+    console.log(`✅ [MCC SHEET] Cabeçalho adicionado na aba "${sheetName}"`);
+    return newSheetId;
+    
+  } catch (error) {
+    console.error('❌ [MCC SHEET] Erro ao criar/obter aba:', error);
+    throw error;
+  }
+}
+
+// Salvar dados no formato MCC (múltiplas contas Google Ads)
+export async function saveToMCCSheet(data: {
+  googleCustomerId: string;
+  conversionName: string;
+  conversionEventTime: string;
+  gclid: string;
+  hashedEmail: string;
+  hashedPhoneNumber: string;
+  conversionValue: number;
+  currencyCode: string;
+  orderId: string;
+}) {
+  try {
+    const authClient = await getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient as any });
+    const sheetName = 'MCC_CONVERSIONS';
+    
+    // Criar ou obter aba
+    await getOrCreateMCCSheet();
+    
+    // Montar array de dados NO FORMATO MCC
+    const values = [[
+      data.googleCustomerId,        // 1. Google Customer ID (ctax)
+      data.conversionName,          // 2. Conversion Name
+      data.conversionEventTime,     // 3. conversion_event_time (ISO 8601)
+      data.gclid,                   // 4. gclid
+      data.hashedEmail,             // 5. hashed_email (SHA-256)
+      data.hashedPhoneNumber,       // 6. hashed_phone_number (SHA-256)
+      data.conversionValue,         // 7. conversion_value
+      data.currencyCode,            // 8. currency_code (BRL)
+      data.orderId                  // 9. order_id
+    ]];
+    
+    console.log(`📊 [MCC SHEET] Salvando conversão MCC`);
+    console.log(`   - Google Customer ID: ${data.googleCustomerId}`);
+    console.log(`   - Conversion Name: ${data.conversionName}`);
+    console.log(`   - Order ID: ${data.orderId}`);
+    console.log(`   - Email Hash: ${data.hashedEmail.substring(0, 16)}...`);
+    console.log(`   - Phone Hash: ${data.hashedPhoneNumber.substring(0, 16)}...`);
+    console.log(`   - Valor: ${data.currencyCode} ${data.conversionValue}`);
+    console.log(`   - GCLID: ${data.gclid || 'N/A'}`);
+    
+    // Adicionar linha
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A2`,
+      valueInputOption: 'RAW',
+      requestBody: {
+        values,
+      },
+    });
+    
+    console.log(`✅ [MCC SHEET] Conversão MCC salva com sucesso!`);
+    console.log(`   - Linhas adicionadas: ${response.data.updates?.updatedRows}`);
+    console.log(`   ℹ️  Pronto para importar no Google Ads MCC`);
+    
+    return {
+      success: true,
+      sheet: sheetName,
+      rows: response.data.updates?.updatedRows || 0,
+    };
+    
+  } catch (error) {
+    console.error('❌ [MCC SHEET] Erro ao salvar conversão:', error);
+    throw error;
+  }
+}
