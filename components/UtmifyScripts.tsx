@@ -44,39 +44,45 @@ export default function UtmifyScripts() {
         dangerouslySetInnerHTML={{
           __html: `
             (function() {
-              // Capturar UTMs da URL SEMPRE que houver parâmetros
               if (typeof window !== 'undefined') {
                 var params = new URLSearchParams(window.location.search);
-                var hasParams = false;
+                var hasValidParams = false;
                 
-                var utmParams = {
-                  utm_source: params.get('utm_source') || '',
-                  utm_campaign: params.get('utm_campaign') || '',
-                  utm_medium: params.get('utm_medium') || '',
-                  utm_content: params.get('utm_content') || '',
-                  utm_term: params.get('utm_term') || '',
-                  gclid: params.get('gclid') || '',
-                  gbraid: params.get('gbraid') || '',
-                  wbraid: params.get('wbraid') || '',
-                  fbclid: params.get('fbclid') || '',
-                  keyword: params.get('keyword') || '',
-                  device: params.get('device') || '',
-                  network: params.get('network') || '',
-                  gad_source: params.get('gad_source') || '',
-                  gad_campaignid: params.get('gad_campaignid') || ''
-                };
+                // Lista de parâmetros para capturar
+                var paramKeys = [
+                  'utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term',
+                  'gclid', 'gbraid', 'wbraid', 'fbclid', 'keyword', 'device', 'network',
+                  'gad_source', 'gad_campaignid'
+                ];
                 
-                // Salvar CADA parâmetro individualmente no localStorage
-                Object.keys(utmParams).forEach(function(key) {
-                  if (utmParams[key]) {
-                    localStorage.setItem(key, utmParams[key]);
-                    hasParams = true;
+                // Capturar parâmetros da URL
+                paramKeys.forEach(function(key) {
+                  var value = params.get(key);
+                  
+                  // PROTEÇÃO: Só salvar se o valor for válido
+                  if (value && value !== '' && value !== 'organic' && value !== 'null' && value !== 'undefined') {
+                    // Verificar se já existe no localStorage
+                    var existing = localStorage.getItem(key);
+                    
+                    // IMPORTANTE: Só sobrescrever se:
+                    // 1. Não existe valor anterior, OU
+                    // 2. O novo valor é do Google Ads (gclid, gbraid) e é diferente
+                    if (!existing || (key === 'gclid' || key === 'gbraid' || key === 'wbraid') && existing !== value) {
+                      localStorage.setItem(key, value);
+                      hasValidParams = true;
+                    }
                   }
                 });
                 
-                if (hasParams && !sessionStorage.getItem('utms_captured')) {
+                // Log apenas na primeira captura
+                if (hasValidParams && !sessionStorage.getItem('utms_captured')) {
                   sessionStorage.setItem('utms_captured', 'true');
-                  console.log('✅ UTMs capturadas e salvas no localStorage:', utmParams);
+                  var captured = {};
+                  paramKeys.forEach(function(key) {
+                    var val = localStorage.getItem(key);
+                    if (val) captured[key] = val;
+                  });
+                  console.log('✅ UTMs capturadas e protegidas no localStorage:', captured);
                 }
               }
             })();
