@@ -26,20 +26,25 @@ export default function RobuxPage() {
   const config = {
     name: 'Robux',
     coinIcon: '/images/iconeRobux.svg',
-    rechargeValues: ["1000", "2000", "5250", "11000", "24000"]
+    rechargeValues: ["2000", "5250", "11000", "24000"]
   }
 
   const calculatePrice = (value: string) => {
+    const prices: { [key: string]: number } = {
+      "2000": 28.97,
+      "5250": 56.31,
+      "11000": 98.44,
+      "24000": 169.75
+    }
+    
     const originalPrices: { [key: string]: number } = {
-      "1000": 59.90,
       "2000": 117.90,
       "5250": 294.90,
       "11000": 589.90,
       "24000": 1179.90
     }
     
-    const numericValue = parseInt(value.replace(/\./g, ''))
-    const realPrice = numericValue * 0.02 // R$ 0,02 por unidade
+    const realPrice = prices[value] || 0
     
     return { 
       originalPrice: originalPrices[value] || 0,

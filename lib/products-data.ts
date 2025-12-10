@@ -264,26 +264,11 @@ export const productsData: Product[] = [
 
   // ============= ROBUX =============
   {
-    id: 'robux-1000',
-    slug: 'roblox-1000-robux',
-    name: '1000 Robux',
-    category: 'robux',
-    price: 29.90,
-    image: '/images/iconeRobux.svg',
-    description: 'Recarga de 1000 Robux para Roblox. Entrega instantânea após confirmação do pagamento.',
-    metadata: {
-      amount: 1000,
-      keywords: ['roblox', 'robux', '1000 robux', 'recarga roblox'],
-      seoTitle: '1000 Robux - Recarga Instantânea Roblox',
-      seoDescription: 'Compre 1000 Robux com entrega instantânea. Pagamento seguro via PIX ou cartão.'
-    }
-  },
-  {
     id: 'robux-2000',
     slug: 'roblox-2000-robux',
     name: '2000 Robux',
     category: 'robux',
-    price: 59.90,
+    price: 28.97,
     popular: true,
     image: '/images/iconeRobux.svg',
     description: 'Recarga de 2000 Robux para Roblox. Entrega instantânea após confirmação do pagamento.',
@@ -299,7 +284,7 @@ export const productsData: Product[] = [
     slug: 'roblox-5250-robux',
     name: '5250 Robux',
     category: 'robux',
-    price: 149.90,
+    price: 56.31,
     image: '/images/iconeRobux.svg',
     description: 'Recarga de 5250 Robux para Roblox. Entrega instantânea após confirmação do pagamento.',
     metadata: {
@@ -314,7 +299,7 @@ export const productsData: Product[] = [
     slug: 'roblox-11000-robux',
     name: '11000 Robux',
     category: 'robux',
-    price: 299.90,
+    price: 98.44,
     popular: true,
     image: '/images/iconeRobux.svg',
     description: 'Recarga de 11000 Robux para Roblox. Entrega instantânea após confirmação do pagamento.',
@@ -330,7 +315,7 @@ export const productsData: Product[] = [
     slug: 'roblox-24000-robux',
     name: '24000 Robux',
     category: 'robux',
-    price: 599.90,
+    price: 169.75,
     image: '/images/iconeRobux.svg',
     description: 'Recarga de 24000 Robux para Roblox. Entrega instantânea após confirmação do pagamento.',
     metadata: {
