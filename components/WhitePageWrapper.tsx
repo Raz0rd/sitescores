@@ -51,17 +51,17 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
     
     if (cloakerEnabled) {
       // Verificar se tem cookie do cloaker
-      const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
+      const hasCloakerCookie = document.cookie.includes('_session_verified=true')
       
       if (!hasCloakerCookie) {
-        // Bot - mostrar whitepage
+        // Tráfego não validado - mostrar whitepage
         setShowWhitePage(true)
         setIsBot(true)
         setIsLoading(false)
         return
       }
       
-      // Usuário real - vai DIRETO pra loja
+      // Tráfego validado - liberar acesso
       setIsLoading(false)
       return
     }
@@ -85,21 +85,21 @@ export default function WhitePageWrapper({ children }: WhitePageWrapperProps) {
 
   const handleWhitePageActivate = () => {
     // ============================================
-    // 🎯 CLOAKER - Verificar se é bot ou usuário
+    // 🎯 CLOAKER - Verificar validação de tráfego
     // ============================================
     const cloakerEnabled = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ENABLED === 'true'
     
     if (cloakerEnabled) {
       // Verificar se tem cookie do cloaker
-      const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
+      const hasCloakerCookie = document.cookie.includes('_session_verified=true')
       
       if (!hasCloakerCookie) {
-        // BOT - não fazer nada, botão já está em loading infinito
+        // Tráfego não validado - não permitir acesso
         return
       }
     }
     
-    // USUÁRIO REAL - permitir acesso
+    // Permitir acesso
     localStorage.setItem('whitepage_passed', 'true')
     localStorage.setItem('whitepage_passed_at', Date.now().toString())
     

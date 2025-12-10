@@ -143,9 +143,7 @@ export default function SucessoPage() {
       console.log('')
       console.log('📊 Conversões enviadas via:')
       console.log('   ✅ UTMify (server-side)')
-      console.log('   ✅ Google Sheets → N8N/Cron → Google Ads API')
-      console.log('')
-      console.log('⚠️  Conversão via gtag DESABILITADA (evitar suspensão)')
+      console.log('   ✅ Google Sheets → Google Ads API')
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
       console.log('')
       
