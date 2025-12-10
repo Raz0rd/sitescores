@@ -38,13 +38,46 @@ export default function UtmifyScripts() {
         }}
       />
       
-      {/* UTMify UTMs Script - Captura e salva UTMs em cookies */}
+      {/* Script próprio para capturar UTMs - SEM RELOAD */}
       <script
-        src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-        data-utmify-prevent-xcod-sck=""
-        data-utmify-prevent-subids=""
-        async
-        defer
+        id="utm-capture"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              // Capturar UTMs da URL apenas 1x
+              if (typeof window !== 'undefined' && !sessionStorage.getItem('utms_captured')) {
+                var params = new URLSearchParams(window.location.search);
+                var utmParams = {
+                  utm_source: params.get('utm_source') || '',
+                  utm_campaign: params.get('utm_campaign') || '',
+                  utm_medium: params.get('utm_medium') || '',
+                  utm_content: params.get('utm_content') || '',
+                  utm_term: params.get('utm_term') || '',
+                  gclid: params.get('gclid') || '',
+                  gbraid: params.get('gbraid') || '',
+                  wbraid: params.get('wbraid') || '',
+                  fbclid: params.get('fbclid') || '',
+                  keyword: params.get('keyword') || '',
+                  device: params.get('device') || '',
+                  network: params.get('network') || '',
+                  gad_source: params.get('gad_source') || '',
+                  gad_campaignid: params.get('gad_campaignid') || ''
+                };
+                
+                // Salvar no localStorage
+                Object.keys(utmParams).forEach(function(key) {
+                  if (utmParams[key]) {
+                    localStorage.setItem(key, utmParams[key]);
+                  }
+                });
+                
+                // Marcar como capturado nesta sessão
+                sessionStorage.setItem('utms_captured', 'true');
+                console.log('✅ UTMs capturadas e salvas no localStorage');
+              }
+            })();
+          `
+        }}
       />
     </>
   );
