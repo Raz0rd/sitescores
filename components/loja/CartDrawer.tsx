@@ -49,6 +49,9 @@ export default function CartDrawer({ isOpen, onClose, items, onRemoveItem, onChe
 
     const firstItem = items[0]
     const category = firstItem?.category || 'freefire'
+    
+    // Preservar UTMs da URL atual
+    const currentParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams()
 
     // Se apenas 1 item, usar slug no checkout
     if (items.length === 1) {
@@ -56,14 +59,16 @@ export default function CartDrawer({ isOpen, onClose, items, onRemoveItem, onChe
 
       if (product?.slug) {
         console.log('🛒 [CartDrawer] 1 item - Checkout com slug:', product.slug)
-        router.push(`/loja/checkout?slug=${product.slug}`)
+        currentParams.set('slug', product.slug)
+        router.push(`/loja/checkout?${currentParams.toString()}`)
         return
       }
     }
 
     // Se 2+ itens, ir para checkout com categoria
     console.log('🛒 [CartDrawer] Múltiplos itens - Checkout com categoria:', category)
-    router.push(`/loja/checkout?category=${category}`)
+    currentParams.set('category', category)
+    router.push(`/loja/checkout?${currentParams.toString()}`)
   }
 
   const getCategoryColor = (category: string) => {

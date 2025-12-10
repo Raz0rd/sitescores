@@ -30,20 +30,25 @@ export default function FixedCartButton() {
     const firstItem = cart.items[0]
     const category = firstItem?.category || 'freefire'
     
+    // Preservar UTMs da URL atual
+    const currentParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams()
+    
     // Se apenas 1 item, usar slug no checkout
     if (cart.itemCount === 1) {
       const product = getProductById(firstItem.id)
       
       if (product?.slug) {
         console.log('🛒 [FixedCartButton] 1 item - Checkout com slug:', product.slug)
-        router.push(`/loja/checkout?slug=${product.slug}`)
+        currentParams.set('slug', product.slug)
+        router.push(`/loja/checkout?${currentParams.toString()}`)
         return
       }
     }
     
     // Se 2+ itens, ir para checkout com categoria
     console.log('🛒 [FixedCartButton] Múltiplos itens - Checkout com categoria:', category)
-    router.push(`/loja/checkout?category=${category}`)
+    currentParams.set('category', category)
+    router.push(`/loja/checkout?${currentParams.toString()}`)
   }
 
   return (
