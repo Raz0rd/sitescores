@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation'
 
 export default function PoliticaDePrivacidade() {
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'techhubz.sbs'
+  const domain = baseUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  const contactEmail = `contato@${domain}`
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col">
       <div className="container mx-auto px-4 py-12 flex-1">
@@ -100,7 +103,7 @@ export default function PoliticaDePrivacidade() {
             <div className="bg-slate-100 rounded-lg p-4 text-slate-700">
               <p className="mb-2"><strong>WANESSA DE NOVAES VASCO</strong></p>
               <p className="mb-1">CNPJ: 33.010.705/0001-49</p>
-              <p className="mb-1">Email: contato@techhubz.sbs</p>
+              <p className="mb-1">Email: {contactEmail}</p>
               <p className="mb-2"><strong>Localização:</strong></p>
               <p className="mb-1">Logradouro: Rua De Fora, 10</p>
               <p className="mb-1">Bairro: Santa Rita</p>

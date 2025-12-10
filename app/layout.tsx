@@ -8,6 +8,7 @@ import ClickTracker from "@/components/ClickTracker"
 import DynamicTheme from "@/components/DynamicTheme"
 import VerificationWrapper from "@/components/VerificationWrapper"
 import { DevToolsBlocker } from "@/components/DevToolsBlocker"
+import UtmifyScripts from "@/components/UtmifyScripts"
 // import SidebarCart from "@/components/loja/SidebarCart" // DESABILITADO - Usando botão fixo otimizado
 import { CartProvider } from "@/contexts/CartContext"
 
@@ -126,6 +127,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         <HeadManager />
         <DynamicTheme />
         <DevToolsBlocker />
+        <UtmifyScripts />
         <CartProvider>
           {/* SidebarCart REMOVIDO - Usando FixedCartButton no LojaLayout */}
           <VerificationWrapper>

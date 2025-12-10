@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation'
 
 export default function QuemSomos() {
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'techhubz.sbs'
+  const domain = baseUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  const contactEmail = `contato@${domain}`
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4">
@@ -33,7 +36,7 @@ export default function QuemSomos() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Dados da Empresa</h2>
               <p className="text-sm mb-1"><strong>WANESSA DE NOVAES VASCO</strong></p>
               <p className="text-sm mb-1">CNPJ: 33.010.705/0001-49</p>
-              <p className="text-sm mb-1">Email: contato@techhubz.sbs</p>
+              <p className="text-sm mb-1">Email: {contactEmail}</p>
               <p className="text-sm mb-2"><strong>Localização:</strong></p>
               <p className="text-sm mb-1">Logradouro: Rua De Fora, 10</p>
               <p className="text-sm mb-1">Bairro: Santa Rita</p>
@@ -44,7 +47,7 @@ export default function QuemSomos() {
 
             <section className="bg-blue-50 rounded-lg p-4">
               <h3 className="font-semibold text-slate-900 mb-2">Entre em Contato</h3>
-              <p className="text-sm mb-1">📧 <a href="mailto:contato@techhubz.sbs" className="text-blue-600 hover:underline">contato@techhubz.sbs</a></p>
+              <p className="text-sm mb-1">📧 <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:underline">{contactEmail}</a></p>
             </section>
           </div>
 
