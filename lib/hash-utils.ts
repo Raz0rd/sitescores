@@ -52,10 +52,36 @@ export async function hashEmail(email: string): Promise<string> {
 export async function hashPhone(phone: string): Promise<string> {
   if (!phone) return ''
   
-  // Remover tudo exceto números e +
-  const normalized = phone.replace(/[^\d+]/g, '')
+  // Remover tudo que não é número
+  let normalized = phone.replace(/\D/g, '')
+  
+  // Adicionar +55 se não tiver código do país
+  if (!normalized.startsWith('55')) {
+    normalized = '55' + normalized
+  }
+  
+  // Adicionar + no início para formato E.164
+  normalized = '+' + normalized
   
   return sha256Hash(normalized)
+}
+
+/**
+ * Gera hash de comprovação de entrega
+ * @param transactionId - ID da transação
+ * @param email - Email do cliente
+ * @param dataEntrega - Data/hora da entrega (ISO 8601)
+ * @param quantidade - Quantidade entregue
+ * @returns Hash SHA-256 para comprovação de entrega
+ */
+export async function generateDeliveryHash(
+  transactionId: string,
+  email: string,
+  dataEntrega: string,
+  quantidade: string
+): Promise<string> {
+  const base = `${transactionId}|${email}|${dataEntrega}|${quantidade}`
+  return sha256Hash(base)
 }
 
 /**

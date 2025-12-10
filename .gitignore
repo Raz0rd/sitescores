@@ -60,3 +60,8 @@ vercel.json
 
 # Google Sheets credentials
 chavesheets.json
+
+# Scripts Python
+generatepdfs.py
+pedidos.csv
+pdfs_pedidos/

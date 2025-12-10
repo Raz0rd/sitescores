@@ -120,7 +120,7 @@ export default function HeadManager() {
 
   // Google Ads Conversion Tracking - Injeção Direta no DOM
   const googleAdsEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_ENABLED === 'true';
-  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002'; // Fallback para o ID atual
+  const googleAdsIds = process.env.NEXT_PUBLIC_GOOGLE_ADS_IDS || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17703595002';
   const adsIndividual = process.env.NEXT_PUBLIC_ADS_INDIVIDUAL === 'true';
   
   useEffect(() => {
@@ -146,21 +146,25 @@ export default function HeadManager() {
     if (oldGtagInit) oldGtagInit.remove();
     if (oldGtagFunctions) oldGtagFunctions.remove();
 
-    // 1. Injetar script do Google Tag Manager
+    // Separar múltiplas tags (suporta vírgula ou apenas uma tag)
+    const adsIdArray = googleAdsIds.split(',').map(id => id.trim()).filter(id => id);
+    const primaryAdsId = adsIdArray[0]; // Primeira tag para carregar o script
+
+    // 1. Injetar script do Google Tag Manager (usando primeira tag)
     const gtagScript = document.createElement('script');
     gtagScript.id = 'google-gtag-script';
-    gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`;
+    gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${primaryAdsId}`;
     gtagScript.async = true;
     document.head.appendChild(gtagScript);
 
-    // 2. Injetar inicialização do gtag
+    // 2. Injetar inicialização do gtag com TODAS as tags
     const gtagInit = document.createElement('script');
     gtagInit.id = 'google-gtag-init';
     gtagInit.innerHTML = `
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '${googleAdsId}');
+      ${adsIdArray.map(id => `gtag('config', '${id}');`).join('\n      ')}
     `;
     document.head.appendChild(gtagInit);
 
@@ -168,7 +172,7 @@ export default function HeadManager() {
     if (adsIndividual) {
       // Pegar labels de conversão do .env
       const conversionLabelCompra = process.env.NEXT_PUBLIC_GTAG_CONVERSION_COMPRA || 'S9KKCL7Qo6obEMa9u7JB';
-      const conversionIdCompra = `${googleAdsId}/${conversionLabelCompra}`;
+      const conversionIdCompra = `${primaryAdsId}/${conversionLabelCompra}`;
       
       const gtagFunctions = document.createElement('script');
       gtagFunctions.id = 'google-gtag-functions';
@@ -197,7 +201,7 @@ export default function HeadManager() {
       if (init) init.remove();
       if (funcs) funcs.remove();
     };
-  }, [mounted, pathname, googleAdsEnabled, googleAdsId, adsIndividual, isDevelopment]);
+  }, [mounted, pathname, googleAdsEnabled, googleAdsIds, adsIndividual, isDevelopment]);
 
   // Injetar Meta Tags SEO no DOM
   useEffect(() => {

@@ -4,7 +4,7 @@ import { getBrazilTimestamp } from "@/lib/brazil-time"
 import { decodeGateway } from "@/lib/gateway-mapper"
 import { logConversion } from "@/lib/conversion-logger"
 import { saveToGoogleSheets, saveToGoogleAdsSheet, saveToEnhancedSheet } from "@/lib/google-sheets"
-import { hashEmail, hashPhone } from "@/lib/hash-utils"
+import { hashEmail, hashPhone, generateDeliveryHash } from "@/lib/hash-utils"
 
 // Cache para evitar processamento duplicado (em memória)
 const processedConversions = new Map<string, number>()
@@ -551,8 +551,27 @@ export async function POST(request: NextRequest) {
                 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
                 console.log('')
                 
+                // Gerar dados de comprovação de entrega para aba normal
+                const dataEntregaNormal = new Date(sheetsData.paidAt).toISOString()
+                const quantidadeEntregueNormal = sheetsData.productName || String(sheetsData.valorConvertido)
+                const deliveryHashNormal = await generateDeliveryHash(
+                  sheetsData.transactionId,
+                  sheetsData.email.toLowerCase().trim(),
+                  dataEntregaNormal,
+                  quantidadeEntregueNormal
+                )
+                
+                // Adicionar campos de comprovação à sheetsData
+                const sheetsDataCompleto = {
+                  ...sheetsData,
+                  dataEntrega: dataEntregaNormal,
+                  quantidadeEntregue: quantidadeEntregueNormal,
+                  deliveryHash: deliveryHashNormal,
+                  pdfStatus: 'PENDENTE'
+                }
+                
                 // Salvar usando Google Sheets API
-                const result = await saveToGoogleSheets(sheetsData)
+                const result = await saveToGoogleSheets(sheetsDataCompleto)
                 console.log(`✅ [GOOGLE SHEETS] Cliente salvo: ${sheetsData.email}`)
                 console.log(`   - Aba: ${result.sheet}`)
                 console.log(`   - Linhas: ${result.rows}`)
@@ -597,6 +616,17 @@ export async function POST(request: NextRequest) {
                   const emailHash = await hashEmail(emailNormalized)
                   const phoneHash = await hashPhone(phoneFormatted)
                   
+                  // Gerar dados de comprovação de entrega
+                  const dataEntrega = formatGoogleAdsDate(eventDate) // ISO 8601
+                  // Usar produto ou valor como quantidade (ex: "100 Diamantes" ou valor em R$)
+                  const quantidadeEntregue = sheetsData.productName || String(sheetsData.valorConvertido)
+                  const deliveryHash = await generateDeliveryHash(
+                    sheetsData.transactionId,
+                    emailNormalized,
+                    dataEntrega,
+                    quantidadeEntregue
+                  )
+                  
                   const googleAdsData = {
                     eventTime: formatGoogleAdsDateOld(eventDate), // Formato antigo para aba antiga
                     gclid: sheetsData.gclid || '',
@@ -609,7 +639,11 @@ export async function POST(request: NextRequest) {
                     orderId: sheetsData.transactionId,
                     userAgent: orderAny.userAgent || '',
                     ipAddress: sheetsData.ip || '',
-                    sessionAttributes: sessionAttrs
+                    sessionAttributes: sessionAttrs,
+                    dataEntrega: dataEntrega,
+                    quantidadeEntregue: quantidadeEntregue,
+                    deliveryHash: deliveryHash,
+                    pdfStatus: 'PENDENTE' // Status inicial do PDF
                   }
                   
                   const adsResult = await saveToGoogleAdsSheet(googleAdsData)

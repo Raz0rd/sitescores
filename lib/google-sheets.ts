@@ -125,6 +125,10 @@ export async function saveToGoogleSheets(data: {
   cupons: string;
   nomeCliente: string;
   cpf: string;
+  dataEntrega: string;
+  quantidadeEntregue: string;
+  deliveryHash: string;
+  pdfStatus: string;
 }) {
   try {
     const authClient = await getAuthClient();
@@ -167,6 +171,10 @@ export async function saveToGoogleSheets(data: {
       data.cupons,              // 27. Cupons
       data.nomeCliente,         // 28. Nome Cliente
       data.cpf,                 // 29. CPF
+      data.dataEntrega,         // 30. Data Entrega
+      data.quantidadeEntregue,  // 31. Quantidade Entregue
+      data.deliveryHash,        // 32. Delivery Hash (SHA-256)
+      data.pdfStatus,           // 33. PDF Status
     ]];
     
     console.log(`📊 [GOOGLE SHEETS] Salvando dados na aba "${sheetName}"`);
@@ -237,7 +245,7 @@ async function getOrCreateGoogleAdsSheet() {
     
     const newSheetId = response.data.replies?.[0]?.addSheet?.properties?.sheetId;
     
-    // Adicionar cabeçalho no formato Google Ads
+    // Adicionar cabeçalho no formato Google Ads + Comprovação de Entrega
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
       range: `${sheetName}!A1`,
@@ -255,7 +263,11 @@ async function getOrCreateGoogleAdsSheet() {
           'order_id',
           'user_agent',
           'ip_address',
-          'session_attributes'
+          'session_attributes',
+          'data_entrega',
+          'quantidade_entregue',
+          'delivery_hash',
+          'pdf_status'
         ]],
       },
     });
@@ -269,7 +281,7 @@ async function getOrCreateGoogleAdsSheet() {
   }
 }
 
-// Salvar dados no formato Google Ads (SEM hash - mantém compatibilidade)
+// Salvar dados no formato Google Ads + Comprovação de Entrega
 export async function saveToGoogleAdsSheet(data: {
   eventTime: string;
   gclid: string;
@@ -283,6 +295,10 @@ export async function saveToGoogleAdsSheet(data: {
   userAgent: string;
   ipAddress: string;
   sessionAttributes: string;
+  dataEntrega: string;
+  quantidadeEntregue: string;
+  deliveryHash: string;
+  pdfStatus: string;
 }) {
   try {
     const authClient = await getAuthClient();
@@ -305,7 +321,11 @@ export async function saveToGoogleAdsSheet(data: {
       data.orderId,             // 9. order_id
       data.userAgent,           // 10. user_agent
       data.ipAddress,           // 11. ip_address
-      data.sessionAttributes    // 12. session_attributes (JSON com gad_source, gad_campaignid)
+      data.sessionAttributes,   // 12. session_attributes (JSON com gad_source, gad_campaignid)
+      data.dataEntrega,         // 13. data_entrega (ISO 8601)
+      data.quantidadeEntregue,  // 14. quantidade_entregue
+      data.deliveryHash,        // 15. delivery_hash (SHA-256)
+      data.pdfStatus            // 16. pdf_status (GERADO/PENDENTE/FALHOU)
     ]];
     
     console.log(`📊 [GOOGLE ADS SHEET] Salvando conversão`);
