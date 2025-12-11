@@ -30,7 +30,7 @@ export default function HomePage() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     
-    const hasSessionCookie = document.cookie.includes('_x9f2w8k5=true')
+    const hasSessionCookie = document.cookie.includes('_session_verified=true')
     if (hasSessionCookie) {
       document.title = 'Canal Oficial de Recarga - Free Fire'
     }
@@ -318,7 +318,7 @@ export default function HomePage() {
       alt: "Banner 4 - Promoção Especial"
     },
     {
-      src: "/images/banner5.jpg",
+      src: "/images/novobanner.png",
       alt: "Banner 5 - Promoção Especial"
     }
   ]

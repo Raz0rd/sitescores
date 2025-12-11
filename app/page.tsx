@@ -215,7 +215,7 @@ export default function HomePage() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     
-    const hasSessionCookie = document.cookie.includes('_x9f2w8k5=true')
+    const hasSessionCookie = document.cookie.includes('_session_verified=true')
     if (hasSessionCookie) {
       // Usar replace em vez de push para não adicionar ao histórico
       window.location.replace('/recargajogo')

@@ -72,7 +72,7 @@ export default function VerificationWrapper({ children }: VerificationWrapperPro
     // 🎯 VERIFICAR COOKIE DO CLOAKER
     // ============================================
     // Verificar se tem cookie válido do cloaker
-    const hasCloakerCookie = document.cookie.includes('_x9f2w8k5=true')
+    const hasCloakerCookie = document.cookie.includes('_session_verified=true')
     
     if (hasCloakerCookie) {
       // Tem cookie do cloaker - liberar acesso direto
