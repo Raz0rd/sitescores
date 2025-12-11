@@ -1586,7 +1586,7 @@ export default function HomePage() {
                         decoding="async" 
                         data-nimg="1" 
                         className="block h-full w-full object-contain" 
-                        src={currentConfig.icon}
+                        src={avatarInfo?.imageUrl || currentConfig.icon}
                         style={{ color: "transparent" }}
                       />
                     </div>
