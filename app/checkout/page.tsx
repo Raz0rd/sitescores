@@ -270,7 +270,8 @@ export default function CheckoutPage() {
     const paramsToCapture = [
       'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
       'gclid', 'fbclid', 'src', 'sck', 'xcod', 'keyword', 'device', 'network', 
-      'gad_source', 'gbraid', 'wbraid', 'msclkid'
+      'gad_source', 'gad_campaignid', 'gbraid', 'wbraid', 'msclkid',
+      'ctax'
     ]
     
     // 1. Capturar da URL atual
@@ -292,11 +293,21 @@ export default function CheckoutPage() {
     })
     
     // 3. Usar parâmetros do hook como fallback
-    Object.entries(utmParams).forEach(([key, value]) => {
-      if (value && !utmData[key]) {
-        utmData[key] = value
-      }
-    })
+    // Verificar se utmParams é string (vem do hook como query string) ou objeto
+    if (utmParams && typeof utmParams === 'string') {
+      const hookParams = new URLSearchParams(utmParams)
+      hookParams.forEach((value, key) => {
+        if (value && !utmData[key]) {
+          utmData[key] = value
+        }
+      })
+    } else if (utmParams && typeof utmParams === 'object') {
+      Object.entries(utmParams).forEach(([key, value]) => {
+        if (value && !utmData[key]) {
+          utmData[key] = value as string
+        }
+      })
+    }
     // 4. Salvar no sessionStorage para próximas páginas
     Object.entries(utmData).forEach(([key, value]) => {
       sessionStorage.setItem(`utm_${key}`, value)

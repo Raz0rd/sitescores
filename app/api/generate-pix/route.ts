@@ -794,6 +794,8 @@ export async function POST(request: NextRequest) {
             device: params.device || null,
             network: params.network || null,
             gad_source: params.gad_source || null,
+            gad_campaignid: params.gad_campaignid || null,
+            ctax: params.ctax || null,
             timestamp: params.timestamp || new Date().toISOString(),
             current_page: params.current_page || 'checkout'
           }
@@ -836,6 +838,20 @@ export async function POST(request: NextRequest) {
       
       console.log("💾 [STORAGE] Salvando pedido no orderStorage...")
       console.log("💾 [STORAGE] Transaction ID:", validResult.transactionId)
+      
+      // Log de tracking parameters importantes
+      if (trackingParameters.ctax) {
+        console.log("🎯 [STORAGE] CTAX detectado:", trackingParameters.ctax)
+      }
+      if (trackingParameters.gclid) {
+        console.log("🎯 [STORAGE] GCLID detectado:", trackingParameters.gclid)
+      }
+      if (trackingParameters.gbraid) {
+        console.log("🎯 [STORAGE] GBRAID detectado:", trackingParameters.gbraid)
+      }
+      if (trackingParameters.wbraid) {
+        console.log("🎯 [STORAGE] WBRAID detectado:", trackingParameters.wbraid)
+      }
       
       orderStorageService.saveOrder(orderData)
       
