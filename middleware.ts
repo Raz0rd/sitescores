@@ -364,29 +364,41 @@ export async function middleware(request: NextRequest) {
           if (result.type === 'black') {
             console.log('✅ [Cloaker] Tráfego válido - Cookie setado')
             
-            // Usar a URL que o cloaker retornou
-            // IMPORTANTE: O cloaker decide o redirecionamento, não podemos alterar
-            const cloakerRedirectUrl = result.url || '/recargajogo'
+            // Usar EXATAMENTE a URL que o cloaker retornou
+            // O cloaker decide o redirecionamento completo
+            let cloakerRedirectUrl = result.url
             
-            // Extrair pathname da URL do cloaker
-            let targetPath = '/recargajogo'
-            try {
-              const cloakerUrl = new URL(cloakerRedirectUrl)
-              targetPath = cloakerUrl.pathname
-            } catch {
-              // Se não for URL completa, usar como pathname
-              targetPath = cloakerRedirectUrl.replace(/^https?:\/\/[^\/]+/, '') || '/recargajogo'
+            // Adicionar query params da requisição original à URL do cloaker
+            if (request.nextUrl.search) {
+              const separator = cloakerRedirectUrl.includes('?') ? '&' : '?'
+              cloakerRedirectUrl += separator + request.nextUrl.search.substring(1)
             }
             
-            // Criar URL de rewrite (interno, não redirect)
-            // Isso garante que o cookie seja setado ANTES da próxima requisição
-            const rewriteUrl = new URL(targetPath, request.url)
-            rewriteUrl.search = request.nextUrl.search // Preservar UTMs, gclid, etc
+            console.log(`🔄 [Cloaker] Redirecionando para: ${cloakerRedirectUrl}`)
             
-            // USAR REWRITE ao invés de REDIRECT
-            // Rewrite = interno (cookie é setado imediatamente)
-            // Redirect = nova requisição (cookie pode não estar disponível)
-            const response = NextResponse.rewrite(rewriteUrl)
+            // Retornar HTML com JavaScript redirect (igual ao PHP)
+            // Isso garante que o cookie seja setado ANTES do redirect
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+        window.onload = () => setTimeout(() => location.replace("${cloakerRedirectUrl}"), 500);
+    </script>
+</head>
+<body>
+</body>
+</html>`
+            
+            const response = new NextResponse(html, {
+              status: 200,
+              headers: {
+                'Content-Type': 'text/html; charset=utf-8'
+              }
+            })
+            
+            // Setar cookie de sessão
             response.cookies.set('_session_verified', 'true', {
               httpOnly: false,
               secure: true,
