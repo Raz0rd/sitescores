@@ -227,16 +227,16 @@ export default function HomePage() {
   }, [])
   
   // Verificar cookie no render inicial para evitar flash
-  if (typeof window !== 'undefined' && document.cookie.includes('_x9f2w8k5=true')) {
+  if (typeof window !== 'undefined' && document.cookie.includes('_session_verified=true')) {
     return null // Não renderiza nada enquanto redireciona
   }
   
   // Se não tem cookie, mostrar WhitePage
-  if (shouldShowWhitePage && typeof window !== 'undefined' && !document.cookie.includes('_x9f2w8k5=true')) {
+  if (shouldShowWhitePage && typeof window !== 'undefined' && !document.cookie.includes('_session_verified=true')) {
     return <WhitePage onActivate={() => {
       // Quando usuário aceitar, setar cookie e recarregar
       const cookieOptions = `path=/; max-age=${60 * 60 * 24}; SameSite=Lax`
-      document.cookie = `_x9f2w8k5=true; ${cookieOptions}`
+      document.cookie = `_session_verified=true; ${cookieOptions}`
       window.location.reload()
     }} />
   }

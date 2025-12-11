@@ -302,19 +302,19 @@ export default function HomePage() {
   // Array de banners para carousel (5 banners diferentes)
   const banners = [
     {
-      src: "/images/banner1.png",
+      src: "/images/banner1.png?v=new",
       alt: "Banner 1 - Promoção Especial de Recarga"
     },
     {
-      src: "/images/banner2.png",
+      src: "/images/banner2.png?v=new",
       alt: "Banner 2 - Ofertas Exclusivas"
     },
     {
-      src: "/images/banner3.png",
+      src: "/images/banner3.png?v=new",
       alt: "Banner 3 - Recarga Segura e Rápida"
     },
     {
-      src: "/images/banner4.png",
+      src: "/images/banner4.png?v=new",
       alt: "Banner 4 - Promoção Especial"
     }
   ]
