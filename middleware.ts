@@ -89,52 +89,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
   
-  // 📊 CAPTURAR GCLID/GBRAID E SALVAR NO GOOGLE SHEETS
-  const url = new URL(request.url)
-  const gclid = url.searchParams.get('gclid')
-  const gbraid = url.searchParams.get('gbraid')
-  const wbraid = url.searchParams.get('wbraid')
-  const utm_source = url.searchParams.get('utm_source')
-  const utm_campaign = url.searchParams.get('utm_campaign')
-  const utm_medium = url.searchParams.get('utm_medium')
-  const fbclid = url.searchParams.get('fbclid')
-  
-  // Se tiver gclid, gbraid ou fbclid, salvar no Google Sheets
-  if (gclid || gbraid || wbraid || fbclid) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-    const userAgent = request.headers.get('user-agent') || 'unknown'
-    
-    console.log(`🎯 [TRACKING] ${pathname} - GCLID: ${gclid || gbraid || wbraid || fbclid}`)
-    
-    // Salvar no Google Sheets (não bloquear o request)
-    const googleSheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
-    if (googleSheetsUrl) {
-      // Fazer request assíncrono sem await (não bloquear)
-      fetch(googleSheetsUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          projeto: 'Tracking_Inicial',
-          timestamp: new Date().toISOString(),
-          gclid: gclid || '',
-          gbraid: gbraid || '',
-          wbraid: wbraid || '',
-          fbclid: fbclid || '',
-          utm_source: utm_source || '',
-          utm_campaign: utm_campaign || '',
-          utm_medium: utm_medium || '',
-          ip: ip,
-          user_agent: userAgent,
-          landing_page: pathname,
-          full_url: request.url
-        })
-      }).then(() => {
-        console.log('✅ [TRACKING] Salvo no Sheets')
-      }).catch(() => {
-        // Silencioso
-      })
-    }
-  }
+  // 📊 TRACKING: Removido daqui - agora só salva no Sheets quando houver conversão (status paid)
+  // O tracking de conversão está em /api/check-transaction-status/route.ts (linhas 445-492)
   
   // Pegar base URL do .env
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://localhost:3000'

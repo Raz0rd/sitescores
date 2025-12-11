@@ -1,0 +1,6 @@
+# Ignorar todos os PDFs gerados
+*.html
+*.pdf
+
+# Manter estrutura de pastas
+!.gitignore

@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const cart = useCart()
   
   // Pegar categoria da URL ou do carrinho
-  const categoryParam = searchParams.get('category') as 'freefire' | 'robux' | 'vbucks' | 'recarga' | null
+  const categoryParam = searchParams.get('category') as 'freefire' | 'robux' | 'vbucks' | 'recarga' | 'brainroots' | null
   const category = categoryParam || cart.items[0]?.category || 'freefire'
   
   // Fluxo em 3 etapas: 1-Revisão, 2-Pagamento, 3-Pix/Cartão
@@ -282,17 +282,26 @@ function CheckoutForm({
   onBack,
   onSelectPayment
 }: { 
-  category: 'freefire' | 'robux' | 'vbucks' | 'recarga'
+  category: 'freefire' | 'robux' | 'vbucks' | 'recarga' | 'brainroots'
   colors: any
   step: 'review' | 'payment' | 'pix' | 'card'
   onBack: () => void
   onSelectPayment: (method: string) => void
 }) {
+  console.log('🚀🚀🚀 [CheckoutForm] COMPONENTE RENDERIZADO!')
+  console.log('   - Props recebidas:', { category, step })
+  
   const cart = useCart()
   const router = useRouter()
   const { getUtmObject } = useUtmParams()
   const utmParameters = getUtmObject()
-  const [internalStep, setInternalStep] = useState<'validate' | 'payment-method' | 'card-form' | 'pix-form'>('validate')
+  // Para Free Fire, começar com validação. Para outras categorias, ir direto para escolha de pagamento
+  const [internalStep, setInternalStep] = useState<'validate' | 'payment-method' | 'card-form' | 'pix-form'>(() => {
+    const initialStep = category === 'freefire' ? 'validate' : 'payment-method'
+    console.log('🎯 [INIT] category:', category)
+    console.log('🎯 [INIT] internalStep inicial:', initialStep)
+    return initialStep
+  })
   const [loading, setLoading] = useState(false)
   const [showAlertModal, setShowAlertModal] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
@@ -313,7 +322,8 @@ function CheckoutForm({
   // Dados do jogador validado
   const [playerData, setPlayerData] = useState<any>(null)
   const [avatarInfo, setAvatarInfo] = useState<any>(null)
-  const [isValidated, setIsValidated] = useState(false)
+  // Para Free Fire, precisa validar. Para outras categorias, já está validado
+  const [isValidated, setIsValidated] = useState(category !== 'freefire')
   
   const [formData, setFormData] = useState({
     email: '',
@@ -334,15 +344,19 @@ function CheckoutForm({
   // Carregar dados do localStorage
   useEffect(() => {
     const savedData = localStorage.getItem('checkout_form_data')
+    console.log('🔍 [LOAD SAVED] Verificando dados salvos:', savedData ? 'EXISTE' : 'NÃO EXISTE')
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData)
+        console.log('🔍 [LOAD SAVED] Dados parseados:', parsed)
         setFormData(parsed.formData || formData)
         setPlayerData(parsed.playerData || null)
         setAvatarInfo(parsed.avatarInfo || null)
         if (parsed.playerData) {
+          console.log('✅ [LOAD SAVED] PlayerData encontrado - marcando como validado')
           setIsValidated(true)
-          setInternalStep('payment-method')
+          // NÃO mudar o internalStep aqui - deixar o estado inicial controlar
+          // setInternalStep('payment-method') // REMOVIDO
         }
       } catch (e) {
         console.error('Erro ao carregar dados salvos:', e)
@@ -392,15 +406,21 @@ function CheckoutForm({
       const result = await response.json()
 
       if (result.success && result.data) {
+        console.log('🎮 [DEBUG] Player Data:', result.data)
         setPlayerData(result.data)
+        
+        // Salvar playerData no localStorage para persistir
+        localStorage.setItem(`playerData_${category}`, JSON.stringify(result.data))
         
         // Buscar avatar se disponível
         if (result.data.basicInfo?.headPic) {
+          console.log('🖼️ [DEBUG] Buscando avatar:', result.data.basicInfo.headPic)
           await fetchAvatarInfo(result.data.basicInfo.headPic)
         }
         
+        console.log('✅ [DEBUG] Validação concluída - playerData definido')
         setIsValidated(true)
-        setStep('payment-method')
+        setInternalStep('payment-method')
       } else {
         setAlertMessage(result.error || 'ID não encontrado')
         setShowAlertModal(true)
@@ -418,6 +438,9 @@ function CheckoutForm({
     const loadPendingPayment = async () => {
       const storageKey = `pendingPayment_${category}`
       const savedPayment = localStorage.getItem(storageKey)
+      
+      console.log('🔍 [DEBUG LOAD] Verificando pagamento pendente para:', category)
+      console.log('🔍 [DEBUG LOAD] savedPayment:', savedPayment ? 'EXISTE' : 'NÃO EXISTE')
       
       if (savedPayment) {
         try {
@@ -444,8 +467,22 @@ function CheckoutForm({
             }
             
             setPixData(payment)
-            setIsValidated(true)
-            setStep('pix-form')
+            // Para Free Fire, só marcar como validado se tiver playerData salvo
+            if (category === 'freefire') {
+              // Tentar recuperar playerData do localStorage
+              const savedPlayerData = localStorage.getItem(`playerData_${category}`)
+              if (savedPlayerData) {
+                setPlayerData(JSON.parse(savedPlayerData))
+                setIsValidated(true)
+                setInternalStep('pix-form')
+              } else {
+                // Se não tem playerData, forçar validação
+                setInternalStep('validate')
+              }
+            } else {
+              setIsValidated(true)
+              setInternalStep('pix-form')
+            }
             startPolling(payment.transactionId)
           } else {
             localStorage.removeItem(storageKey)
@@ -1079,6 +1116,96 @@ function CheckoutForm({
     )
   }
 
+  // ⚡ VALIDAÇÃO FREE FIRE - DEVE VIR ANTES DE TUDO
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.log('🔍 [RENDER] Verificando condição de validação:')
+  console.log('   - category:', category)
+  console.log('   - category === "freefire"?', category === 'freefire')
+  console.log('   - internalStep:', internalStep)
+  console.log('   - internalStep === "validate"?', internalStep === 'validate')
+  console.log('   - isValidated:', isValidated)
+  console.log('   - playerData:', playerData ? 'EXISTE' : 'NÃO EXISTE')
+  console.log('   - Condição completa:', category === 'freefire' && internalStep === 'validate')
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  
+  if (category === 'freefire' && internalStep === 'validate') {
+    console.log('✅✅✅ [RENDER] RENDERIZANDO TELA DE VALIDAÇÃO!')
+    return (
+      <div className="space-y-4">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm font-medium">Voltar</span>
+        </button>
+
+        {/* Seção de Validação - Design Futurístico */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-gray-100">
+          {/* Efeito de brilho orgânico */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-3xl" />
+          
+          <div className="relative p-8">
+            {/* Header da seção */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className={`w-12 h-12 rounded-2xl ${colors.bg} flex items-center justify-center`}>
+                <ShoppingBag className={`w-6 h-6 ${colors.text}`} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Validar Conta</h2>
+                <p className="text-sm text-gray-500">Confirme sua identidade no jogo</p>
+              </div>
+            </div>
+
+            {/* Input futurístico */}
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-700">
+                ID do Free Fire *
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.gameId}
+                  onChange={(e) => setFormData({ ...formData, gameId: e.target.value })}
+                  placeholder="Digite seu ID"
+                  disabled={loading}
+                  className="w-full px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all outline-none text-lg font-medium disabled:opacity-50"
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 flex items-center gap-2">
+                <span className="w-1 h-1 bg-gray-400 rounded-full" />
+                Encontre no jogo: Perfil → Configurações
+              </p>
+            </div>
+
+            {/* Botão futurístico */}
+            <button
+              type="button"
+              onClick={handleValidateFreeFire}
+              disabled={loading || !formData.gameId}
+              className={`mt-6 w-full ${colors.primary} text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-2xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group`}
+            >
+              <span className="relative z-10">
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Validando...
+                  </span>
+                ) : (
+                  'Validar e Continuar'
+                )}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // STEP 3 - DADOS PIX (apenas inputs, sem resumo) OU QR CODE
   if (step === 'pix') {
     // Se já gerou o PIX, mostrar QR Code
@@ -1333,6 +1460,31 @@ function CheckoutForm({
             </div>
           </div>
           
+          {/* Card do Jogador Validado (Free Fire) */}
+          {category === 'freefire' && playerData && (
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-4 mb-6 border-2 border-orange-200 shadow-md">
+              <div className="flex items-center gap-3">
+                {avatarInfo?.imageUrl && (
+                  <img
+                    src={avatarInfo.imageUrl}
+                    alt="Avatar do jogador"
+                    className="w-16 h-16 rounded-xl border-2 border-orange-500 shadow-lg"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="text-xs text-orange-600 font-semibold uppercase tracking-wide mb-0.5">✓ Conta Validada</p>
+                  <p className="font-bold text-gray-900 text-lg">{playerData.basicInfo?.nickname || 'Jogador'}</p>
+                  <p className="text-xs text-gray-600">ID: {formData.gameId}</p>
+                </div>
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-[18px]">
             {/* E-mail */}
             <div>
@@ -1476,101 +1628,28 @@ function CheckoutForm({
     )
   }
 
-  // Para Free Fire, mostrar validação primeiro
-  if (category === 'freefire' && internalStep === 'validate') {
-    return (
-      <div className="space-y-4">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm font-medium">Voltar</span>
-        </button>
-
-        {/* Seção de Validação - Design Futurístico */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-gray-100">
-          {/* Efeito de brilho orgânico */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-3xl" />
-          
-          <div className="relative p-8">
-            {/* Header da seção */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className={`w-12 h-12 rounded-2xl ${colors.bg} flex items-center justify-center`}>
-                <ShoppingBag className={`w-6 h-6 ${colors.text}`} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Validar Conta</h2>
-                <p className="text-sm text-gray-500">Confirme sua identidade no jogo</p>
-              </div>
-            </div>
-
-            {/* Input futurístico */}
-            <div className="space-y-3">
-              <label className="block text-sm font-semibold text-gray-700">
-                ID do Free Fire *
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={formData.gameId}
-                  onChange={(e) => setFormData({ ...formData, gameId: e.target.value })}
-                  placeholder="Digite seu ID"
-                  disabled={loading}
-                  className="w-full px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all outline-none text-lg font-medium disabled:opacity-50"
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 flex items-center gap-2">
-                <span className="w-1 h-1 bg-gray-400 rounded-full" />
-                Encontre no jogo: Perfil → Configurações
-              </p>
-            </div>
-
-            {/* Botão futurístico */}
-            <button
-              type="button"
-              onClick={handleValidateFreeFire}
-              disabled={loading || !formData.gameId}
-              className={`mt-6 w-full ${colors.primary} text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-2xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group`}
-            >
-              <span className="relative z-10">
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Validando...
-                  </span>
-                ) : (
-                  'Validar e Continuar'
-                )}
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-6">
-      {/* Jogador Validado (Free Fire) */}
+      {/* Jogador Validado (Free Fire) - Card Destacado */}
       {category === 'freefire' && playerData && (
-        <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-4 border-2 border-orange-200 shadow-md">
           <div className="flex items-center gap-3">
             {avatarInfo?.imageUrl && (
               <img
                 src={avatarInfo.imageUrl}
-                alt="Avatar"
-                className="w-12 h-12 rounded-lg border-2 border-orange-500"
+                alt="Avatar do jogador"
+                className="w-16 h-16 rounded-xl border-2 border-orange-500 shadow-lg"
               />
             )}
             <div className="flex-1">
-              <p className="text-sm text-gray-600">Conta Validada</p>
-              <p className="font-bold text-gray-900">{playerData.basicInfo?.nickname || 'Jogador'}</p>
-              <p className="text-xs text-gray-500">ID: {formData.gameId}</p>
+              <p className="text-xs text-orange-600 font-semibold uppercase tracking-wide mb-0.5">✓ Conta Validada</p>
+              <p className="font-bold text-gray-900 text-lg">{playerData.basicInfo?.nickname || 'Jogador'}</p>
+              <p className="text-xs text-gray-600">ID: {formData.gameId}</p>
+            </div>
+            <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
             </div>
           </div>
         </div>
@@ -1600,7 +1679,7 @@ function CheckoutForm({
       </div>
 
       {/* Seleção de Método de Pagamento - Mostrar apenas após validação */}
-      {!pixData && isValidated && step === 'payment-method' && (
+      {!pixData && isValidated && internalStep === 'payment-method' && (
         <div className="bg-white rounded-lg shadow-sm p-6">
           <button
             onClick={onBack}
@@ -1614,9 +1693,9 @@ function CheckoutForm({
             onSelectMethod={(method) => {
               setPaymentMethod(method)
               if (method === 'card') {
-                setStep('card-form')
+                setInternalStep('card-form')
               } else {
-                setStep('pix-form')
+                setInternalStep('pix-form')
               }
             }}
             colors={colors}
@@ -1625,13 +1704,38 @@ function CheckoutForm({
       )}
 
       {/* Formulário de Cartão */}
-      {!pixData && isValidated && step === 'card-form' && (
+      {!pixData && isValidated && internalStep === 'card-form' && (
         <div className="bg-white rounded-lg shadow-sm p-6">
+          {/* Jogador Validado (Free Fire) - Mostrar no formulário de cartão */}
+          {category === 'freefire' && playerData ? (
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-4 mb-6 border-2 border-orange-200 shadow-md">
+              <div className="flex items-center gap-3">
+                {avatarInfo?.imageUrl && (
+                  <img
+                    src={avatarInfo.imageUrl}
+                    alt="Avatar"
+                    className="w-14 h-14 rounded-xl border-2 border-orange-500 shadow-md"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="text-xs text-orange-600 font-semibold uppercase tracking-wide">Conta Validada</p>
+                  <p className="font-bold text-gray-900 text-lg">{playerData.basicInfo?.nickname || 'Jogador'}</p>
+                  <p className="text-xs text-gray-600">ID: {formData.gameId}</p>
+                </div>
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          
           <CardForm
             onSubmit={handleCardPayment}
             onBack={() => {
               setPaymentMethod(null)
-              setStep('payment-method')
+              setInternalStep('payment-method')
             }}
             colors={colors}
             loading={cardLoading}
@@ -1641,12 +1745,12 @@ function CheckoutForm({
       )}
 
       {/* Formulário PIX - Esconder quando PIX gerado */}
-      {!pixData && isValidated && step === 'pix-form' && (
+      {!pixData && isValidated && internalStep === 'pix-form' && (
         <div className="bg-white rounded-lg shadow-sm p-6">
           <button
             onClick={() => {
               setPaymentMethod(null)
-              setStep('payment-method')
+              setInternalStep('payment-method')
             }}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
           >
@@ -1657,6 +1761,38 @@ function CheckoutForm({
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Dados para Pagamento PIX
           </h2>
+
+          {/* Jogador Validado (Free Fire) - Mostrar no formulário */}
+          {(() => {
+            console.log('🎮 [PIX FORM] Verificando card do jogador:')
+            console.log('   - category:', category)
+            console.log('   - playerData:', playerData)
+            console.log('   - Deve mostrar?', category === 'freefire' && playerData)
+            return null
+          })()}
+          {category === 'freefire' && playerData ? (
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-4 mb-6 border-2 border-orange-200 shadow-md">
+              <div className="flex items-center gap-3">
+                {avatarInfo?.imageUrl && (
+                  <img
+                    src={avatarInfo.imageUrl}
+                    alt="Avatar"
+                    className="w-14 h-14 rounded-xl border-2 border-orange-500 shadow-md"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="text-xs text-orange-600 font-semibold uppercase tracking-wide">Conta Validada</p>
+                  <p className="font-bold text-gray-900 text-lg">{playerData.basicInfo?.nickname || 'Jogador'}</p>
+                  <p className="text-xs text-gray-600">ID: {formData.gameId}</p>
+                </div>
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* Email */}
@@ -1745,7 +1881,7 @@ function CheckoutForm({
           onSwitchToPix={() => {
             setShowCardError(false)
             setPaymentMethod('pix')
-            setStep('validate')
+            setInternalStep('validate')
           }}
           colors={colors}
         />

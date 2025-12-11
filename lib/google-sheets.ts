@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import path from 'path';
+import crypto from 'crypto';
 
 const SPREADSHEET_ID = '19noK4HT3COT-r-dJU3ZE6WRZvZMmffdRo0DzJDr0cwI';
 
@@ -65,7 +66,8 @@ async function getOrCreateSheet(sheetName: string) {
           'Data Criação', 'Data Pagamento', 'Produto', 'Gateway',
           'UTM Source', 'UTM Campaign', 'UTM Medium', 'UTM Content', 'UTM Term',
           'FBCLID', 'Keyword', 'Device', 'Network',
-          'GAD Source', 'GAD Campaign ID', 'Cupons', 'Nome Cliente', 'CPF'
+          'GAD Source', 'GAD Campaign ID', 'Cupons', 'Nome Cliente', 'CPF',
+          'Data Entrega', 'Quantidade Entregue', 'Delivery Hash', 'PDF Status'
         ]],
       },
     });
@@ -110,7 +112,16 @@ export async function saveToGoogleSheets(data: {
   cupons: string;
   nomeCliente: string;
   cpf: string;
+  quantidadeEntregue?: string;
 }) {
+  // Gerar data de entrega (agora)
+  const dataEntrega = new Date().toISOString();
+  
+  // Gerar delivery hash: SHA256(transaction_id + email + data_entrega + quantidade)
+  const hashInput = `${data.transactionId}${data.email}${dataEntrega}${data.quantidadeEntregue || ''}`;
+  const deliveryHash = crypto.createHash('sha256').update(hashInput).digest('hex');
+  
+  console.log(`🔐 [DELIVERY HASH] Gerado: ${deliveryHash.substring(0, 16)}...`);
   try {
     const authClient = await getAuthClient();
     const sheets = google.sheets({ version: 'v4', auth: authClient as any });
@@ -152,6 +163,10 @@ export async function saveToGoogleSheets(data: {
       data.cupons,              // 27. Cupons
       data.nomeCliente,         // 28. Nome Cliente
       data.cpf,                 // 29. CPF
+      dataEntrega,              // 30. Data Entrega
+      data.quantidadeEntregue || '', // 31. Quantidade Entregue
+      deliveryHash,             // 32. Delivery Hash
+      'PENDENTE',               // 33. PDF Status
     ]];
     
     console.log(`📊 [GOOGLE SHEETS] Salvando dados na aba "${sheetName}"`);
