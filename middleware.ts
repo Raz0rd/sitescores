@@ -215,7 +215,7 @@ export async function middleware(request: NextRequest) {
   const isLocalhost = requestHost.includes('localhost') || requestHost.includes('127.0.0.1')
   
   // Se o usuário já tem cookie válido, liberar acesso total a TODAS as rotas
-  const hasValidCookie = request.cookies.get('_x9f2w8k5')?.value === 'true'
+  const hasValidCookie = request.cookies.get('_session_verified')?.value === 'true'
   
   if (hasValidCookie) {
     // Se tem cookie e está na rota raiz (/), REWRITE para /recargajogo
