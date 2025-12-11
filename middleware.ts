@@ -262,10 +262,23 @@ export async function middleware(request: NextRequest) {
   if (!hasValidCookie && !isLocalhost) {
     if (pathname === '/recargajogo' || pathname.startsWith('/checkout')) {
       if (shouldLog) {
-        console.log('🚫 [Middleware] BLOQUEADO: Acesso direto sem cookie')
-        console.log('   - Rota:', pathname)
-        console.log('   - Motivo: Usuário legítimo passa pelo cloaker em / primeiro')
-        console.log('   - Ação: Reescrevendo para / (invisível - 200 OK)')
+        const currentIp = request.headers.get('cf-connecting-ip') || 
+                         request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
+                         request.headers.get('x-real-ip') || 
+                         'unknown'
+        const currentReferer = request.headers.get('referer') || 'direto'
+
+        console.log('')
+        console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+        console.log('┃ 🚫 ACESSO BLOQUEADO (SEM COOKIE)        ┃')
+        console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+        console.log(`📍 Rota: ${pathname}`)
+        console.log(`🔑 IP: ${currentIp}`)
+        console.log(`🔗 Referer: ${currentReferer}`)
+        console.log(`🍪 Cookie válido: NÃO`)
+        console.log('⚠️  Motivo: Usuário legítimo passa pelo cloaker em / primeiro')
+        console.log('🔄 Ação: Reescrevendo para / (invisível - 200 OK)')
+        console.log('')
       }
       
       // REWRITE para / (onde o cloaker vai validar)
