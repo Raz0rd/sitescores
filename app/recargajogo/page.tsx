@@ -103,7 +103,7 @@ export default function HomePage() {
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
         { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Ganhe todos os privilégios e recompensas do Booyah Pass Premium + recompensas exclusivas + 50 níveis do Booyah Pass instantaneamente.' },
-        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie recompensas incríveis, incluindo skins exclusivas e diamantes. + Bônus de 2.180 Diamantes!' }
+        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie recompensas incríveis, incluindo skins exclusivas e diamantes. + Bônus de 2.240 Diamantes!' }
       ]
     },
     deltaforce: {
@@ -488,7 +488,7 @@ export default function HomePage() {
   const getSpecialOfferBonus = (offer: string): number => {
     const bonusMap: { [key: string]: number } = {
       // Free Fire - Diamantes
-      "Passe de Nível": 2180,
+      "Passe de Nível": 2240,
       // Haikyu - Diamantes Estelares
       "Especial de Recrutar Ultra I": 200,
       "Especial de Recrutar Ultra II": 300,
@@ -1841,6 +1841,7 @@ export default function HomePage() {
                   onClick={() => handleSpecialOfferSelect(offer.name)}
                 >
                   <div className="relative mb-1.5 sm:mb-2 w-full overflow-hidden rounded-sm pt-[56.25%]">
+                  
                     <img
                       alt={offer.name}
                       data-ai-hint="game offer"
