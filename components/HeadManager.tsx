@@ -54,28 +54,22 @@ export default function HeadManager() {
     
     // Desabilitar UTMify no modo de desenvolvimento
     if (isDevelopment) {
-      console.log('🔧 [HeadManager] Modo desenvolvimento: Scripts UTMify desabilitados');
       return;
     }
     
     // Verificar se Pixel ID está configurado
     if (!utmifyPixelId) {
-      console.error('❌ [HeadManager] Pixel ID não está configurado!')
       return;
     }
 
     // Remover scripts antigos se existirem
     const oldPixelScript = document.getElementById('utmify-pixel-init');
     const oldGoogleScript = document.getElementById('utmify-google-pixel');
-    const oldUtmsScript = document.getElementById('utmify-utms-script');
     
     if (oldPixelScript) oldPixelScript.remove();
     if (oldGoogleScript) oldGoogleScript.remove();
-    if (oldUtmsScript) oldUtmsScript.remove();
 
-    console.log('📦 [HeadManager] Injetando scripts UTMify...')
-
-    // 1. Injetar script de inicialização do Pixel Google
+    // Injetar apenas o Pixel Google (UTMs já são capturados manualmente)
     const pixelInitScript = document.createElement('script');
     pixelInitScript.id = 'utmify-pixel-init';
     pixelInitScript.innerHTML = `
@@ -88,20 +82,6 @@ export default function HeadManager() {
       document.head.appendChild(a);
     `;
     document.head.appendChild(pixelInitScript);
-
-    // 2. Injetar script de UTMs
-    const utmsScript = document.createElement('script');
-    utmsScript.id = 'utmify-utms-script';
-    utmsScript.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
-    utmsScript.setAttribute('data-utmify-prevent-xcod-sck', '');
-    utmsScript.setAttribute('data-utmify-prevent-subids', '');
-    utmsScript.async = true;
-    utmsScript.defer = true;
-    document.head.appendChild(utmsScript);
-    
-    console.log('✅ [HeadManager] Scripts UTMify injetados com sucesso!')
-    console.log('   - Pixel Script: utmify-pixel-init')
-    console.log('   - UTMs Script: utmify-utms-script')
 
     // Cleanup: remover scripts ao desmontar
     return () => {

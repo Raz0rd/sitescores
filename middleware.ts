@@ -155,7 +155,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
   
-  console.log('   ⚙️  Cloaker:', cloakerEnabled ? 'ATIVADO' : 'DESATIVADO')
   
   // ✅ VERIFICAR BEARER TOKEN E WHITELIST - Se IP está na whitelist, libera TUDO
   const bearerToken = request.cookies.get('bearer')
