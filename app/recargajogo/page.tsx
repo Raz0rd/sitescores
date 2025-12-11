@@ -328,7 +328,7 @@ export default function HomePage() {
     const paramsToCapture = [
       'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
       'gclid', 'fbclid', 'src', 'sck', 'xcod', 'keyword', 'device', 'network', 
-      'gad_source', 'gbraid', 'wbraid', 'msclkid'
+      'gad_source', 'gbraid', 'wbraid', 'msclkid', 'ctax'
     ]
     
     // Salvar parâmetros da URL no sessionStorage

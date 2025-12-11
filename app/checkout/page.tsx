@@ -1812,7 +1812,7 @@ export default function CheckoutPage() {
 
       {/* Modal de Promoção */}
       {showPromoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 p-4">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col">
             {/* Header */}
             <div className="p-6 pb-0">
@@ -1953,10 +1953,10 @@ export default function CheckoutPage() {
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         onGetOffer={() => {
+          console.log('🔘 [BOTÃO] Clicou em Obter oferta no SuccessModal')
           setShowSuccessModal(false)
-          setShowPromoModal(true) // Mostrar order bump
-          console.log(' [ORDER BUMP] Usuário clicou em "Obter oferta"')
-          // TODO: Implementar order bump
+          setTimeout(() => setShowPromoModal(true), 100) // Pequeno delay para garantir transição suave
+          console.log(' [ORDER BUMP] Modal de promoção ativado')
         }}
         onRequestRefund={() => {
           setShowSuccessModal(false)

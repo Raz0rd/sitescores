@@ -29,7 +29,8 @@ export const useUtmParams = () => {
         'gad_campaignid',
         'gbraid',
         'wbraid',
-        'msclkid'
+        'msclkid',
+        'ctax'
       ]
 
       const params = new URLSearchParams()

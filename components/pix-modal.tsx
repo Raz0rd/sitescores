@@ -47,7 +47,11 @@ export default function PixModal({ isOpen, onClose, amount, customerData, utmPar
     network: utmParameters.network || null,
     gclid: utmParameters.gclid || null,
     gad_source: utmParameters.gad_source || null,
-    gbraid: utmParameters.gbraid || null
+    gbraid: utmParameters.gbraid || null,
+    ctax: utmParameters.ctax || null,
+    gad_campaignid: utmParameters.gad_campaignid || null,
+    wbraid: utmParameters.wbraid || null,
+    fbclid: utmParameters.fbclid || null
   }
 
   const generatePixPayment = async () => {
@@ -210,7 +214,7 @@ export default function PixModal({ isOpen, onClose, amount, customerData, utmPar
           } catch (error) {
             // Erro ao verificar status
           }
-        }, 7000) // A cada 7 segundos (evitar 429)
+        }, 15000) // A cada 15 segundos (evitar 429)
       }
 
       // Iniciar fallback após 10 segundos (dar tempo para webhook chegar)
