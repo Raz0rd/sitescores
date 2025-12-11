@@ -97,8 +97,8 @@ export default function HomePage() {
       icon: '/images/icon.png',
       coinIcon: '/images/point.webp',
       userIcon: '/images/icon.png',
-      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600"],
-      promotionalValues: ["1.060", "2.180", "5.600"],
+      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600", "22.400"],
+      promotionalValues: ["1.060", "2.180", "5.600", "22.400"],
       specialOffers: [
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
@@ -306,7 +306,7 @@ export default function HomePage() {
       alt: "Banner 1 - Promoção Especial de Recarga"
     },
     {
-      src: "/images/banner2.jpg",
+      src: "/images/banner2.png",
       alt: "Banner 2 - Ofertas Exclusivas"
     },
     {
@@ -316,10 +316,6 @@ export default function HomePage() {
     {
       src: "/images/banner4.png",
       alt: "Banner 4 - Promoção Especial"
-    },
-    {
-      src: "/images/novobanner.png",
-      alt: "Banner 5 - Promoção Especial"
     }
   ]
 
@@ -462,6 +458,7 @@ export default function HomePage() {
       1060: { price: 19.99, bonus: 240 },     // 1060 + 240 bônus
       2180: { price: 27.30, bonus: 840 },     // 2180 + 840 bônus
       5600: { price: 46.40, bonus: 1200 },    // 5600 + 1200 bônus
+      22400: { price: 139.99, bonus: 2240 },  // 22400 + 2240 bônus
       15600: { price: 110.85, bonus: 15600 }, // DOBRO
     }
 
@@ -475,22 +472,25 @@ export default function HomePage() {
       "Assinatura Mensal": 44.99,
       "Passe Booyah Premium Plus": 11.99,
       "Passe de Nível": 44.99,
+      // Haikyu - Diamantes Estelares
+      "Especial de Recrutar Ultra I": 15.99,
+      "Especial de Recrutar Ultra II": 25.50,
+      "Especial de Recrutar Ultra III": 52.11,
+      "Especial de Recrutar Ultra IV": 77.30,
       // Delta Force
       "Black Hawk Down - Gênesis": 25.44,
       "Black Hawk Down - Reinvenção": 18.50,
       "Suprimentos de Maré": 13.99,
       "Suprimentos de Maré - Avançado": 12.50,
-      // Haikyu
-      "Especial de Recrutar Ultra I": 15.99,
-      "Especial de Recrutar Ultra II": 25.50,
-      "Especial de Recrutar Ultra III": 52.11,
-      "Especial de Recrutar Ultra IV": 77.30,
     }
     return priceMap[offer] || 0
   }
 
   const getSpecialOfferBonus = (offer: string): number => {
     const bonusMap: { [key: string]: number } = {
+      // Free Fire - Bônus Especiais
+      "Passe de Nível": 2240,
+      "Passe Booyah Premium Plus": 5600,
       // Haikyu - Diamantes Estelares
       "Especial de Recrutar Ultra I": 200,
       "Especial de Recrutar Ultra II": 300,
@@ -1000,7 +1000,7 @@ export default function HomePage() {
             </div>
             <div className="w-8 h-8 sm:w-10 sm:h-10">
               <img
-                src={currentConfig.userIcon}
+                src={avatarInfo?.imageUrl || currentConfig.userIcon}
                 alt={`${currentConfig.name} Icon`}
                 className="w-full h-full object-cover rounded-full"
               />
@@ -1767,19 +1767,7 @@ export default function HomePage() {
             <span className="font-bold">Valor de Recarga</span>
           </div>
           
-          {/* Texto Promocional - Apenas após login */}
-          {isLoggedIn && (
-            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg">
-              <div className="text-center">
-                <h3 className="text-base sm:text-lg font-bold text-red-600 mb-1">
-                  🎉 80% OFF na primeira recarga!
-                </h3>
-                <p className="text-xs sm:text-sm text-red-500 font-medium">
-                  Válido para valores destacados
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Texto Promocional removido */}
           <div className="grid grid-cols-3 gap-2 sm:gap-2.5 sm:grid-cols-4 md:grid-cols-6 md:gap-4">
             {currentConfig.rechargeValues.map((value) => {
               const isPromotional = currentConfig.promotionalValues.includes(value)
@@ -1798,7 +1786,7 @@ export default function HomePage() {
                     isDisabled
                       ? "bg-gray-100 border-gray-300 cursor-not-allowed opacity-50"
                       : selectedRechargeValue === value
-                      ? "border-[3px] border-red-500 bg-red-50/50 text-red-700 cursor-pointer"
+                      ? "border-2 border-red-500 bg-red-50/50 text-red-700 cursor-pointer"
                       : "bg-white border-gray-200 cursor-pointer hover:border-red-300"
                   }`}
                   onClick={() => !isDisabled && handleRechargeValueSelect(value)}
@@ -1849,6 +1837,8 @@ export default function HomePage() {
                 key={offer.id}
                 className="relative"
               >
+                {/* Tag HOT para Passe de Nível */}
+               
                 <div
                   role="radio"
                   aria-checked={selectedSpecialOffer === offer.name}
