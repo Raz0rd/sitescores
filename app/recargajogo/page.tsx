@@ -97,8 +97,8 @@ export default function HomePage() {
       icon: '/images/icon.png',
       coinIcon: '/images/point.webp',
       userIcon: '/images/icon.png',
-      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600", "15.000"],
-      promotionalValues: ["1.060", "2.180", "5.600", "15.000"],
+      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600", "22.400"],
+      promotionalValues: ["1.060", "2.180", "5.600", "22.400"],
       specialOffers: [
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
@@ -310,12 +310,12 @@ export default function HomePage() {
       alt: "Banner 2 - Ofertas Exclusivas"
     },
     {
-      src: "/images/banner3.png",
-      alt: "Banner 3 - Recarga Segura e Rápida"
+      src: "/images/banner1.jpg",
+      alt: "Banner 3 - Ofertas Especiais"
     },
     {
-      src: "/images/banner4.png",
-      alt: "Banner 4 - Promoção Especial"
+      src: "/images/banner3.png",
+      alt: "Banner 4 - Recarga Segura e Rápida"
     }
   ]
 
@@ -458,7 +458,7 @@ export default function HomePage() {
       1060: { price: 19.99, bonus: 240 },     // 1060 + 240 bônus
       2180: { price: 27.30, bonus: 840 },     // 2180 + 840 bônus
       5600: { price: 46.40, bonus: 1200 },    // 5600 + 1200 bônus
-      15000: { price: 124.30, bonus: 2180 },  // 15000 + 2180 bônus
+      22400: { price: 124.30, bonus: 2240 },  // 22400 + 2240 bônus
     }
 
     return priceMap[diamondCount] || { price: 0, bonus: 0 }
@@ -1748,7 +1748,7 @@ export default function HomePage() {
           <div className="font-semibold text-gray-900 flex items-center gap-2 mb-3 sm:mb-4">
             <div className="grid grid-cols-1 grid-rows-1 items-center justify-items-center">
               <svg
-                className="col-start-1 row-start-1 h-6 w-6 sm:h-7 sm:w-7 text-orange-500"
+                className="col-start-1 row-start-1 h-6 w-6 sm:h-7 sm:w-7 text-red-500"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -1780,7 +1780,7 @@ export default function HomePage() {
                     isDisabled
                       ? "bg-gray-100 border-gray-300 cursor-not-allowed opacity-50"
                       : selectedRechargeValue === value
-                      ? "border-[3px] border-red-500 bg-red-50/50 text-red-700 cursor-pointer"
+                      ? "border-2 border-red-500 bg-red-50/50 text-red-700 cursor-pointer"
                       : "bg-white border-gray-200 cursor-pointer hover:border-red-300"
                   }`}
                   onClick={() => !isDisabled && handleRechargeValueSelect(value)}
