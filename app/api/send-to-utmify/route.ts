@@ -70,12 +70,14 @@ export async function POST(request: Request) {
         utm_content: orderData.trackingParameters?.utm_content || null,
         utm_term: orderData.trackingParameters?.utm_term || null,
         gclid: orderData.trackingParameters?.gclid || null,
+        gbraid: orderData.trackingParameters?.gbraid || null,
+        wbraid: orderData.trackingParameters?.wbraid || null,
         xcod: orderData.trackingParameters?.xcod || null,
         keyword: orderData.trackingParameters?.keyword || null,
         device: orderData.trackingParameters?.device || null,
         network: orderData.trackingParameters?.network || null,
         gad_source: orderData.trackingParameters?.gad_source || null,
-        gbraid: orderData.trackingParameters?.gbraid || null
+        ctax: orderData.trackingParameters?.ctax || null
       },
       commission: {
         totalPriceInCents: amountInCents,

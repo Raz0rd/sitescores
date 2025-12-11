@@ -326,11 +326,23 @@ export async function POST(request: NextRequest) {
       const utmifyToken = process.env.UTMIFY_API_TOKEN
       let utmifySuccess = false
       
-      // Log de aviso se não tiver GCLID (Google Ads não vai aceitar, mas UTMify sim)
+      // Log de aviso se não tiver GCLID (mas verificar GBRAID/WBRAID como alternativa)
       const hasGclid = trackingParameters.gclid && trackingParameters.gclid !== 'null'
-      if (!hasGclid) {
-        console.log(`⚠️ [CHECK-STATUS] Sem GCLID - Google Ads não vai aceitar esta conversão`)
+      const hasGbraid = trackingParameters.gbraid && trackingParameters.gbraid !== 'null'
+      const hasWbraid = trackingParameters.wbraid && trackingParameters.wbraid !== 'null'
+      const hasCtax = trackingParameters.ctax && trackingParameters.ctax !== 'null'
+      
+      if (!hasGclid && !hasGbraid && !hasWbraid) {
+        console.log(`⚠️ [CHECK-STATUS] Sem GCLID/GBRAID/WBRAID - Google Ads pode não aceitar esta conversão`)
         console.log(`   - Mas enviando para UTMify mesmo assim (pode ter outros destinos)`)
+      } else if (!hasGclid && (hasGbraid || hasWbraid)) {
+        console.log(`✅ [CHECK-STATUS] Sem GCLID mas tem ${hasGbraid ? 'GBRAID' : 'WBRAID'} - Google Ads vai aceitar!`)
+        console.log(`   - ${hasGbraid ? 'GBraid' : 'WBraid'}: ${hasGbraid ? trackingParameters.gbraid : trackingParameters.wbraid}`)
+      }
+      
+      if (hasCtax) {
+        console.log(`🎯 [CHECK-STATUS] CTAX detectado: ${trackingParameters.ctax}`)
+        console.log(`   - Será enviado para planilha MCC_CONVERSIONS`)
       }
       
       console.log(`[CHECK-STATUS] 🔍 DEBUG UTMify: ENABLED=${utmifyEnabled}, TOKEN=${!!utmifyToken}`)
@@ -379,15 +391,16 @@ export async function POST(request: NextRequest) {
               utm_content: (trackingParameters as any)?.utm_content || null,
               utm_term: (trackingParameters as any)?.utm_term || null,
               gclid: (trackingParameters as any)?.gclid || null,
+              gbraid: (trackingParameters as any)?.gbraid || null,
+              wbraid: (trackingParameters as any)?.wbraid || null,
+              fbclid: (trackingParameters as any)?.fbclid || null,
               xcod: (trackingParameters as any)?.xcod || null,
               keyword: (trackingParameters as any)?.keyword || null,
               device: (trackingParameters as any)?.device || null,
               network: (trackingParameters as any)?.network || null,
               gad_source: (trackingParameters as any)?.gad_source || (trackingParameters as any)?.utm_source || null,
               gad_campaignid: (trackingParameters as any)?.gad_campaignid || (trackingParameters as any)?.utm_campaign || null,
-              gbraid: (trackingParameters as any)?.gbraid || null,
-              wbraid: (trackingParameters as any)?.wbraid || null,
-              fbclid: (trackingParameters as any)?.fbclid || null
+              ctax: (trackingParameters as any)?.ctax || null
             },
             commission: {
               totalPriceInCents: transactionData.amount,
@@ -875,15 +888,16 @@ export async function POST(request: NextRequest) {
                 utm_content: (utmTrackingParams as any)?.utm_content || null,
                 utm_term: (utmTrackingParams as any)?.utm_term || null,
                 gclid: (utmTrackingParams as any)?.gclid || null,
+                gbraid: (utmTrackingParams as any)?.gbraid || null,
+                wbraid: (utmTrackingParams as any)?.wbraid || null,
+                fbclid: (utmTrackingParams as any)?.fbclid || null,
                 xcod: (utmTrackingParams as any)?.xcod || null,
                 keyword: (utmTrackingParams as any)?.keyword || null,
                 device: (utmTrackingParams as any)?.device || null,
                 network: (utmTrackingParams as any)?.network || null,
                 gad_source: (utmTrackingParams as any)?.gad_source || (utmTrackingParams as any)?.utm_source || null,
                 gad_campaignid: (utmTrackingParams as any)?.gad_campaignid || (utmTrackingParams as any)?.utm_campaign || null,
-                gbraid: (utmTrackingParams as any)?.gbraid || null,
-                wbraid: (utmTrackingParams as any)?.wbraid || null,
-                fbclid: (utmTrackingParams as any)?.fbclid || null
+                ctax: (utmTrackingParams as any)?.ctax || null
               },
               commission: {
                 totalPriceInCents: transactionData.amount,
