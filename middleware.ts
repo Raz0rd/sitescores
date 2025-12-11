@@ -272,6 +272,10 @@ export async function middleware(request: NextRequest) {
   // Se não for rota raiz (/), mostrar white page com status 200
   if (pathname !== '/') {
     console.log('🚫 Tentativa de acesso sem bearer')
+    console.log(`   🎯 Rota tentada: ${pathname}${request.nextUrl.search}`)
+    console.log(`   🔑 IP: ${clientIp}`)
+    console.log(`   🔗 Referer: ${referer}`)
+    console.log(`   🖥️  User-Agent: ${userAgent.substring(0, 80)}...`)
     console.log('   📄 Mostrando white page (200 OK)')
     return NextResponse.rewrite(new URL('/', request.url))
   }
