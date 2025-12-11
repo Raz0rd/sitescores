@@ -455,15 +455,8 @@ export default function CheckoutPage() {
     const randomData = generateRandomUserData()
     setPhone(randomData.phone)
 
-    // Mostrar modal de promoção apenas para Free Fire
-    if (config.showOrderBump) {
-      // Marcar no localStorage que o OrderBump foi aberto
-      localStorage.setItem('orderBumpShown', 'true')
-      setShowPromoModal(true)
-    } else {
-      // Para Delta Force e Haikyu, ir direto para finalizar
-      handleFinalizeOrder()
-    }
+    // Modal de promoção desabilitado - ir direto para finalizar pedido
+    handleFinalizeOrder()
   }
 
   const handleFinalizeOrder = async () => {

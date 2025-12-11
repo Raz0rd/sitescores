@@ -97,13 +97,13 @@ export default function HomePage() {
       icon: '/images/icon.png',
       coinIcon: '/images/point.webp',
       userIcon: '/images/icon.png',
-      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600"],
-      promotionalValues: ["1.060", "2.180", "5.600"],
+      rechargeValues: ["100", "310", "520", "1.060", "2.180", "5.600", "15.000"],
+      promotionalValues: ["1.060", "2.180", "5.600", "15.000"],
       specialOffers: [
         { id: 'semanal', name: 'Assinatura Semanal', image: '/images/semanal.png', description: 'Ganhe 60 diamantes agora e resgate 40 diamantes todos os dias no jogo, durante 7 dias! Você receberá 340 diamantes no total.' },
         { id: 'mensal', name: 'Assinatura Mensal', image: '/images/mensal.png', description: 'Ganhe 300 diamantes agora e resgate 50 diamantes todos os dias no jogo, durante 30 dias! Você receberá 1800 diamantes no total.' },
         { id: 'booyah', name: 'Passe Booyah Premium Plus', image: '/images/boyahplus.png', description: 'Ganhe todos os privilégios e recompensas do Booyah Pass Premium + recompensas exclusivas + 50 níveis do Booyah Pass instantaneamente.' },
-        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie recompensas incríveis, incluindo skins exclusivas e diamantes.' }
+        { id: 'nivel', name: 'Passe de Nível', image: '/images/passe-nivel.webp', description: 'Avance de nível e desbloqueie recompensas incríveis, incluindo skins exclusivas e diamantes. + Bônus de 2.180 Diamantes!' }
       ]
     },
     deltaforce: {
@@ -316,10 +316,6 @@ export default function HomePage() {
     {
       src: "/images/banner4.png",
       alt: "Banner 4 - Promoção Especial"
-    },
-    {
-      src: "/images/banner5.jpg",
-      alt: "Banner 5 - Promoção Especial"
     }
   ]
 
@@ -462,7 +458,7 @@ export default function HomePage() {
       1060: { price: 19.99, bonus: 240 },     // 1060 + 240 bônus
       2180: { price: 27.30, bonus: 840 },     // 2180 + 840 bônus
       5600: { price: 46.40, bonus: 1200 },    // 5600 + 1200 bônus
-      15600: { price: 110.85, bonus: 15600 }, // DOBRO
+      15000: { price: 124.30, bonus: 2180 },  // 15000 + 2180 bônus
     }
 
     return priceMap[diamondCount] || { price: 0, bonus: 0 }
@@ -491,6 +487,8 @@ export default function HomePage() {
 
   const getSpecialOfferBonus = (offer: string): number => {
     const bonusMap: { [key: string]: number } = {
+      // Free Fire - Diamantes
+      "Passe de Nível": 2180,
       // Haikyu - Diamantes Estelares
       "Especial de Recrutar Ultra I": 200,
       "Especial de Recrutar Ultra II": 300,
@@ -1519,7 +1517,7 @@ export default function HomePage() {
                         alt="Eventos Especiais"
                       />
                     </div>
-                    <div class="text-sm/[22px] font-medium md:text-base/[22px]">PALPITEIROS FFWS 2025: DÊ SEU PALPITE!</div>
+                    <div className="text-sm/[22px] font-medium md:text-base/[22px]">PALPITEIROS FFWS 2025: DÊ SEU PALPITE!</div>
                   </a>
                 </div>
               </div>
@@ -1747,15 +1745,13 @@ export default function HomePage() {
 
         {/* Valor de Recarga Section */}
         <div className="relative mx-auto max-w-5xl px-4 sm:px-[22px] md:px-8 pb-4 sm:pb-6">
-          <div className="mb-2 sm:mb-3 flex items-center gap-2 text-lg sm:text-xl text-gray-800 md:text-2xl">
-            <div className="grid items-center">
+          <div className="font-semibold text-gray-900 flex items-center gap-2 mb-3 sm:mb-4">
+            <div className="grid grid-cols-1 grid-rows-1 items-center justify-items-center">
               <svg
-                width="1em"
-                height="1em"
+                className="col-start-1 row-start-1 h-6 w-6 sm:h-7 sm:w-7 text-orange-500"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="col-start-1 row-start-1 text-xl sm:text-2xl text-destructive"
               >
                 <path
                   d="M0 3C0 1.34315 1.34315 0 3 0H21C22.6569 0 24 1.34315 24 3V15.7574C24 16.553 23.6839 17.3161 23.1213 17.8787L17.8787 23.1213C17.3161 23.6839 16.553 24 15.7574 24H3C1.34315 24 0 22.6569 0 21V3Z"
@@ -1766,20 +1762,6 @@ export default function HomePage() {
             </div>
             <span className="font-bold">Valor de Recarga</span>
           </div>
-          
-          {/* Texto Promocional - Apenas após login */}
-          {isLoggedIn && (
-            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg">
-              <div className="text-center">
-                <h3 className="text-base sm:text-lg font-bold text-red-600 mb-1">
-                  🎉 80% OFF na primeira recarga!
-                </h3>
-                <p className="text-xs sm:text-sm text-red-500 font-medium">
-                  Válido para valores destacados
-                </p>
-              </div>
-            </div>
-          )}
           <div className="grid grid-cols-3 gap-2 sm:gap-2.5 sm:grid-cols-4 md:grid-cols-6 md:gap-4">
             {currentConfig.rechargeValues.map((value) => {
               const isPromotional = currentConfig.promotionalValues.includes(value)
