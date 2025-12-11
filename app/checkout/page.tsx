@@ -1952,6 +1952,7 @@ export default function CheckoutPage() {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
+        showOfferButton={!isOrderBumpPurchase}
         onGetOffer={() => {
           console.log('🔘 [BOTÃO] Clicou em Obter oferta no SuccessModal')
           setShowSuccessModal(false)
@@ -1960,7 +1961,13 @@ export default function CheckoutPage() {
         }}
         onRequestRefund={() => {
           setShowSuccessModal(false)
-          setShowRefundModal(true)
+          if (isOrderBumpPurchase) {
+            // Se já comprou o order bump, volta para o início
+            window.location.href = '/'
+          } else {
+            // Se foi a primeira compra, oferece reembolso
+            setShowRefundModal(true)
+          }
         }}
       />
 

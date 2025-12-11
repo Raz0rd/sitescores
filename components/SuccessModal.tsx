@@ -8,9 +8,10 @@ interface SuccessModalProps {
   onClose: () => void
   onGetOffer: () => void
   onRequestRefund: () => void
+  showOfferButton?: boolean
 }
 
-export default function SuccessModal({ isOpen, onClose, onGetOffer, onRequestRefund }: SuccessModalProps) {
+export default function SuccessModal({ isOpen, onClose, onGetOffer, onRequestRefund, showOfferButton = true }: SuccessModalProps) {
   if (!isOpen) return null
 
   return (
@@ -19,7 +20,7 @@ export default function SuccessModal({ isOpen, onClose, onGetOffer, onRequestRef
         {/* Header */}
         <div className="bg-white p-6 text-center border-b-2 border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            OFERTA EXCLUSIVA DE SKINS
+            {showOfferButton ? 'OFERTA EXCLUSIVA DE SKINS' : 'COMPRA APROVADA!'}
           </h2>
         </div>
 
@@ -33,24 +34,28 @@ export default function SuccessModal({ isOpen, onClose, onGetOffer, onRequestRef
             Devido a grande demanda da promoção, a sua compra será processada e enviada no correio do jogo em <span className="font-bold">5-7 dias úteis</span>, caso você não queira esperar, você pode solicitar um reembolso apertando no botão abaixo.
           </p>
 
-          <p className="text-red-600 font-bold text-center mb-6">
-            Também preparamos uma oferta exclusiva para você!!
-          </p>
+          {showOfferButton && (
+            <p className="text-red-600 font-bold text-center mb-6">
+              Também preparamos uma oferta exclusiva para você!!
+            </p>
+          )}
 
           {/* Botões */}
           <div className="space-y-3">
-            <button
-              onClick={onGetOffer}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
-            >
-              Obter oferta
-            </button>
+            {showOfferButton && (
+              <button
+                onClick={onGetOffer}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+              >
+                Obter oferta
+              </button>
+            )}
 
             <button
               onClick={onRequestRefund}
-              className="w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg border-2 border-gray-300 transition-all duration-200"
+              className={`w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg border-2 border-gray-300 transition-all duration-200 ${!showOfferButton ? 'bg-red-600 text-white border-red-600 hover:bg-red-700 hover:text-white' : ''}`}
             >
-              Solicitar um reembolso
+              {showOfferButton ? 'Solicitar um reembolso' : 'Voltar para o início'}
             </button>
           </div>
         </div>
