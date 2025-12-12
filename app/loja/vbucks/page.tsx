@@ -19,13 +19,13 @@ export default function VBucksPage() {
 
   // Preços calculados: 0,015 por V-Buck + centavos aleatórios
   const vbucksPackages = [
-    { value: 2800, price: 42.81, originalPrice: 84.00, image: "/images/2800Vbucks.avif", title: "Fortnite Account 2800 V-Bucks" },
-    { value: 3000, price: 45.47, originalPrice: 90.00, image: "/images/3000Vbucks.jpeg", title: "Fortnite Account 3000 V-Bucks" },
-    { value: 5000, price: 75.23, originalPrice: 150.00, image: "/images/5000Vbucks.jpeg", title: "Fortnite Account 5000 V-Bucks" },
-    { value: 10000, price: 150.89, originalPrice: 300.00, image: "/images/10000Vbucks.jpeg", title: "Fortnite Account 10000 V-Bucks" },
-    { value: 13500, price: 202.65, originalPrice: 405.00, image: "/images/13500Vbucks.jpeg", title: "Fortnite Account 13500 V-Bucks" },
-    { value: 27000, price: 405.37, originalPrice: 810.00, image: "/images/27000.jpeg", title: "Fortnite Account 27000 V-Bucks" },
-    { value: 54000, price: 810.92, originalPrice: 1620.00, image: "/images/54000Vbucks.jpeg", title: "Fortnite Account 54000 V-Bucks" }
+    { value: 2800, price: 34.25, originalPrice: 84.00, image: "/images/2800Vbucks.avif", title: "Fortnite Account 2800 V-Bucks" },
+    { value: 3000, price: 36.38, originalPrice: 90.00, image: "/images/3000Vbucks.jpeg", title: "Fortnite Account 3000 V-Bucks" },
+    { value: 5000, price: 60.18, originalPrice: 150.00, image: "/images/5000Vbucks.jpeg", title: "Fortnite Account 5000 V-Bucks" },
+    { value: 10000, price: 120.71, originalPrice: 300.00, image: "/images/10000Vbucks.jpeg", title: "Fortnite Account 10000 V-Bucks" },
+    { value: 13500, price: 162.12, originalPrice: 405.00, image: "/images/13500Vbucks.jpeg", title: "Fortnite Account 13500 V-Bucks" },
+    { value: 27000, price: 324.30, originalPrice: 810.00, image: "/images/27000.jpeg", title: "Fortnite Account 27000 V-Bucks" },
+    { value: 54000, price: 648.74, originalPrice: 1620.00, image: "/images/54000Vbucks.jpeg", title: "Fortnite Account 54000 V-Bucks" }
   ]
 
   const handleAddToCart = (pkg: typeof vbucksPackages[0]) => {
@@ -290,15 +290,6 @@ export default function VBucksPage() {
               </summary>
               <p className="text-sm text-gray-600 mt-3">
                 Após a confirmação do pagamento, você recebe os dados de acesso por e-mail/WhatsApp em poucos minutos. Basta fazer login e aproveitar.
-              </p>
-            </details>
-            <details className="p-4 group">
-              <summary className="font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                Posso alterar a senha da conta?
-                <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="text-sm text-gray-600 mt-3">
-                Sim! Recomendamos que você altere a senha no primeiro acesso para sua segurança total.
               </p>
             </details>
           </div>

@@ -31,10 +31,10 @@ export default function RobuxPage() {
 
   const calculatePrice = (value: string) => {
     const prices: { [key: string]: number } = {
-      "2000": 28.97,
-      "5250": 56.31,
-      "11000": 98.44,
-      "24000": 169.75
+      "2000": 18.83,
+      "5250": 36.60,
+      "11000": 63.99,
+      "24000": 110.34
     }
     
     const originalPrices: { [key: string]: number } = {
@@ -65,7 +65,7 @@ export default function RobuxPage() {
         {/* 3️⃣ Chamada de Impacto */}
         <div className="text-center mb-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            💰 Aproveite até 25% a mais de Robux
+            💰 Aproveite até 70% a mais de Robux
           </h2>
           <p className="text-sm text-gray-600 font-medium">
             Receba Robux automaticamente após o pagamento via Pix.
