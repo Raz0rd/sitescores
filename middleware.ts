@@ -110,6 +110,37 @@ export async function middleware(request: NextRequest) {
   const referer = request.headers.get('referer') || 'direto'
   const userAgent = request.headers.get('user-agent') || 'unknown'
   
+  // 🎯 VERIFICAR PALAVRAS-CHAVE NA URL: Liberar acesso direto para produtos específicos
+  const fullUrl = pathname + request.nextUrl.search
+  const productKeywords = ['robux', 'bucks', 'brainrots', 'celular']
+  const hasProductKeyword = productKeywords.some(keyword => 
+    fullUrl.toLowerCase().includes(keyword)
+  )
+  
+  if (hasProductKeyword) {
+    console.log('┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓')
+    console.log('┃ 🎯 ACESSO DIRETO - PRODUTO ESPECÍFICO   ┃')
+    console.log('┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛')
+    console.log(`📍 URL: ${fullUrl}`)
+    console.log(`🔑 IP: ${clientIp}`)
+    console.log(`🔗 Referer: ${referer}`)
+    console.log(`🎁 Palavra-chave detectada: ${productKeywords.find(k => fullUrl.toLowerCase().includes(k))}`)
+    console.log(`✅ Acesso liberado sem cloaker`)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    
+    // Gerar bearer token e adicionar à whitelist
+    const bearer = await addToWhitelist(clientIp)
+    const response = NextResponse.next()
+    response.cookies.set('bearer', bearer, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 // 7 dias
+    })
+    
+    return response
+  }
+  
   // Rotas da whitepage que NUNCA devem passar pelo cloaker
   // IMPORTANTE: "/" NÃO está aqui - deve passar pelo cloaker!
   const whitePageRoutes = [
