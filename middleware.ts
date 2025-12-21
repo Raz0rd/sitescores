@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { addToWhitelistDB, addToBlacklistDB } from './lib/supabase-ip'
 
 // Configuração do cloaker
 const CLOAKER_TRACKING_ID = process.env.NEXT_PUBLIC_CLOAKER_TRACKING_ID
@@ -62,14 +63,28 @@ function validateBearer(bearer: string | undefined, ip: string): boolean {
   return whitelisted.bearer === bearer
 }
 
-// Função para adicionar IP à whitelist
-async function addToWhitelist(ip: string): Promise<string> {
+// Função para adicionar IP à whitelist (memória + Supabase)
+async function addToWhitelist(ip: string, userAgent: string, source: string = 'cloaker'): Promise<string> {
   const bearer = await generateBearerToken(ip)
   ipWhitelist.set(ip, {
     timestamp: Date.now(),
     bearer: bearer
   })
+  
+  // Salvar no Supabase (fire and forget - não bloqueia)
+  addToWhitelistDB(ip, userAgent, bearer, source).catch(err => {
+    console.error('❌ Erro ao salvar IP no Supabase:', err)
+  })
+  
   return bearer
+}
+
+// Função para adicionar IP à blacklist (Supabase)
+async function addToBlacklist(ip: string, userAgent: string, source: string = 'cloaker'): Promise<void> {
+  // Salvar no Supabase (fire and forget - não bloqueia)
+  addToBlacklistDB(ip, userAgent, source).catch(err => {
+    console.error('❌ Erro ao salvar IP blacklist no Supabase:', err)
+  })
 }
 
 export async function middleware(request: NextRequest) {
@@ -129,7 +144,7 @@ export async function middleware(request: NextRequest) {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     
     // Gerar bearer token e adicionar à whitelist
-    const bearer = await addToWhitelist(clientIp)
+    const bearer = await addToWhitelist(clientIp, userAgent, 'keyword')
     const response = NextResponse.next()
     response.cookies.set('bearer', bearer, {
       httpOnly: true,
@@ -355,6 +370,10 @@ export async function middleware(request: NextRequest) {
     console.log(`   🤖 IP do Google detectado: ${clientIp}`)
     console.log('   ⚪ BLOQUEADO - mostrando white page')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    
+    // Salvar IP do Google na blacklist para base do cloaker privado
+    addToBlacklist(clientIp, userAgent, 'google-bot')
+    
     return NextResponse.next() // Mostrar white page sem chamar cloaker
   }
   
@@ -387,7 +406,7 @@ export async function middleware(request: NextRequest) {
       const response = NextResponse.redirect(redirectUrl)
       
       // Adicionar IP à whitelist e gerar bearer token
-      const bearer = await addToWhitelist(clientIp)
+      const bearer = await addToWhitelist(clientIp, userAgent, 'cache')
       
       console.log('   ✅ Bearer gerado:', bearer.substring(0, 16) + '...')
       console.log('   🌍 IP adicionado à whitelist:', clientIp)
@@ -494,6 +513,10 @@ export async function middleware(request: NextRequest) {
       console.log('   ⚪ DECISÃO: WHITE PAGE (Bot/Crawler)')
       console.log('   📄 Ação: Exibir presell (página /)')
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      
+      // Salvar IP na blacklist (bot/crawler detectado)
+      addToBlacklist(clientIp, userAgent, 'cloaker-bot')
+      
       return NextResponse.next()
     }
 
@@ -505,7 +528,7 @@ export async function middleware(request: NextRequest) {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     
     // Adicionar IP à whitelist e gerar bearer token
-    const bearer = await addToWhitelist(clientIp)
+    const bearer = await addToWhitelist(clientIp, userAgent, 'cloaker')
     
     console.log('   ✅ Bearer gerado:', bearer.substring(0, 16) + '...')
     console.log('   🌍 IP adicionado à whitelist:', clientIp)
